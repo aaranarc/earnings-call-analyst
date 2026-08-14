@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chroma_server
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./chroma_db:/data
+
+  fastapi:
+    build: .
+    container_name: fastapi_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CHROMA_HOST=chromadb
+    env_file:
+      - .env
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - chromadb
+    volumes:
+      - ./app:/app/app
+      - ./models:/app/models
+
+  streamlit:
+    build: .
+    container_name: streamlit_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://fastapi:8000
+    command: streamlit run app/ui/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      - fastapi
+    volumes:
+      - ./app:/app/app
+      - ./.streamlit:/app/.streamlit

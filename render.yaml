@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: fastapi-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: CHROMA_HOST
+        value: localhost
+      - key: GROQ_API_KEY
+        sync: false
+    plan: free
+
+  - type: web
+    name: streamlit-frontend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: streamlit run app/ui/streamlit_app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: API_URL
+        value: https://fastapi-backend.onrender.com
+    plan: free

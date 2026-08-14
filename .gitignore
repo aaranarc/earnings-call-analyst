@@ -1,0 +1,18 @@
+# Environments
+venv/
+.env
+
+# Byte-compiled
+__pycache__/
+*.pyc
+
+# Data & DBs
+chroma_db/
+data/
+*.pdf
+
+# Models (except the json/pkl files you want to track, but let's just track them specifically)
+# If models are large, they should ideally be in LFS, but for this portfolio we will commit the small models.
+
+# Streamlit
+.streamlit/credentials.toml
