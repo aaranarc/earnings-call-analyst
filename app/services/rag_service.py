@@ -18,8 +18,6 @@ class RAGService:
 
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         chroma_path = os.path.join(base_dir, "chroma_db")
-        
-        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
         chroma_host = os.getenv("CHROMA_HOST")
         if chroma_host:
@@ -42,11 +40,25 @@ class RAGService:
         self.scaler = joblib.load(os.path.join(models_dir, "robust_scaler.pkl"))
         self.winsorize_bounds = joblib.load(os.path.join(models_dir, "winsorize_bounds.pkl"))
         self.feature_names = joblib.load(os.path.join(models_dir, "feature_names.pkl"))
-
-        print("Loading CrossEncoder re-ranker...")
-        self.reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+        
+        self._embeddings = None
+        self._reranker = None
 
         print(f"RAGService initialized. Collection has {self.collection.count()} documents.")
+
+    @property
+    def embeddings(self):
+        if self._embeddings is None:
+            print("Lazy loading HuggingFaceEmbeddings...")
+            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        return self._embeddings
+        
+    @property
+    def reranker(self):
+        if self._reranker is None:
+            print("Lazy loading CrossEncoder re-ranker...")
+            self._reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+        return self._reranker
 
     def classify_question(self, question):
         q_lower = question.lower()
