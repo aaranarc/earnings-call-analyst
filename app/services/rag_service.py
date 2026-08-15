@@ -2,14 +2,9 @@ import os
 import fitz
 # pyrefly: ignore [missing-import]
 import chromadb
-import joblib
 import pandas as pd
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-import xgboost as xgb
-from sentence_transformers import CrossEncoder
 
 
 class RAGService:
@@ -32,23 +27,20 @@ class RAGService:
             temperature=0
         )
 
-        self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
-
-        models_dir = os.path.join(base_dir, "models")
-        self.risk_model = xgb.XGBClassifier()
-        self.risk_model.load_model(os.path.join(models_dir, "xgboost_bankruptcy.json"))        
-        self.scaler = joblib.load(os.path.join(models_dir, "robust_scaler.pkl"))
-        self.winsorize_bounds = joblib.load(os.path.join(models_dir, "winsorize_bounds.pkl"))
-        self.feature_names = joblib.load(os.path.join(models_dir, "feature_names.pkl"))
-        
         self._embeddings = None
         self._reranker = None
+        
+        self.risk_model = None
+        self.scaler = None
+        self.winsorize_bounds = None
+        self.feature_names = None
 
         print(f"RAGService initialized. Collection has {self.collection.count()} documents.")
 
     @property
     def embeddings(self):
         if self._embeddings is None:
+            from langchain_huggingface import HuggingFaceEmbeddings
             print("Lazy loading HuggingFaceEmbeddings...")
             self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         return self._embeddings
@@ -56,9 +48,23 @@ class RAGService:
     @property
     def reranker(self):
         if self._reranker is None:
+            from sentence_transformers import CrossEncoder
             print("Lazy loading CrossEncoder re-ranker...")
             self._reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
         return self._reranker
+
+    def _ensure_risk_models(self):
+        if self.risk_model is None:
+            import xgboost as xgb
+            import joblib
+            print("Lazy loading XGBoost models...")
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            models_dir = os.path.join(base_dir, "models")
+            self.risk_model = xgb.XGBClassifier()
+            self.risk_model.load_model(os.path.join(models_dir, "xgboost_bankruptcy.json"))        
+            self.scaler = joblib.load(os.path.join(models_dir, "robust_scaler.pkl"))
+            self.winsorize_bounds = joblib.load(os.path.join(models_dir, "winsorize_bounds.pkl"))
+            self.feature_names = joblib.load(os.path.join(models_dir, "feature_names.pkl"))
 
     def classify_question(self, question):
         q_lower = question.lower()
@@ -169,6 +175,7 @@ Question: {question}"""
         }
 
     def predict_risk(self, financial_ratios: dict = None, company_name: str = None) -> dict:
+        self._ensure_risk_models()
         import yfinance as yf
         import hashlib
 
