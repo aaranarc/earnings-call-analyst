@@ -1,22 +1,28 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.services.rag_service import RAGService
 
 app = FastAPI()
 
-# loaded once when the server starts, not per-request
-service = RAGService()
+_service = None
+
+def get_service():
+    global _service
+    if _service is None:
+        from app.services.rag_service import RAGService
+        _service = RAGService()
+    return _service
 
 class AskRequest(BaseModel):
     question: str
 
 @app.post("/ask")
 def ask(request: AskRequest):
-    return service.ask(request.question)
+    return get_service().ask(request.question)
 
 @app.get("/companies")
 def get_companies():
-    all_data = service.collection.get()
+    svc = get_service()
+    all_data = svc.collection.get()
     combos = set()
     all_metadatas = all_data.get("metadatas") or []
     for meta in all_metadatas:
@@ -34,7 +40,7 @@ class RiskRequest(BaseModel):
 
 @app.post("/risk-score")
 def risk_score(request: RiskRequest):
-    return service.predict_risk(
+    return get_service().predict_risk(
         financial_ratios=request.financial_ratios, 
         company_name=request.company_name
     )
