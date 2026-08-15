@@ -269,7 +269,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000").rstrip("/")
 
 def get_company_color(company_name):
     """Generate a consistent hex color for a given company name"""
