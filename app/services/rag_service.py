@@ -40,7 +40,13 @@ class RAGService:
         if self._embeddings is None:
             from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
             print("Lazy loading FastEmbedEmbeddings (No PyTorch, single-threaded)...")
-            self._embeddings = FastEmbedEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", threads=1)
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            cache_dir = os.path.join(base_dir, "models", "fastembed_cache")
+            self._embeddings = FastEmbedEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2", 
+                threads=1,
+                cache_dir=cache_dir
+            )
         return self._embeddings
         
     @property
