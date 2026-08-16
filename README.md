@@ -10,10 +10,9 @@
 
 ---
 
-> **Screenshot Placeholder** 
-> *(See instructions below on how to add your screenshot here!)*
-> 
-> `![App Screenshot](./assets/screenshot.png)`
+> **Live Demo:** [https://quant-rag.onrender.com](https://quant-rag.onrender.com)
+
+![App Screenshot](./assets/ss.png)
 
 ---
 
