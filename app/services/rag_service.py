@@ -40,56 +40,15 @@ class RAGService:
     @property
     def embeddings(self):
         if self._embeddings is None:
-            hf_token = os.getenv("HF_TOKEN")
-            if hf_token:
-                print("Loading HF Cloud Embeddings to save RAM...")
-                class HFCloudEmbeddings:
-                    def __init__(self, token):
-                        self.url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-                        self.headers = {"Authorization": f"Bearer {token}"}
-                    def embed_query(self, text: str):
-                        import requests
-                        res = requests.post(self.url, headers=self.headers, json={"inputs": [text]})
-                        if res.status_code != 200: raise Exception(f"HF Embed API Error: {res.text}")
-                        data = res.json()
-                        return data[0] if isinstance(data, list) and isinstance(data[0], list) else data
-                self._embeddings = HFCloudEmbeddings(hf_token)
-            else:
-                from langchain_huggingface import HuggingFaceEmbeddings
-                print("Lazy loading local HuggingFaceEmbeddings...")
-                self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            from langchain_huggingface import HuggingFaceEmbeddings
+            print("Lazy loading local HuggingFaceEmbeddings...")
+            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         return self._embeddings
         
     @property
     def reranker(self):
-        if self._reranker is None:
-            hf_token = os.getenv("HF_TOKEN")
-            if hf_token:
-                print("Loading HF Cloud CrossEncoder to save RAM...")
-                class HFCloudCrossEncoder:
-                    def __init__(self, token):
-                        self.url = "https://api-inference.huggingface.co/models/cross-encoder/ms-marco-MiniLM-L-6-v2"
-                        self.headers = {"Authorization": f"Bearer {token}"}
-                    def predict(self, pairs):
-                        import requests
-                        scores = []
-                        for q, doc in pairs:
-                            res = requests.post(self.url, headers=self.headers, json={"inputs": {"text": q, "text_pair": doc}})
-                            if res.status_code != 200: raise Exception(f"HF CE API Error: {res.text}")
-                            data = res.json()
-                            if isinstance(data, list) and isinstance(data[0], list) and "score" in data[0][0]:
-                                scores.append(data[0][0]["score"])
-                            elif isinstance(data, list) and isinstance(data[0], dict) and "score" in data[0]:
-                                scores.append(data[0]["score"])
-                            else:
-                                scores.append(0.0)
-                        return scores
-                self._reranker = HFCloudCrossEncoder(hf_token)
-            else:
-                from sentence_transformers import CrossEncoder
-                print("Lazy loading local CrossEncoder re-ranker...")
-                self._reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
-        return self._reranker
+        # Disabled to prevent OOM crash on Render Free Tier
+        return None
 
     def _ensure_risk_models(self):
         if self.risk_model is None:
@@ -97,119 +56,97 @@ class RAGService:
             import joblib
             print("Lazy loading XGBoost models...")
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            models_dir = os.path.join(base_dir, "models")
-            self.risk_model = xgb.XGBClassifier()
-            self.risk_model.load_model(os.path.join(models_dir, "xgboost_bankruptcy.json"))        
-            self.scaler = joblib.load(os.path.join(models_dir, "robust_scaler.pkl"))
-            self.winsorize_bounds = joblib.load(os.path.join(models_dir, "winsorize_bounds.pkl"))
-            self.feature_names = joblib.load(os.path.join(models_dir, "feature_names.pkl"))
+            self.risk_model = xgb.Booster()
+            self.risk_model.load_model(os.path.join(base_dir, "models", "xgb_bankruptcy_model.json"))
+            self.scaler = joblib.load(os.path.join(base_dir, "models", "scaler.pkl"))
+            
+            with open(os.path.join(base_dir, "models", "winsorize_bounds.json"), "r") as f:
+                import json
+                self.winsorize_bounds = json.load(f)
+            with open(os.path.join(base_dir, "models", "feature_names.json"), "r") as f:
+                self.feature_names = json.load(f)
 
-    def classify_question(self, question):
-        q_lower = question.lower()
-        comparison_keywords = ["compare", "vs", "versus", "difference between"]
-        temporal_keywords = ["changed", "over time", "trend", "from q1 to q2", "quarter over quarter"]
+    def get_corpus_summary(self) -> dict:
+        try:
+            all_data = self.collection.get(include=["metadatas"])
+            if not all_data or not all_data.get("metadatas"):
+                return {"total_documents": 0, "companies": []}
+            
+            df = pd.DataFrame(all_data["metadatas"])
+            unique_companies = df["company"].unique().tolist()
+            return {
+                "total_documents": len(df),
+                "companies": unique_companies,
+            }
+        except Exception as e:
+            return {"error": str(e)}
 
-        if any(kw in q_lower for kw in comparison_keywords):
-            return "comparison"
-        elif any(kw in q_lower for kw in temporal_keywords):
-            return "temporal"
-        else:
-            return "single"
-
-    def extract_companies(self, question):
-        known_companies = ["JPMorgan", "HDFC", "Infosys", "Apple", "Microsoft", "Reliance"]
-        q_lower = question.lower()
-        return [c for c in known_companies if c.lower() in q_lower]
-
-    def retrieve_with_routing(self, question, n_results=5):
-        question_type = self.classify_question(question)
-        companies = self.extract_companies(question)
-        query_embedding = self.embeddings.embed_query(question)
-
-        if question_type == "comparison":
-            all_docs, all_metas = [], []
-            if not companies:
-                results = self.collection.query(
-                    query_embeddings=[query_embedding],
-                    n_results=n_results
-                )
-                return results["documents"][0], results["metadatas"][0]
-                
+    def retrieve_with_routing(self, query: str, n_results: int = 5) -> tuple[list[str], list[dict]]:
+        query_embedding = self.embeddings.embed_query(query)
+        
+        # Simple routing logic
+        query_lower = query.lower()
+        companies = [c for c in self.get_corpus_summary().get("companies", []) if c.lower() in query_lower]
+        
+        if len(companies) > 1:
+            # Multi-company comparison
+            docs, metas = [], []
             for company in companies:
                 results = self.collection.query(
                     query_embeddings=[query_embedding],
-                    n_results=n_results,
+                    n_results=n_results // len(companies),
                     where={"company": company}
                 )
-                all_docs.extend(results["documents"][0])
-                all_metas.extend(results["metadatas"][0])
-            return all_docs, all_metas
-
-        elif question_type == "temporal":
-            where_filter = {"company": companies[0]} if companies else None
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=n_results * 2,
-                where=where_filter
-            )
-            return results["documents"][0], results["metadatas"][0]
-
-        else:  # single
+                if results["documents"] and results["documents"][0]:
+                    docs.extend(results["documents"][0])
+                    metas.extend(results["metadatas"][0])
+            return docs, metas
+        else:
+            # Single company or general query
             where_filter = {"company": companies[0]} if companies else None
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=n_results,
                 where=where_filter
             )
-            return results["documents"][0], results["metadatas"][0]
+            if results["documents"] and results["documents"][0]:
+                return results["documents"][0], results["metadatas"][0]
+            return [], []
 
     def ask(self, question: str) -> dict:
-        docs, metas = self.retrieve_with_routing(question, n_results=15)
+        # Ask directly without reranking to save memory
+        docs, metas = self.retrieve_with_routing(question, n_results=5)
         
         if not docs:
             return {"answer": "No relevant transcripts found.", "sources": []}
 
-        # Cross-Encoder Re-ranking
-        cross_inp = [[question, doc] for doc in docs]
-        scores = self.reranker.predict(cross_inp)
+        # Format context
+        context_parts = []
+        sources_list = []
+        for d, m in zip(docs, metas):
+            comp = m.get("company", "Unknown")
+            q = m.get("quarter", "")
+            y = m.get("year", "")
+            context_parts.append(f"[{comp} {q} {y}]: {d}")
+            sources_list.append(f"{comp} {q} {y}")
+            
+        context_str = "\n\n".join(context_parts)
         
-        # Sort by score descending
-        doc_score_pairs = list(zip(docs, metas, scores))
-        doc_score_pairs.sort(key=lambda x: x[2], reverse=True)
+        prompt = f"""You are an elite financial analyst. Answer the user's question based ONLY on the following transcripts.
+If the answer is not in the context, say "I don't have enough information."
+
+Context:
+{context_str}
+
+Question: {question}
+Answer:"""
+
+        from langchain_core.messages import HumanMessage
+        response = self.llm.invoke([HumanMessage(content=prompt)])
         
-        # Keep top 5
-        top_pairs = doc_score_pairs[:5]
-        top_docs = [p[0] for p in top_pairs]
-        top_metas = [p[1] for p in top_pairs]
-
-        context = "\n\n".join([
-            f"[{meta['company']} {meta['quarter']} {meta['year']}]: {doc}"
-            for doc, meta in zip(top_docs, top_metas)
-        ])
-
-        system_prompt = """You are a strict equity research analyst. Answer ONLY using the provided context below.
-If comparing companies, structure your answer clearly per company.
-If a specific number or figure is not in the context, say "Not mentioned in transcript" — never invent numbers.
-Always mention which company and quarter your answer is drawn from."""
-
-        user_prompt = f"""Context:
-{context}
-
-Question: {question}"""
-
-        response = self.llm.invoke([
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ])
-
-        sources = [
-            {"company": meta["company"], "quarter": meta["quarter"], "year": meta["year"], "excerpt": doc[:200]}
-            for doc, meta in zip(top_docs, top_metas)
-        ]
-
         return {
             "answer": response.content,
-            "sources": sources
+            "sources": list(set(sources_list))
         }
 
     def predict_risk(self, financial_ratios: dict = None, company_name: str = None) -> dict:
