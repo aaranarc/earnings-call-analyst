@@ -151,9 +151,12 @@ Answer:"""
 
         from langchain_core.messages import HumanMessage
         response = self.llm.invoke([HumanMessage(content=prompt)])
-        
+        ans_content = response.content
+        if isinstance(ans_content, list):
+            ans_content = " ".join([item.get("text", "") for item in ans_content if isinstance(item, dict)])
+            
         return {
-            "answer": response.content,
+            "answer": str(ans_content),
             "sources": sources_list,
         }
 
