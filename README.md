@@ -10,7 +10,7 @@
 
 ---
 
-> [**Live Demo:**] (https://quant-rag.onrender.com)
+> ![**Live Demo:**] (https://quant-rag.onrender.com)
 
 ![App Screenshot](./assets/ss.png)
 
