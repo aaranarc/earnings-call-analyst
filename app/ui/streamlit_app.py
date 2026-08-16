@@ -321,7 +321,7 @@ def plot_risk_gauge(score, tier):
 @st.cache_data(ttl=300)
 def get_companies():
     try:
-        response = requests.get(f"{API_URL}/companies", timeout=5)
+        response = requests.get(f"{API_URL}/companies", timeout=30)
         if response.status_code == 200:
             return response.json(), True
     except:
@@ -365,7 +365,7 @@ with st.sidebar:
         
         with st.spinner("Fetching live data & Scoring..."):
             try:
-                res = requests.post(f"{API_URL}/risk-score", json={"company_name": selected_company}, timeout=8)
+                res = requests.post(f"{API_URL}/risk-score", json={"company_name": selected_company}, timeout=30)
                 if res.status_code == 200:
                     data = res.json()
                     score = data.get("risk_score", 0.0)
@@ -525,7 +525,7 @@ with tab3:
             
             with st.spinner("Scoring..."):
                 try:
-                    res = requests.post(f"{API_URL}/risk-score", json={"financial_ratios": payload}, timeout=5)
+                    res = requests.post(f"{API_URL}/risk-score", json={"financial_ratios": payload}, timeout=30)
                     if res.status_code == 200:
                         data = res.json()
                         score = data.get("risk_score", 0.0)
