@@ -402,22 +402,18 @@ with tab2:
                 neu = 30 + (col_idx * 3) % 20
                 neg = 100 - pos - neu
                 
-                st.markdown(f"""
-                <div class="metric-card" style="border-top: 3px solid {comp_color};">
-                    <h3 style="margin-top:0; color:#EDEDED;">{company}</h3>
-                    <div style="color:#98989D; margin-bottom:16px; font-size:12px; font-family:'Roboto Mono', monospace;">
-                        MKT: {flag} | CHUNKS: {len(group) * 22}
-                    </div>
-                    
-                    <div style="font-size: 11px; font-family: 'Roboto Mono', monospace; margin-bottom: 4px; color: #636366;">NLP SENTIMENT</div>
-                    <div style="display: flex; height: 6px; border-radius: 1px; overflow: hidden; margin-bottom: 16px;">
-                        <div style="width: {pos}%; background: #10B981;" title="Positive: {pos}%"></div>
-                        <div style="width: {neu}%; background: #F59E0B;" title="Neutral: {neu}%"></div>
-                        <div style="width: {neg}%; background: #EF4444;" title="Negative: {neg}%"></div>
-                    </div>
-                    
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div class="metric-card" style="border-top: 3px solid {comp_color};">
+<h3 style="margin-top:0; color:#EDEDED;">{company}</h3>
+<div style="color:#98989D; margin-bottom:16px; font-size:12px; font-family:'Roboto Mono', monospace;">
+MKT: {flag} | CHUNKS: {len(group) * 22}
+</div>
+<div style="font-size: 11px; font-family: 'Roboto Mono', monospace; margin-bottom: 4px; color: #636366;">NLP SENTIMENT</div>
+<div style="display: flex; height: 6px; border-radius: 1px; overflow: hidden; margin-bottom: 16px;">
+<div style="width: {pos}%; background: #10B981;" title="Positive: {pos}%"></div>
+<div style="width: {neu}%; background: #F59E0B;" title="Neutral: {neu}%"></div>
+<div style="width: {neg}%; background: #EF4444;" title="Negative: {neg}%"></div>
+</div>
+<div style="display:flex; flex-wrap:wrap; gap:6px;">""", unsafe_allow_html=True)
                 
                 quarters_html = ""
                 for _, row in group.iterrows():
