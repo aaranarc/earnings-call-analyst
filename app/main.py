@@ -38,7 +38,8 @@ def get_companies():
         combos = set()
         all_metadatas = all_data.get("metadatas") or []
         for meta in all_metadatas:
-            combos.add((meta["company"], meta["market"], meta["quarter"], meta["year"]))
+            market = meta.get("market", meta.get("country", "Unknown"))
+            combos.add((meta.get("company", "Unknown"), market, meta.get("quarter", "Unknown"), meta.get("year", "Unknown")))
         return [
             {"company": c, "market": m, "quarter": q, "year": y}
             for c, m, q, y in combos
