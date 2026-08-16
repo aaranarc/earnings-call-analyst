@@ -25,7 +25,8 @@ class RAGService:
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-flash-latest",
             api_key=os.getenv("GEMINI_API_KEY"),
-            temperature=0
+            temperature=0,
+            max_retries=0
         )
 
         self._embeddings = None
@@ -45,7 +46,8 @@ class RAGService:
             print("Lazy loading GoogleGenerativeAIEmbeddings...")
             self._embeddings = GoogleGenerativeAIEmbeddings(
                 model="models/gemini-embedding-2",
-                google_api_key=os.getenv("GEMINI_API_KEY")
+                google_api_key=os.getenv("GEMINI_API_KEY"),
+                max_retries=0
             )
         return self._embeddings
         
