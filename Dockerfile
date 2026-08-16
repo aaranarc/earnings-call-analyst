@@ -5,6 +5,13 @@ WORKDIR /app
 # Set env var to fix macOS/OpenMP XGBoost conflict
 ENV KMP_DUPLICATE_LIB_OK="TRUE"
 
+# Prevent ML libraries from spin-locking and hanging on Render's restricted CPUs
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV OPENBLAS_NUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+ENV ONNXRUNTIME_NUM_THREADS=1
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
