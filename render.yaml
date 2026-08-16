@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: aarana-fastapi-backend
+    name: quant-rag-api
     env: docker
     dockerfilePath: ./Dockerfile
     dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -10,11 +10,11 @@ services:
     plan: free
 
   - type: web
-    name: aarana-earnings-frontend
+    name: quant-rag
     env: docker
     dockerfilePath: ./Dockerfile
     dockerCommand: streamlit run app/ui/streamlit_app.py --server.port $PORT --server.address 0.0.0.0
     envVars:
       - key: API_URL
-        value: https://aarana-fastapi-backend.onrender.com
+        value: https://quant-rag-api.onrender.com
     plan: free
