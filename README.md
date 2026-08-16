@@ -12,7 +12,7 @@
 
 > **Live Demo:** (https://quant-rag.onrender.com)
 
-![App Screenshot](./assets/ss.png)
+![App Screenshot](./assets/asset.png)
 
 ---
 
