@@ -1,8 +1,6 @@
 import os
-import fitz
-# pyrefly: ignore [missing-import]
+
 import chromadb
-import pandas as pd
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 
@@ -71,11 +69,10 @@ class RAGService:
             all_data = self.collection.get(include=["metadatas"])
             if not all_data or not all_data.get("metadatas"):
                 return {"total_documents": 0, "companies": []}
-            
-            df = pd.DataFrame(all_data["metadatas"])
-            unique_companies = df["company"].unique().tolist()
+            metadatas = all_data.get("metadatas", [])
+            unique_companies = list(set([m.get("company") for m in metadatas if m.get("company")]))
             return {
-                "total_documents": len(df),
+                "total_documents": len(metadatas),
                 "companies": unique_companies,
             }
         except Exception as e:
@@ -150,6 +147,8 @@ Answer:"""
         }
 
     def predict_risk(self, financial_ratios: dict = None, company_name: str = None) -> dict:
+        import pandas as pd
+        
         self._ensure_risk_models()
         import yfinance as yf
         import hashlib
