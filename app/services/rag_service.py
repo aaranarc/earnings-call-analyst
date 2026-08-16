@@ -40,17 +40,55 @@ class RAGService:
     @property
     def embeddings(self):
         if self._embeddings is None:
-            from langchain_huggingface import HuggingFaceEmbeddings
-            print("Lazy loading HuggingFaceEmbeddings...")
-            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            hf_token = os.getenv("HF_TOKEN")
+            if hf_token:
+                print("Loading HF Cloud Embeddings to save RAM...")
+                class HFCloudEmbeddings:
+                    def __init__(self, token):
+                        self.url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+                        self.headers = {"Authorization": f"Bearer {token}"}
+                    def embed_query(self, text: str):
+                        import requests
+                        res = requests.post(self.url, headers=self.headers, json={"inputs": [text]})
+                        if res.status_code != 200: raise Exception(f"HF Embed API Error: {res.text}")
+                        data = res.json()
+                        return data[0] if isinstance(data, list) and isinstance(data[0], list) else data
+                self._embeddings = HFCloudEmbeddings(hf_token)
+            else:
+                from langchain_huggingface import HuggingFaceEmbeddings
+                print("Lazy loading local HuggingFaceEmbeddings...")
+                self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         return self._embeddings
         
     @property
     def reranker(self):
         if self._reranker is None:
-            from sentence_transformers import CrossEncoder
-            print("Lazy loading CrossEncoder re-ranker...")
-            self._reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+            hf_token = os.getenv("HF_TOKEN")
+            if hf_token:
+                print("Loading HF Cloud CrossEncoder to save RAM...")
+                class HFCloudCrossEncoder:
+                    def __init__(self, token):
+                        self.url = "https://api-inference.huggingface.co/models/cross-encoder/ms-marco-MiniLM-L-6-v2"
+                        self.headers = {"Authorization": f"Bearer {token}"}
+                    def predict(self, pairs):
+                        import requests
+                        scores = []
+                        for q, doc in pairs:
+                            res = requests.post(self.url, headers=self.headers, json={"inputs": {"text": q, "text_pair": doc}})
+                            if res.status_code != 200: raise Exception(f"HF CE API Error: {res.text}")
+                            data = res.json()
+                            if isinstance(data, list) and isinstance(data[0], list) and "score" in data[0][0]:
+                                scores.append(data[0][0]["score"])
+                            elif isinstance(data, list) and isinstance(data[0], dict) and "score" in data[0]:
+                                scores.append(data[0]["score"])
+                            else:
+                                scores.append(0.0)
+                        return scores
+                self._reranker = HFCloudCrossEncoder(hf_token)
+            else:
+                from sentence_transformers import CrossEncoder
+                print("Lazy loading local CrossEncoder re-ranker...")
+                self._reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
         return self._reranker
 
     def _ensure_risk_models(self):
