@@ -23,7 +23,7 @@ class RAGService:
         self.collection = client.get_or_create_collection(name="earnings_calls")
 
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-3.5-flash",
+            model="gemini-3.1-flash-lite",
             api_key=os.getenv("GEMINI_API_KEY"),
             temperature=0,
             max_retries=0
