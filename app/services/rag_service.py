@@ -40,9 +40,9 @@ class RAGService:
     @property
     def embeddings(self):
         if self._embeddings is None:
-            from langchain_huggingface import HuggingFaceEmbeddings
-            print("Lazy loading local HuggingFaceEmbeddings...")
-            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+            print("Lazy loading FastEmbedEmbeddings (No PyTorch)...")
+            self._embeddings = FastEmbedEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         return self._embeddings
         
     @property

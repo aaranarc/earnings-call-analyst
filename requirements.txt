@@ -12,6 +12,7 @@ pandas
 requests
 joblib
 xgboost
+fastembed
 langchain-huggingface
 langchain-groq
 langchain-text-splitters
