@@ -482,7 +482,10 @@ with tab2:
                     
                     st.session_state.messages.append({"role": "assistant", "content": answer, "sources": sources})
                 else:
-                    st.error(f"Error: {res.text}")
+                    if not res.text.strip():
+                        st.error(f"Error: Backend returned an empty response (Status {res.status_code}). This usually means the server ran out of memory or crashed.")
+                    else:
+                        st.error(f"Error: {res.text}")
             except requests.exceptions.ConnectionError as e:
                 st.error(f"Could not reach backend. Error: {e}")
 

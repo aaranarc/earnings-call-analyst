@@ -41,8 +41,8 @@ class RAGService:
     def embeddings(self):
         if self._embeddings is None:
             from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            print("Lazy loading FastEmbedEmbeddings (No PyTorch)...")
-            self._embeddings = FastEmbedEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+            print("Lazy loading FastEmbedEmbeddings (No PyTorch, single-threaded)...")
+            self._embeddings = FastEmbedEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", threads=1)
         return self._embeddings
         
     @property

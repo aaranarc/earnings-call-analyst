@@ -19,8 +19,8 @@ class AskRequest(BaseModel):
 def ask(request: AskRequest):
     try:
         svc = get_service()
-        ans, srcs = svc.ask(request.question)
-        return {"answer": ans, "sources": srcs}
+        result = svc.ask(request.question)
+        return result
     except Exception as e:
         import traceback
         # Return a 500 error gracefully so the frontend can display the traceback
