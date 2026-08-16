@@ -19,3 +19,4 @@ langchain-text-splitters
 sentence-transformers
 plotly
 yfinance
+psutil

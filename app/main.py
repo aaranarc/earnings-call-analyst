@@ -59,3 +59,14 @@ def risk_score(request: RiskRequest):
         financial_ratios=request.financial_ratios, 
         company_name=request.company_name
     )
+@app.get("/health/memory")
+def health_memory():
+    import os
+    import psutil
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return {
+        "rss_mb": mem_info.rss / 1024 / 1024,
+        "vms_mb": mem_info.vms / 1024 / 1024,
+        "status": "ok"
+    }
