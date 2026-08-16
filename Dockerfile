@@ -12,7 +12,6 @@ ENV OPENBLAS_NUM_THREADS=1
 ENV NUMEXPR_NUM_THREADS=1
 ENV ONNXRUNTIME_NUM_THREADS=1
 ENV RAYON_NUM_THREADS=1
-ENV HF_HUB_OFFLINE=1
 
 COPY requirements.txt .
 
@@ -27,3 +26,5 @@ COPY . .
 
 # We'll override the command in docker-compose for each service
 CMD ["bash"]
+
+ENV HF_HUB_OFFLINE=1
