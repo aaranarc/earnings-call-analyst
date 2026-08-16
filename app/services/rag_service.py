@@ -23,7 +23,7 @@ class RAGService:
         self.collection = client.get_or_create_collection(name="earnings_calls")
 
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
+            model="gemini-flash-latest",
             api_key=os.getenv("GEMINI_API_KEY"),
             temperature=0
         )
@@ -216,7 +216,10 @@ Answer:"""
 
         scaled_input = self.scaler.transform(input_data)
 
-        risk_score = float(self.risk_model.predict_proba(scaled_input)[0][1])
+        import xgboost as xgb
+        dmatrix = xgb.DMatrix(scaled_input, feature_names=self.feature_names)
+        predictions = self.risk_model.predict(dmatrix)
+        risk_score = float(predictions[0])
         risk_tier = "High" if risk_score > 0.7 else "Medium" if risk_score > 0.3 else "Low"
 
         return {
