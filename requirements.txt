@@ -1,7 +1,7 @@
 langchain
 langchain-openai
 langchain-community
-chromadb
+chromadb==0.4.24
 pymupdf
 fastapi
 uvicorn
