@@ -318,7 +318,6 @@ def plot_risk_gauge(score, tier):
     )
     return fig
 
-@st.cache_data(ttl=300)
 def get_companies():
     try:
         response = requests.get(f"{API_URL}/companies", timeout=30)
