@@ -21,16 +21,20 @@ def ask(request: AskRequest):
 
 @app.get("/companies")
 def get_companies():
-    svc = get_service()
-    all_data = svc.collection.get()
-    combos = set()
-    all_metadatas = all_data.get("metadatas") or []
-    for meta in all_metadatas:
-        combos.add((meta["company"], meta["market"], meta["quarter"], meta["year"]))
-    return [
-        {"company": c, "market": m, "quarter": q, "year": y}
-        for c, m, q, y in combos
-    ]
+    try:
+        svc = get_service()
+        all_data = svc.collection.get()
+        combos = set()
+        all_metadatas = all_data.get("metadatas") or []
+        for meta in all_metadatas:
+            combos.add((meta["company"], meta["market"], meta["quarter"], meta["year"]))
+        return [
+            {"company": c, "market": m, "quarter": q, "year": y}
+            for c, m, q, y in combos
+        ]
+    except Exception as e:
+        import traceback
+        return {"error": str(e), "traceback": traceback.format_exc()}
 
 from typing import Optional
 
