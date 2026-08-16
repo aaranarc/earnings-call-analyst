@@ -460,7 +460,7 @@ with tab2:
 
         with st.spinner("Analyzing transcripts..."):
             try:
-                res = requests.post(f"{API_URL}/ask", json={"question": prompt}, timeout=30)
+                res = requests.post(f"{API_URL}/ask", json={"question": prompt}, timeout=120)
                 if res.status_code == 200:
                     data = res.json()
                     answer = data.get("answer", "No answer found.")
