@@ -2,12 +2,15 @@ import os
 
 import chromadb
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 class RAGService:
     def __init__(self):
         load_dotenv()
+
+        if not os.getenv("GEMINI_API_KEY"):
+            raise ValueError("GEMINI_API_KEY is not set. Add it to your environment variables.")
 
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         chroma_path = os.path.join(base_dir, "chroma_db")
@@ -19,9 +22,9 @@ class RAGService:
             client = chromadb.PersistentClient(path=chroma_path)
         self.collection = client.get_or_create_collection(name="earnings_calls")
 
-        self.llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
-            api_key=os.getenv("GROQ_API_KEY"),
+        self.llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            api_key=os.getenv("GEMINI_API_KEY"),
             temperature=0
         )
 
@@ -38,14 +41,11 @@ class RAGService:
     @property
     def embeddings(self):
         if self._embeddings is None:
-            from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-            print("Lazy loading FastEmbedEmbeddings (No PyTorch, single-threaded)...")
-            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            cache_dir = os.path.join(base_dir, "models", "fastembed_cache")
-            self._embeddings = FastEmbedEmbeddings(
-                model_name="sentence-transformers/all-MiniLM-L6-v2", 
-                threads=1,
-                cache_dir=cache_dir
+            from langchain_google_genai import GoogleGenerativeAIEmbeddings
+            print("Lazy loading GoogleGenerativeAIEmbeddings...")
+            self._embeddings = GoogleGenerativeAIEmbeddings(
+                model="models/gemini-embedding-2",
+                google_api_key=os.getenv("GEMINI_API_KEY")
             )
         return self._embeddings
         
@@ -122,12 +122,21 @@ class RAGService:
         # Format context
         context_parts = []
         sources_list = []
+        seen_sources = set()
         for d, m in zip(docs, metas):
             comp = m.get("company", "Unknown")
             q = m.get("quarter", "")
             y = m.get("year", "")
             context_parts.append(f"[{comp} {q} {y}]: {d}")
-            sources_list.append(f"{comp} {q} {y}")
+            source_key = (comp, str(q), str(y))
+            if source_key not in seen_sources:
+                seen_sources.add(source_key)
+                sources_list.append({
+                    "company": comp,
+                    "quarter": q,
+                    "year": y,
+                    "excerpt": d[:200],
+                })
             
         context_str = "\n\n".join(context_parts)
         
@@ -145,7 +154,7 @@ Answer:"""
         
         return {
             "answer": response.content,
-            "sources": list(set(sources_list))
+            "sources": sources_list,
         }
 
     def predict_risk(self, financial_ratios: dict = None, company_name: str = None) -> dict:

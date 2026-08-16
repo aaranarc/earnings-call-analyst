@@ -318,9 +318,38 @@ def plot_risk_gauge(score, tier):
     )
     return fig
 
+def normalize_source(src):
+    if isinstance(src, dict):
+        return {
+            "company": src.get("company", "Unknown"),
+            "quarter": src.get("quarter", ""),
+            "year": src.get("year", ""),
+            "excerpt": src.get("excerpt", ""),
+        }
+    parts = str(src).split()
+    return {
+        "company": parts[0] if parts else "Unknown",
+        "quarter": parts[-1] if len(parts) > 1 else "",
+        "year": parts[-2] if len(parts) > 2 else "",
+        "excerpt": str(src),
+    }
+
+def render_source_card(src):
+    source = normalize_source(src)
+    comp_color = get_company_color(source["company"])
+    excerpt = source["excerpt"]
+    excerpt_html = f'<br><span style="color:#98989D; font-family: monospace; font-size: 13px; display: inline-block; margin-top: 8px;">"{excerpt}..."</span>' if excerpt else ""
+    st.markdown(f"""
+    <div style='margin-bottom: 12px; padding-left: 12px; border-left: 3px solid {comp_color}; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 0 8px 8px 0;'>
+        <strong style='color:#EDEDED;'>{source["company"]}</strong>
+        <span style='background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 8px;'>{source["year"]} {source["quarter"]}</span>
+        {excerpt_html}
+    </div>
+    """, unsafe_allow_html=True)
+
 def get_companies():
     try:
-        response = requests.get(f"{API_URL}/companies", timeout=30)
+        response = requests.get(f"{API_URL}/companies", timeout=120)
         if response.status_code == 200:
             return response.json(), True
     except:
@@ -445,14 +474,7 @@ with tab2:
             if "sources" in message and message["sources"]:
                 with st.expander("View Sources", expanded=False):
                     for src in message["sources"]:
-                        comp_color = get_company_color(src['company'])
-                        st.markdown(f"""
-                        <div style='margin-bottom: 12px; padding-left: 12px; border-left: 3px solid {comp_color}; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 0 8px 8px 0;'>
-                            <strong style='color:#EDEDED;'>{src['company']}</strong> 
-                            <span style='background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 8px;'>{src['year']} {src['quarter']}</span>
-                            <br><span style='color:#98989D; font-family: monospace; font-size: 13px; display: inline-block; margin-top: 8px;'>"{src['excerpt']}..."</span>
-                        </div>
-                        """, unsafe_allow_html=True)
+                        render_source_card(src)
 
     if prompt := st.chat_input("Ask a question (e.g. 'Compare JPMorgan and HDFC Q1 revenues')"):
         st.markdown(f'<div class="chat-user">{prompt}</div>', unsafe_allow_html=True)
@@ -471,14 +493,7 @@ with tab2:
                     if sources:
                         with st.expander("View Sources", expanded=False):
                             for src in sources:
-                                comp_color = get_company_color(src['company'])
-                                st.markdown(f"""
-                                <div style='margin-bottom: 12px; padding-left: 12px; border-left: 3px solid {comp_color}; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 0 8px 8px 0;'>
-                                    <strong style='color:#EDEDED;'>{src['company']}</strong> 
-                                    <span style='background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 8px;'>{src['year']} {src['quarter']}</span>
-                                    <br><span style='color:#98989D; font-family: monospace; font-size: 13px; display: inline-block; margin-top: 8px;'>"{src['excerpt']}..."</span>
-                                </div>
-                                """, unsafe_allow_html=True)
+                                render_source_card(src)
                     
                     st.session_state.messages.append({"role": "assistant", "content": answer, "sources": sources})
                 else:
@@ -562,4 +577,4 @@ with tab3:
             st.caption("Submit the form to generate a score.")
 
 # --- Minimal Footer ---
-st.markdown("<div class='minimal-footer'>Built with FastAPI · ChromaDB · Llama 3.3 · XGBoost</div>", unsafe_allow_html=True)
+st.markdown("<div class='minimal-footer'>Built with FastAPI · ChromaDB · Gemini · XGBoost</div>", unsafe_allow_html=True)

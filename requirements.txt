@@ -12,11 +12,8 @@ pandas
 requests
 joblib
 xgboost
-fastembed
-langchain-huggingface
-langchain-groq
 langchain-text-splitters
-sentence-transformers
+langchain-google-genai
 plotly
 yfinance
 psutil

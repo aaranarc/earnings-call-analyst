@@ -1,4 +1,7 @@
+from typing import Optional
+
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -23,8 +26,6 @@ def ask(request: AskRequest):
         return result
     except Exception as e:
         import traceback
-        # Return a 500 error gracefully so the frontend can display the traceback
-        from fastapi.responses import JSONResponse
         return JSONResponse(
             status_code=500,
             content={"error": str(e), "traceback": traceback.format_exc()}
@@ -47,8 +48,6 @@ def get_companies():
     except Exception as e:
         import traceback
         return {"error": str(e), "traceback": traceback.format_exc()}
-
-from typing import Optional
 
 class RiskRequest(BaseModel):
     financial_ratios: Optional[dict] = None
