@@ -1,50 +1,44 @@
-# 📊 Earnings Call Analyst (Flagship RAG Project)
+<div align="center">
+  <h1>📊 Earnings Call Analyst</h1>
+  <p><strong>A production-grade, full-stack AI application designed to intelligently analyze corporate earnings calls and predict quantitative bankruptcy risks.</strong></p>
+  
+  [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](#)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](#)
+  [![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)](#)
+  [![Gemini](https://img.shields.io/badge/Google_Gemini-Powered-8E75B2?logo=google&logoColor=white)](#)
+</div>
 
-A production-grade, full-stack AI application designed to intelligently analyze corporate earnings calls. This project features a highly accurate **Hybrid RAG Pipeline (Retrieval-Augmented Generation)** combined with a live, quantitative **Bankruptcy Risk Scoring Model**. 
+---
 
-Built to eliminate hallucinations and provide mathematically rigorous financial insights.
+> **Screenshot Placeholder** 
+> *(See instructions below on how to add your screenshot here!)*
+> 
+> `![App Screenshot](./assets/screenshot.png)`
 
 ---
 
 ## 🌟 Key Features
 
-1. **Scientifically Evaluated RAG (100% Context Precision)**
-   - Utilizes `ChromaDB` for vector storage and semantic retrieval.
-   - Implements a **Cross-Encoder Re-ranker** (`ms-marco-MiniLM-L-6-v2`) to ruthlessly filter noise, ensuring only the most relevant transcript chunks are passed to the LLM.
-   - Evaluated via an automated LLM-as-a-judge system (inspired by RAGAS) achieving **100% Faithfulness** and **100% Context Precision** against a Golden Dataset.
+1. **Lightning-Fast Cloud RAG Pipeline**
+   - Built with a serverless **Google Gemini** architecture (`gemini-flash-latest` & `gemini-embedding-2`) to entirely offload heavy machine learning processes from the local server.
+   - Utilizes `ChromaDB` for ultra-fast semantic retrieval.
+   - Guaranteed **Zero-RAM bottlenecks**, easily deployable on restricted free-tier cloud platforms.
 
 2. **Live Quantitative Risk Engine**
-   - Integrates a pre-trained **XGBoost** model initially developed for Taiwanese bankruptcy prediction.
+   - Integrates a pre-trained **XGBoost** model initially developed for predicting Taiwanese bankruptcy.
    - Fetches live financial ratios directly via the `yfinance` API.
    - Computes real-time dynamic risk tiers based on live market data, mathematically combining it with historical baseline clustering.
 
 3. **Premium UI/UX Architecture**
-   - **Frontend:** Built with Streamlit, but heavily customized with vanilla CSS, glassmorphism, gradient meshes, and Plotly interactive gauges.
+   - **Frontend:** Built with Streamlit and heavily customized with vanilla CSS, featuring glassmorphism, dynamic gradient meshes, and Plotly interactive gauges.
    - **Backend:** A scalable `FastAPI` REST architecture cleanly separating the AI logic from the presentation layer.
 
 ---
 
-## 🔬 Scientific Evaluation Results
-
-To prove the pipeline works, it was rigorously tested against a custom Golden Dataset using Llama-3.3-70b as an automated evaluator:
-
-| Question Tested | Faithfulness | Context Precision |
-| :--- | :---: | :---: |
-| *What drove growth for Microsoft Cloud in Q1 2024?* | 100% | 100% |
-| *How did Apple's services revenue perform in Q1 2024?* | 100% | 100% |
-| *Compare Reliance Jio and O2C margins.* | 100% | 100% |
-| *JPMorgan's stance on investment banking fees?* | 100% | 100% |
-| *HDFC's credit risk and provisions performance?* | 100% | 100% |
-
-**System Averages:**
-- **Average Faithfulness: 100.0%** (Zero hallucinations detected; LLM strictly adhered to the context)
-- **Average Context Precision: 100.0%** (Cross-Encoder correctly elevated the exact answer chunks to the top 5)
-
----
-
 ## 🛠 Tech Stack
-- **AI/LLM:** Llama-3.3-70b-versatile (via Groq API)
-- **RAG Architecture:** LangChain, ChromaDB, HuggingFace Cross-Encoders
+- **AI/LLM:** Google Gemini (`gemini-flash-latest`)
+- **Embeddings:** Google Gemini Embeddings
+- **Vector Database:** ChromaDB
 - **Machine Learning:** XGBoost, Scikit-learn, Pandas
 - **Backend/API:** FastAPI, Uvicorn, Python 3.11
 - **Frontend:** Streamlit, Plotly, Custom CSS
@@ -55,7 +49,7 @@ To prove the pipeline works, it was rigorously tested against a custom Golden Da
 
 ### 1. Prerequisites
 - Docker & Docker Compose
-- A free [Groq API Key](https://console.groq.com/keys)
+- A free [Google Gemini API Key](https://aistudio.google.com/app/apikey)
 
 ### 2. Installation
 ```bash
@@ -65,7 +59,7 @@ cd earnings-call-analyst
 
 Create a `.env` file in the root directory:
 ```env
-GROQ_API_KEY=your_actual_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ### 3. Run the System
@@ -79,10 +73,10 @@ docker-compose up --build
 
 ## ☁️ Cloud Deployment (Render.com)
 
-This project is fully containerized and production-ready. A `render.yaml` Blueprint is included.
+This project is fully containerized and production-ready for Render's free tier.
 1. Connect this GitHub repo to [Render.com](https://render.com/).
-2. Deploy via **Blueprint**.
-3. Add your `GROQ_API_KEY` to the `fastapi-backend` environment variables in the Render dashboard.
+2. Deploy via the included **Blueprint** (`render.yaml`).
+3. Add your `GEMINI_API_KEY` to the `aarana-fastapi-backend` environment variables in the Render dashboard.
 
 ---
 
