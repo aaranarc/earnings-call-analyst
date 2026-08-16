@@ -17,7 +17,18 @@ class AskRequest(BaseModel):
 
 @app.post("/ask")
 def ask(request: AskRequest):
-    return get_service().ask(request.question)
+    try:
+        svc = get_service()
+        ans, srcs = svc.ask(request.question)
+        return {"answer": ans, "sources": srcs}
+    except Exception as e:
+        import traceback
+        # Return a 500 error gracefully so the frontend can display the traceback
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "traceback": traceback.format_exc()}
+        )
 
 @app.get("/companies")
 def get_companies():
