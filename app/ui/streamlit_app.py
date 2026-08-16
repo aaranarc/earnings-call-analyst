@@ -339,6 +339,11 @@ else:
 unique_companies = []
 markets_count = 0
 if companies_data:
+    if isinstance(companies_data, dict) and "error" in companies_data:
+        st.error(f"Backend Error: {companies_data['error']}")
+        st.code(companies_data.get("traceback", ""))
+        st.stop()
+        
     df_companies = pd.DataFrame(companies_data)
     unique_companies = df_companies["company"].unique().tolist()
     markets_count = df_companies["market"].nunique()
