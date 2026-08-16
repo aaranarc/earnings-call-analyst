@@ -55,10 +55,14 @@ class RiskRequest(BaseModel):
 
 @app.post("/risk-score")
 def risk_score(request: RiskRequest):
-    return get_service().predict_risk(
-        financial_ratios=request.financial_ratios, 
-        company_name=request.company_name
-    )
+    try:
+        return get_service().predict_risk(
+            financial_ratios=request.financial_ratios, 
+            company_name=request.company_name
+        )
+    except Exception as e:
+        import traceback
+        return JSONResponse(status_code=500, content={"error": str(e), "traceback": traceback.format_exc()})
 @app.get("/health/memory")
 def health_memory():
     import os
