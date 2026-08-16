@@ -55,14 +55,10 @@ class RAGService:
             print("Lazy loading XGBoost models...")
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             self.risk_model = xgb.Booster()
-            self.risk_model.load_model(os.path.join(base_dir, "models", "xgb_bankruptcy_model.json"))
-            self.scaler = joblib.load(os.path.join(base_dir, "models", "scaler.pkl"))
-            
-            with open(os.path.join(base_dir, "models", "winsorize_bounds.json"), "r") as f:
-                import json
-                self.winsorize_bounds = json.load(f)
-            with open(os.path.join(base_dir, "models", "feature_names.json"), "r") as f:
-                self.feature_names = json.load(f)
+            self.risk_model.load_model(os.path.join(base_dir, "models", "xgboost_bankruptcy.json"))
+            self.scaler = joblib.load(os.path.join(base_dir, "models", "robust_scaler.pkl"))
+            self.winsorize_bounds = joblib.load(os.path.join(base_dir, "models", "winsorize_bounds.pkl"))
+            self.feature_names = joblib.load(os.path.join(base_dir, "models", "feature_names.pkl"))
 
     def get_corpus_summary(self) -> dict:
         try:
