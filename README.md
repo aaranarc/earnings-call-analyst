@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Quant RAG</h1>
+  <h1>QuantRAG</h1>
   <p><strong>A production-grade, full-stack AI application designed to intelligently analyze corporate earnings calls and predict quantitative bankruptcy risks.</strong></p>
   
   [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](#)
