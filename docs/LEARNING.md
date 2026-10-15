@@ -47,3 +47,11 @@ Plain-English notes on what was built and why, one section per phase. Written so
 - **Where reranker memory goes:** loading the model costs ~100 MB. Running it on 20 passages × 512 tokens in one batch is what spiked memory to ~1.1 GB. Scoring 4 at a time, capping inputs at 384 tokens and reranking only the top 10 brought the peak to ~390–420 MB with the same recall and half the latency.
 - **Run it three times:** the same memory setting measured 374 MB in one run and 516 MB in another. One run would have given either a false pass or a false fail against the 512 MB target.
 - **A fix can make another part redundant:** once keyword search worked, plain hybrid search (no reranker) scored as well as the reranked version on this set. Keep measuring the whole pipeline, not just the part you changed.
+
+## Phase 4: Router and generation (2026-10-15)
+- **The router is plain rules, not an LLM:** it looks for company names and aliases ("Tata Consultancy" → TCS), quarters ("Q1 FY27", "last two quarters") and words like "compare" or "risk". Rules are free, instant, and you can explain exactly why a question went where it did.
+- **Filters come from the router:** once it knows the question is about TCS in Q1 FY27, retrieval only searches those chunks. That's why routing matters even with good search.
+- **The model gets numbered excerpts [c1]…[cN]** and must tag every factual sentence with the excerpt it came from. Then *code* checks every tag points at a real excerpt and removes any that don't. An answer with no valid tags isn't shown at all.
+- **Structured output** means the model returns a fixed shape (answer text, optional table, refused yes/no, reason) instead of free text, so the code can rely on it.
+- **Refusing is a feature:** if nothing relevant is found, or the model says the excerpts don't answer it, the system says so and lists which quarters it *does* have for that company. Questions about a quarter that isn't ingested are refused before any LLM call, which costs nothing.
+- **Citation checks aren't truth checks:** one answer cited the right chunk but called TCS's total contract value "large deal" value. Checking that claims *match* their sources is what the Phase 5 number checker and the Phase 6 faithfulness judge are for.

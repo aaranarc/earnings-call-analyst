@@ -4,7 +4,8 @@
 - Phase 0 (audit and setup): **done**.
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
 - **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
-- **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking. Waiting for approval to start Phase 4.
+- **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking.
+- **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`). Waiting for approval to start Phase 5. **Action: add `GEMINI_MODEL` to `.env`; choose the production model (D25).**
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -176,6 +177,22 @@ All complete manifest rows ingested ✅ · re-run adds 0 rows ✅ (local and Sup
 | v1 for comparison | 172 MB without reranker · 512–692 MB with PyTorch reranker |
 
 **Takeaways:** (1) keyword OR + vector via RRF is the biggest win: 14 → 19/20 with no model cost. (2) Reranker memory is now under 512 MB, with ~90 MB headroom on macOS, down from ~1.1 GB, so the v1 OOM story has a measured fix. (3) **On this small set the reranker no longer adds recall** (hybrid 19 vs hybrid+rerank 18) and costs ~0.44 s. Whether to keep it is a Phase 6 ablation on the full gold set. (4) s08 (Infosys tax rate) is missed by every hybrid configuration. Worth a look when the gold set exists.
+
+## Phase 4: Router and generation
+### Done
+- `backend/generate/router.py`: rule-based router (D26). `backend/generate/answer.py`: route → retrieve (router's company/period filters) → numbered excerpts → Gemini structured output → citation validation → answer or refusal (D27). CLI: `cd backend && python -m generate "question"`.
+- Tests: `test_router.py` (24) and `test_answer.py` (10, fake LLM, no API calls). Backend total **98 pass**, 3 DB tests skip without `TEST_DATABASE_URL`. Ruff clean.
+- Pinned: `langchain-core 1.6.10`, `langchain-google-genai 4.4.2`, `pydantic 2.14.1`, `psutil 7.2.2`. `.env.example` lists `GEMINI_API_KEY`, `GEMINI_MODEL`, `ROUTER_ENABLED`, `REFUSAL_MIN_RERANK`.
+
+### Done-check: `eval/phase4_check.py` (local DB, `GEMINI_MODEL=gemini-3.1-flash-lite`, results in `eval/results/phase4_check.json`)
+| Set | Result | What "pass" means |
+|---|---|---|
+| 10 answerable (8 smoke questions + 2 comparisons) | **10/10** | not refused · ≥1 citation · cites only the companies asked about · cites a chunk containing the expected evidence (each company, for comparisons) |
+| 3 unanswerable | **3/3 refused** | Wipro (not ingested) and TCS Q3 FY26 (quarter not ingested) refused before any LLM call; HUL share-price target refused by the model |
+| 1 out of scope ("weather in Mumbai") | **1/1 refused** | no retrieval, no LLM call; lists covered companies |
+Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 s). ~11 Gemini calls per run.
+
+**My read of all 14 outputs (not automated):** answers 1–8 and 10 are faithful to their cited excerpts, and refusals list what's available. Issues found: (1) the model added tables to single-company answers; fixed in code (D27) and re-run. (2) The TCS vs Infosys comparison labels TCS's **total** TCV as "Large Deal TCV"; kept as a known failure for the Phase 6 report. (3) "$2.4 bn" was rewritten as "$2.4 billion" (same value).
 
 ## Open questions
 - **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.

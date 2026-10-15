@@ -1,0 +1,665 @@
+{
+  "gemini_model": "gemini-3.1-flash-lite",
+  "summary": {
+    "answerable": "10/10",
+    "unanswerable": "3/3",
+    "out_of_scope": "1/1"
+  },
+  "results": [
+    {
+      "kind": "answerable",
+      "question": "Why did TCS's operating margin fall in Q1 FY27?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "According to TCS management, the company's operating margin in Q1 FY27 stood at 24%, which represents a 130 bps sequential decline primarily due to wage hikes [c2].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": 583,
+          "symbol": "TCS",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "K Krithivasan",
+          "role": "management",
+          "page": 2
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.33,
+        "generate": 2.03,
+        "total": 2.36
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "What did TCS announce with Anthropic?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In Q1 FY27, TCS announced a global premier partnership with Anthropic [c1]. This partnership provides TCS with early access to the Claude family of models, 50,000 licenses, a joint go-to-market campaign, the co-creation of industry solutions, and designates TCS iON as a training and certification partner [c1].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": 584,
+          "symbol": "TCS",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "K Krithivasan",
+          "role": "management",
+          "page": 3
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.33,
+        "generate": 1.97,
+        "total": 2.3
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "What was Hindustan Unilever's turnover and underlying sales growth in the June 2026 quarter?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "HINDUNILVR"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In the June 2026 quarter (Q1 FY27), Hindustan Unilever reported a turnover of INR17,184 crores and an Underlying Sales Growth of 10%, according to management [c3][c4].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": 794,
+          "symbol": "HINDUNILVR",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Priya Nair",
+          "role": "management",
+          "page": 2
+        },
+        {
+          "n": 4,
+          "chunk_id": 793,
+          "symbol": "HINDUNILVR",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Yogesh Mulgaonkar",
+          "role": "management",
+          "page": 2
+        }
+      ],
+      "timing_s": {
+        "route": 0.01,
+        "retrieve": 0.32,
+        "generate": 1.97,
+        "total": 2.29
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "Who is HDFC Bank's new chairman?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In the Q1 FY27 earnings call, HDFC Bank management announced that Rajiv Kumar is the new Chairman [c2].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": 732,
+          "symbol": "HDFCBANK",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Sashidhar Jagdishan",
+          "role": "management",
+          "page": 2
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.22,
+        "generate": 1.38,
+        "total": 1.6
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "What provisioning floor does HDFC Bank apply to unsecured loans in stage 1?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "For Q1 FY27, HDFC Bank management states that the provisioning floor applied to unsecured loans in stage 1 is 1% [c1][c2].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": 771,
+          "symbol": "HDFCBANK",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Srinivasan Vaidyanathan",
+          "role": "management",
+          "page": 12
+        },
+        {
+          "n": 2,
+          "chunk_id": 773,
+          "symbol": "HDFCBANK",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Srinivasan Vaidyanathan",
+          "role": "management",
+          "page": 12
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.42,
+        "generate": 2.39,
+        "total": 2.81
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "How many large deals did Infosys win in Q2 FY25 and how much was net new?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": [
+          "Q2 FY25"
+        ],
+        "numeric": true,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In Q2 FY25, Infosys won 21 large deals with a total contract value (TCV) of $2.4 bn [c1]. Management stated that 41% of this TCV was net new [c1].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": 652,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 6
+        }
+      ],
+      "timing_s": {
+        "route": 0.01,
+        "retrieve": 0.31,
+        "generate": 1.85,
+        "total": 2.17
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "How much did Hindustan Unilever spend on advertising and promotion in the June quarter?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "HINDUNILVR"
+        ],
+        "periods": [],
+        "numeric": true,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In the June quarter (Q1 FY27), Hindustan Unilever increased its advertising and promotion (A&P) spending sequentially to INR1,657 crores, which management noted was the highest level in 11 quarters [c1].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": 795,
+          "symbol": "HINDUNILVR",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Priya Nair",
+          "role": "management",
+          "page": 3
+        }
+      ],
+      "timing_s": {
+        "route": 0.01,
+        "retrieve": 0.3,
+        "generate": 1.77,
+        "total": 2.07
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "What is Infosys's revised revenue growth guidance for FY25?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": [
+          "Q1 FY25",
+          "Q2 FY25",
+          "Q3 FY25",
+          "Q4 FY25"
+        ],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "For FY25, Infosys management has revised its revenue growth guidance to 3.75% to 4.5% in constant currency [c1].",
+      "comparison_table": null,
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": 649,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Salil Parekh",
+          "role": "management",
+          "page": 4
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.26,
+        "generate": 2.1,
+        "total": 2.37
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "Compare TCS and Infosys on large deal wins",
+      "route": {
+        "kind": "comparison",
+        "companies": [
+          "TCS",
+          "INFY"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "2 companies"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "In Q1 FY27, TCS reported a total contract value (TCV) of $9.5 billion, which included a $800 million mega deal with SKF [c5]. Management noted this was their 6th mega deal win in the last 5 quarters [c5]. In Q2 FY25, Infosys closed 21 large deals with a TCV of $2.4 billion, of which 41% was net new [c7]. Management at Infosys described large deal wins as \"lumpy\" and stated they have not observed a change in the outlook or decision-making behavior for these deals [c9][c11][c12].",
+      "comparison_table": [
+        {
+          "metric": "Large Deal TCV",
+          "cells": [
+            {
+              "company": "TCS (Q1 FY27)",
+              "value": "$9.5 billion",
+              "citations": [
+                5
+              ]
+            },
+            {
+              "company": "Infosys (Q2 FY25)",
+              "value": "$2.4 billion",
+              "citations": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "metric": "Large Deal Count",
+          "cells": [
+            {
+              "company": "TCS (Q1 FY27)",
+              "value": "not discussed",
+              "citations": []
+            },
+            {
+              "company": "Infosys (Q2 FY25)",
+              "value": "21",
+              "citations": [
+                7
+              ]
+            }
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "n": 5,
+          "chunk_id": 583,
+          "symbol": "TCS",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "K Krithivasan",
+          "role": "management",
+          "page": 2
+        },
+        {
+          "n": 7,
+          "chunk_id": 652,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 6
+        },
+        {
+          "n": 9,
+          "chunk_id": 667,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Salil Parekh",
+          "role": "management",
+          "page": 10
+        },
+        {
+          "n": 11,
+          "chunk_id": 671,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Salil Parekh",
+          "role": "management",
+          "page": 11
+        },
+        {
+          "n": 12,
+          "chunk_id": 693,
+          "symbol": "INFY",
+          "fiscal_label": "Q2 FY25",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 17
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.5,
+        "generate": 2.3,
+        "total": 2.8
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "answerable",
+      "question": "Compare HUL and HDFC Bank on how they described demand in the June 2026 quarter",
+      "route": {
+        "kind": "comparison",
+        "companies": [
+          "HINDUNILVR",
+          "HDFCBANK"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "2 companies"
+      },
+      "refused": false,
+      "refusal_reason": null,
+      "answer_markdown": "For the June 2026 quarter, management at both companies expressed confidence in the demand environment: \n\n* **Hindustan Unilever (HUL):** Management described the FMCG demand environment as stable, reflecting the underlying strength of consumption [c4][c5]. \n* **HDFC Bank:** Management noted that there is a \"very healthy credit demand\" in the system [c7] and stated that they \"do see credit demand holding\" across their business segments [c12].",
+      "comparison_table": [
+        {
+          "metric": "Demand Description",
+          "cells": [
+            {
+              "company": "Hindustan Unilever",
+              "value": "Stable FMCG demand environment",
+              "citations": [
+                4,
+                5
+              ]
+            },
+            {
+              "company": "HDFC Bank",
+              "value": "Very healthy credit demand in the system",
+              "citations": [
+                7,
+                12
+              ]
+            }
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": 794,
+          "symbol": "HINDUNILVR",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Priya Nair",
+          "role": "management",
+          "page": 2
+        },
+        {
+          "n": 5,
+          "chunk_id": 799,
+          "symbol": "HINDUNILVR",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Niranjan Gupta",
+          "role": "management",
+          "page": 7
+        },
+        {
+          "n": 7,
+          "chunk_id": 733,
+          "symbol": "HDFCBANK",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Sashidhar Jagdishan",
+          "role": "management",
+          "page": 2
+        },
+        {
+          "n": 12,
+          "chunk_id": 776,
+          "symbol": "HDFCBANK",
+          "fiscal_label": "Q1 FY27",
+          "speaker": "Kaizad Bharucha",
+          "role": "management",
+          "page": 13
+        }
+      ],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.57,
+        "generate": 2.36,
+        "total": 2.93
+      },
+      "checks": {
+        "not_refused": true,
+        "has_citations": true,
+        "cites_only_asked_companies": true,
+        "cites_expected_evidence": true
+      },
+      "pass": true
+    },
+    {
+      "kind": "unanswerable",
+      "question": "What was Wipro's revenue growth in Q1 FY27?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "WIPRO"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": true,
+      "refusal_reason": "I couldn't find this in the transcripts I have. Available transcripts: Wipro: no transcripts ingested yet.",
+      "answer_markdown": "",
+      "comparison_table": null,
+      "citations": [],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.02
+      },
+      "pass": true
+    },
+    {
+      "kind": "unanswerable",
+      "question": "What did TCS say about its Q3 FY26 results?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q3 FY26"
+        ],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": true,
+      "refusal_reason": "I couldn't find this in the transcripts I have. Available transcripts: Tata Consultancy Services: Q1 FY27.",
+      "answer_markdown": "",
+      "comparison_table": null,
+      "citations": [],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.01
+      },
+      "pass": true
+    },
+    {
+      "kind": "unanswerable",
+      "question": "What is Hindustan Unilever's share price target for next year?",
+      "route": {
+        "kind": "single",
+        "companies": [
+          "HINDUNILVR"
+        ],
+        "periods": [],
+        "numeric": false,
+        "reason": "one company"
+      },
+      "refused": true,
+      "refusal_reason": "The provided transcript excerpts do not contain any information or analyst projections regarding a share price target for Hindustan Unilever. Available transcripts: Hindustan Unilever: Q1 FY27.",
+      "answer_markdown": "",
+      "comparison_table": null,
+      "citations": [],
+      "timing_s": {
+        "route": 0.0,
+        "retrieve": 0.6,
+        "generate": 1.74
+      },
+      "pass": true
+    },
+    {
+      "kind": "out_of_scope",
+      "question": "What's the weather in Mumbai tomorrow?",
+      "route": {
+        "kind": "out_of_scope",
+        "companies": [],
+        "periods": [],
+        "numeric": false,
+        "reason": "no covered company and no earnings-call topic"
+      },
+      "refused": true,
+      "refusal_reason": "I can only answer questions about the earnings calls I cover. Available transcripts: HDFC Bank (Q1 FY27); Hindustan Unilever (Q1 FY27); Infosys (Q2 FY25); Tata Consultancy Services (Q1 FY27).",
+      "answer_markdown": "",
+      "comparison_table": null,
+      "citations": [],
+      "timing_s": {
+        "route": 0.0
+      },
+      "pass": true
+    }
+  ]
+}
