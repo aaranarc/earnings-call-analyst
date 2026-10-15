@@ -2,7 +2,7 @@
 
 ## Status
 - Phase 0 (audit and setup): **done**.
-- **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **FAIL** 2/3 sectors (HDFCBANK Q1 FY27's PDF is in, but its `source_url` is empty) · `A` 2/48 · `B` 2/96. Complete: TCS Q1 FY27, HINDUNILVR Q1 FY27.
+- **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
 - **Phase 2 (DB + ingestion): code and tests done, not yet run against a database.** Started at Aarana's request with the 3 sector PDFs on disk, while the `phase2` gate still fails on missing links.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
@@ -97,10 +97,11 @@ Chunks are far below the brief's ~350–500 tokens (D14).
 
 ### Blocked / not done
 1. **No database yet.** Docker is installed but not running, and no `SUPABASE_DB_URL` exists. So: the DB tests (incl. "re-running adds 0 rows") haven't run, nothing is ingested, and the DB size vs the 500 MB Supabase free tier isn't measured. Needs: start Docker Desktop (local test DB) **and/or** create the Supabase project and put its URL in `.env`.
-2. **Ingestion only takes rows that pass the checker,** so HDFCBANK Q1 FY27 and INFY Q2 FY25 are skipped until their `source_url`s are filled in.
+2. **Ingestion only takes rows that pass the checker,** so INFY Q2 FY25 is skipped until its `source_url` is filled in. HDFCBANK Q1 FY27's link was added and verified (the file at the URL has the same sha256 as `data/raw`).
 3. **Phase 2 done-condition** (all manifest docs ingested; 0 rows on re-run; chunk count, avg tokens and DB size logged) can't be met until 1 and 2 are resolved.
 
 ## Open questions
+0. **INFY Q2 FY25 `source_url` can't be verified.** Aarana supplied `https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf` on the condition that its sha256 matches `data/raw/INFY_Q2FY25.pdf`. On 2026-10-15 infosys.com answered an automated download with **HTTP 403** (506-byte HTML, not a PDF), so there was nothing to compare. Per brief rule 4, no workaround was tried and the URL was **not** set. Options: Aarana downloads it in a browser and runs `shasum -a 256` on it (expected `0c28ccd2…ce14a00`), or re-downloads the PDF from that URL into `data/raw/` and sets the URL (then `--fill-sha` recomputes the hash).
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.
 2. Untracked root `asset.png` is byte-identical to the committed `assets/asset.png`. It's safe to delete; left alone until approved.
 3. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.

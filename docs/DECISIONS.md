@@ -118,3 +118,10 @@ None yet.
 - **Boilerplate dropped:** moderator turns, labelled "Disclaimer:"/"Note:" blocks, sentences matching forward-looking / safe-harbour wording, turns under 5 words, running headers/footers (lines repeated at page edges on ≥50% of pages) and "Page N of M".
 - **The DB test runs only against localhost** (`TEST_DATABASE_URL`), because it drops the `quantrag` schema.
 - **Revisit if:** a new transcript layout breaks the speaker rules. Add it as a real-PDF test case first.
+
+## D17 · 2026-10-15 · First fix to try if Q&A retrieval is weak: pair each question with its answer
+- **Decided (Aarana):** if Phase 6 shows weak retrieval for questions answered in the Q&A section, the **first** experiment is exchange chunks: each analyst question chunked together with the management answer that follows it. This supersedes the "options" ordering in D14.
+- **Why first:** short analyst follow-ups ("And what about margins?") and short answers ("Yes, about 24%") are meaningless alone. Pairing gives each the other's context, and it's the smallest change to the chunker.
+- **How to judge it:** run it as a Phase 6 ablation on the same gold set (hit-rate@5 and MRR@10 on Q&A-sourced questions), keeping single-turn chunks as the baseline. Adopt it only if it wins.
+- **Trade-off if adopted:** a chunk then has two speakers, so citations must show both (speaker becomes "analyst → management"). The D14 rule "never mix speakers" would be superseded by a new entry.
+- **Revisit if:** the ablation shows no gain. Then try dropping trivial chunks (under ~20 tokens of thanks/greetings) next.
