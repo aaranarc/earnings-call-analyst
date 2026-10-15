@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [v2, main]
+    branches: [v2, main, "codex/**"]
   pull_request:
     branches: [v2, main]
 
@@ -38,7 +38,7 @@ jobs:
           key: fastembed-${{ hashFiles('backend/retrieve/search.py') }}
 
       - name: Install
-        run: pip install -e "backend[dev]"
+        run: pip install -c backend/requirements-api.lock -e "backend[dev,api]"
 
       - name: Lint
         run: ruff check backend scripts eval --config backend/pyproject.toml
@@ -47,7 +47,7 @@ jobs:
         working-directory: backend
         run: |
           pytest tests ../scripts -q \
-            --cov=ingest --cov=numcheck --cov=retrieve --cov=generate --cov=check_manifest \
+            --cov=ingest --cov=numcheck --cov=retrieve --cov=generate --cov=quantrag --cov=check_manifest \
             --cov-report=term | tee pytest.txt
           {
             echo "### Tests"
@@ -56,3 +56,21 @@ jobs:
             grep -E "^TOTAL" pytest.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

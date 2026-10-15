@@ -65,7 +65,7 @@ def make_llm():
     model = os.environ.get("GEMINI_MODEL")
     if not model:
         raise RuntimeError("GEMINI_MODEL is not set (model IDs come from the environment, never the code)")
-    llm = ChatGoogleGenerativeAI(model=model, temperature=0, api_key=os.environ["GEMINI_API_KEY"], max_retries=2)
+    llm = ChatGoogleGenerativeAI(model=model, temperature=0, api_key=os.environ["GEMINI_API_KEY"], max_retries=1, timeout=60, max_output_tokens=4096)
     return llm.with_structured_output(LLMAnswer)
 
 
@@ -127,6 +127,17 @@ def answer(question, conn, models, companies, llm=None, use_rerank=True):
         out.update(refused=True, refusal_reason=_refusal(
             "I can only answer questions about the earnings calls I cover.", conn, companies, None))
         return out
+
+    if rt.companies:
+        available = coverage(conn, rt.companies)
+        missing = [f"{companies[s]['name']} ({', '.join(p for p in rt.periods if p not in available.get(s, []))})"
+                   if available.get(s) else companies[s]["name"]
+                   for s in rt.companies
+                   if not available.get(s) or any(p not in available[s] for p in rt.periods)]
+        if missing:
+            out.update(refused=True, refusal_reason=_refusal(
+                "The requested coverage is incomplete for " + "; ".join(missing) + ".", conn, companies, rt.companies))
+            return out
 
     t = time.perf_counter()
     hits = retrieve(conn, models, question, rt.companies or None, rt.periods or None, use_rerank=use_rerank)

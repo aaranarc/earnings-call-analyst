@@ -123,10 +123,12 @@ def _one(conn, models, query, qvec, companies, periods, mode, use_rerank, k, fus
 
 
 def retrieve(conn, models, query, companies=None, periods=None, mode="hybrid", use_rerank=True,
-             k=30, fuse_top=10, top_n=5, per_company_n=6):  # fuse_top: candidates reranked (D23)
-    """mode: dense | fts | hybrid. With 2+ companies, retrieves per company and keeps per_company_n each."""
+             k=30, fuse_top=10, top_n=5, per_company_n=6, split_by_company=True):  # fuse_top: candidates reranked (D23)
+    """mode: dense | fts | hybrid. By default, 2+ companies retrieve per company.
+
+    split_by_company=False returns a single global ranking for retrieval evaluation."""
     qvec = models.embed_query(query) if mode != "fts" else None
-    if companies and len(companies) > 1:
+    if split_by_company and companies and len(companies) > 1:
         # ponytail: per-company queries run sequentially on one connection; use a pool if latency matters (Phase 7)
         return [h for c in companies
                 for h in _one(conn, models, query, qvec, [c], periods, mode, use_rerank, k, fuse_top, per_company_n)]

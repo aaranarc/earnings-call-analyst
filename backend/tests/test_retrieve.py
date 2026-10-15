@@ -25,3 +25,29 @@ def test_rrf_keeps_every_stage_score_for_the_ui():
 
 def test_rrf_with_one_empty_list_is_that_list_order():
     assert [h.chunk_id for h in rrf([hits("x", "y", stage="dense"), []])] == ["x", "y"]
+
+
+def test_global_eval_ranking_keeps_company_filter_without_fanout(monkeypatch):
+    from types import SimpleNamespace
+
+    from retrieve import search
+
+    calls = []
+    monkeypatch.setattr(search, "_one", lambda *args: calls.append(args) or [])
+    search.retrieve(None, SimpleNamespace(), "question", companies=["A", "B"],
+                    mode="fts", split_by_company=False, top_n=10)
+    assert len(calls) == 1
+    assert calls[0][4] == ["A", "B"]
+    assert calls[0][-1] == 10
+
+
+def test_production_comparison_still_fans_out(monkeypatch):
+    from types import SimpleNamespace
+
+    from retrieve import search
+
+    calls = []
+    monkeypatch.setattr(search, "_one", lambda *args: calls.append(args) or [])
+    search.retrieve(None, SimpleNamespace(), "question", companies=["A", "B"], mode="fts")
+    assert [args[4] for args in calls] == [["A"], ["B"]]
+    assert [args[-1] for args in calls] == [6, 6]

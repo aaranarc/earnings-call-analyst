@@ -127,3 +127,16 @@ def test_numbers_are_checked_in_answer_and_table(wired):
     assert got == [("answer", "2.2%", "verified"), ("answer", "9.9%", "unverified"),
                    ("table:0:0", "2.2%", "verified"), ("table:0:1", "9.9%", "unverified")]
     assert out["numbers"][0]["source"] == {"chunk_id": 101, "raw": "2.2%"}
+
+
+@pytest.mark.parametrize("question", [
+    "Compare TCS and Wipro revenue", "Compare TCS and Infosys Q1 FY27 margins",
+    "How did TCS margins change from Q4 FY26 to Q1 FY27?",
+])
+def test_incomplete_requested_coverage_refuses_before_retrieval(wired, monkeypatch, question):
+    monkeypatch.setattr(ga, "retrieve", lambda *a, **k: pytest.fail("missing coverage must not retrieve"))
+    llm = FakeLLM(None)
+    out = run(question, llm)
+    assert out["refused"]
+    assert "coverage is incomplete" in out["refusal_reason"]
+    assert llm.calls == []

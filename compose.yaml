@@ -1,40 +1,33 @@
-version: '3.8'
-
 services:
-  chromadb:
-    image: chromadb/chroma:latest
-    container_name: chroma_server
-    ports:
-      - "8001:8000"
-    volumes:
-      - ./chroma_db:/data
-
-  fastapi:
+  api:
+    image: quantrag-api:release
     build: .
-    container_name: fastapi_backend
-    ports:
-      - "8000:8000"
     environment:
-      - CHROMA_HOST=chromadb
-    env_file:
-      - .env
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-    depends_on:
-      - chromadb
+      APP_ENV: production
+      API_ACCESS_TOKEN: ${API_ACCESS_TOKEN:?Set a random server-only API_ACCESS_TOKEN}
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:?Set SUPABASE_DB_URL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:?Set GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:?Set GEMINI_MODEL}
+      DAILY_REQUEST_LIMIT: ${DAILY_REQUEST_LIMIT:-100}
+      USAGE_DB_PATH: /app/usage/budget.sqlite3
     volumes:
-      - ./app:/app/app
-      - ./models:/app/models
-
-  streamlit:
-    build: .
-    container_name: streamlit_frontend
-    ports:
-      - "8501:8501"
+      - usage:/app/usage
+    # Only the web service can reach the API; no published API port.
+    expose: ["8000"]
+    init: true
+    restart: unless-stopped
+  web:
+    image: quantrag-web:release
+    build: frontend
     environment:
-      - API_URL=http://fastapi:8000
-    command: streamlit run app/ui/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+      API_ORIGIN: http://api:8000
+      API_ACCESS_TOKEN: ${API_ACCESS_TOKEN:?Set API_ACCESS_TOKEN}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
+    ports: ["3000:3000"]
+    init: true
+    restart: unless-stopped
     depends_on:
-      - fastapi
-    volumes:
-      - ./app:/app/app
-      - ./.streamlit:/app/.streamlit
+      api:
+        condition: service_healthy
+volumes:
+  usage:

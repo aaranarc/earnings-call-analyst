@@ -98,3 +98,31 @@ Smoke test: `eval/smoke_retrieval.py --rerank|--no-rerank [--batch-size --max-to
 
 ### Deploy
 `render.yaml`: two Docker services from the same `Dockerfile` (`python:3.11-slim`, `pip install -r requirements.txt`, `COPY . .`). The API runs `uvicorn app.main:app`, and the UI runs `streamlit run app/ui/streamlit_app.py` with `API_URL` pointing to the API service. The committed `chroma_db/` ships inside the image.
+
+## Retrieval evaluation (Phase 6 tooling)
+`eval/retrieval_eval.py` → validate reviewed gold schema → read-only corpus evidence check →
+load retrieval models → dense/keyword/hybrid with router and optional reranker ablations →
+score first-hit ranks and required-evidence completeness → save a new report with input hashes and settings.
+Comparison evaluation uses global ranking; the production request flow retains per-company retrieval.
+See `EVALUATION.md` for metrics and limitations.
+
+## Dashboard request and research flow
+Browser `/ask` → same-origin `/api/ask` proxy → local FastAPI → existing route/retrieve/generate/validate/number-check
+pipeline → SSE status followed by the checked result → citation drawer and diagnostic trace.
+Saving evidence to a thesis copies the answer and source links into browser-local research. The user supplies the
+assessment; changed evidence resets it to unresolved. `/companies` exposes a dated ingest snapshot and `/eval/latest`
+exposes only the designated public report (or a pending state).
+
+## Current source-quoted thesis and release path
+`/watchlist` personal thesis → `/api/thesis/check` server-only proxy → API token + budget + coverage gate →
+per-period retrieval → conservative suggestion model → exact quote validation → source-bearing suggestions.
+Keeping a suggestion appends to `quantrag.theses.v2` and resets manual assessment. Import validates before merge;
+v1's two notes migrate to entries while the original storage key remains intact.
+
+`eval/generation_eval.py` freezes reviewed gold/corpus, runs the production answer path, invokes an explicitly
+configured cross-family judge and records row-level outputs. `publish_eval.py` requires matching retrieval inputs,
+60 reviewed questions and complete human agreement labels before preparing the public report.
+
+The current root `Dockerfile` runs the v2 API; `frontend/Dockerfile` runs the standalone Next app. The earlier v1
+Render description above is historical. `render.yaml` now contains only the deferred-hosting free API option.
+See `DEPLOYMENT.md` for secrets, request-budget persistence and rollback.
