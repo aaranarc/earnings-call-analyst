@@ -7,7 +7,7 @@
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
 > **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
-> small corpus (4 transcripts). A local thesis dashboard is available; a hosted deployment is not yet available. Every number below comes from a file in
+> small corpus (4 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
 > [`eval/results/`](eval/results/) and can be re-run.
 >
 > *Research and educational project. Not investment advice.*
@@ -93,7 +93,7 @@ the file it comes from.
   transcript says 93%; a long multi-topic CFO turn is never retrieved for palm-oil questions (D24).
 - **Router gaps:** sector questions ("which bank…") and "this quarter" aren't understood (D30).
 - **Memory figures are from macOS** and vary by up to ~140 MB between identical runs. Cloud Run (Linux) needs its own measurement.
-- **Local API and dashboard available; no hosted deployment yet**, and no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
+- **[Public dashboard available](https://quantrag.vercel.app)** on free hosting; the API sleeps when idle. There is no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
   still in the repo pending removal.
 
 ## Roadmap
@@ -105,7 +105,7 @@ the file it comes from.
 | Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | [Retrieval, generation and calibration tooling ready](docs/EVALUATION.md); human-reviewed runs pending |
 | Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
 | Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |
-| Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | images/runbook ready; hosting decision deferred |
+| Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | [deployed on Vercel + free Render](https://quantrag.vercel.app); automated ingest pending |
 | Phase 10 | risk route backed by the separate distress early-warning (EWS) API | planned |
 | Phase 11 | README, demo GIF, architecture write-up | planned |
 | Thesis tracker | source-quoted AI suggestions, multi-period evidence timeline, manual assessment, import/export, printable brief | implemented on demand |
