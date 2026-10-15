@@ -566,7 +566,6 @@ button {
   border-radius: 10px;
   padding: 20px;
   background: linear-gradient(120deg, #161616, #0f0f0f);
-  animation: appear 0.4s both;
 }
 .thesis-card:hover {
   border-color: #6c6c6c;
