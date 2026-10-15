@@ -3,7 +3,7 @@
 ## Status
 - Phase 0 (audit and setup): **done**.
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
-- **Phase 2 (DB + ingestion): verified on local Postgres; Supabase ingest pending** (waiting for `SUPABASE_DB_URL`).
+- **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`. Waiting for approval to start Phase 3.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -127,11 +127,18 @@ Each fix came with regression tests (`backend/tests/test_numbers.py`, now 45 cas
 - **Known remaining misses:** a unit written once for a list ("40, 50 basis points"), "N odd percent", and category labels ("stage 3"). Left for Phase 5: the matcher can compare values when a stored number has no unit. The Phase 5 checker evaluation (~100 hand-labelled numbers, `eval/numbers_gold.jsonl`) is the real measurement. These 20-number samples are small (one wrong = 5 points).
 - After the fixes: 4 documents, 287 chunks (avg 133 tokens), **368 numbers**, schema 2.0 MB on local Postgres.
 
-### Not done
-1. **Supabase ingest:** waiting for Aarana to add `SUPABASE_DB_URL` (Mumbai, session pooler) to `.env`. Then: `cd backend && python -m ingest.run`, and record chunk count, average tokens and schema size here. The schema-wiping DB tests are never run against it (they refuse non-localhost URLs).
-2. **Phase 2 done-condition** = the Supabase run above, plus a second run adding 0 rows there.
+### Supabase run (2026-10-15)
+Project `cjttcgxtmgcpvzqtzzkg` (Mumbai `ap-south-1`, session pooler, port 5432), Postgres 17.11, pgvector 0.8.2. `cd backend && python -m ingest.run` with `SUPABASE_DB_URL` from `.env`, run twice:
+- run 1: 4 documents, **287 chunks (avg 133 tokens)**, 368 numbers; `quantrag` schema **2.0 MB**
+- run 2: "4 already ingested · 0 to ingest", totals unchanged (**idempotent on Supabase**)
+- Whole database: **13 MB of the 500 MB free tier** (Supabase's built-in `auth`/`storage`/`realtime`/`vault` schemas plus `quantrag`).
+- The schema-wiping DB tests were **not** run against Supabase (they refuse non-localhost URLs).
+
+### Phase 2 done-condition: met for the current corpus
+All complete manifest rows ingested ✅ · re-run adds 0 rows ✅ (local and Supabase) · speaker-parsing tests on real transcripts ✅ · idempotency test ✅ · chunk count, avg tokens and DB size logged ✅. The corpus itself is still 4 of 96 (Phase 1 gates A and B).
 
 ## Open questions
+- **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.
 0. **INFY Q2 FY25 `source_url` set on Aarana's verification, 2026-10-15.** infosys.com returns HTTP 403 to automated downloads (twice), so the tool couldn't compare hashes. Aarana confirmed the file at the URL has the same sha256 as `data/raw/INFY_Q2FY25.pdf` (`0c28ccd2…ce14a00`). Not re-checkable by script while the block stands.
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.
 2. Untracked root `asset.png` is byte-identical to the committed `assets/asset.png`. It's safe to delete; left alone until approved.
