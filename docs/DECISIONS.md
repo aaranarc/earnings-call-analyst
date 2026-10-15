@@ -75,3 +75,17 @@ One dated entry per meaningful decision. Never rewrite old entries; add a new en
 - **Decided (Aarana):** `venv/` deleted (broken). The untracked `test_*.py` scratch files and the `* 2` duplicates (including `.env 2`, which holds real keys) were moved to `../quantrag_v1_scratch/`.
 - **Why:** keeps the repo clean without losing anything.
 - **Revisit if:** never. Delete that folder by hand once it's no longer needed.
+
+## D12 · 2026-10-15 · Corpus completion in gates: Phase 2 gate, Tier A, Tier B (≥90 of 96, excuses logged)
+- **Why 90 of 96:** the brief sets "≥ 90 rows" for Phase 1. That leaves room for up to 6 transcripts (about 6%) that can't legitimately be obtained: a company that didn't hold or publish a call that quarter, a PDF missing from both the IR page and the exchange filing, or a source that blocks access (brief rule 4 forbids working around blocks). Requiring all 96 would let one unavailable PDF block the whole project. A much lower bar would leave comparisons with holes.
+- **Rule:** a row may only fall short if it is **excused**: listed in `EXCUSED` in `scripts/check_manifest.py` with a reason **and** logged below with the evidence (what was checked, where, when). At most 6 rows (`MAX_EXCUSED`). Missing without an excuse fails Tier B, even with ≥90 complete.
+- **Gates** (`python scripts/check_manifest.py --gate …`; any row error fails every gate):
+  - `phase2`: ≥1 complete transcript per sector (3 sectors). Phase 2 (ingestion) may start, because speaker parsing is tested on 3 real transcripts, one per sector.
+  - `A`: the latest 4 quarters (Q2 FY26 → Q1 FY27) complete for all 12 companies = 48 rows, **no excuses**. Recent quarters matter most for "last quarter / last two quarters" questions, and an analyst would expect them all.
+  - `B`: the full window, 96 rows complete or excused, ≤6 excused. This is the brief's Phase 1 done-condition.
+- **Options considered:** one flat "≥90 rows" count (doesn't say *which* rows are missing; 6 gaps could all be one company's recent quarters) · all 96 required (one unavailable PDF blocks the project) · tiers with logged excuses (chosen).
+- **Trade-off:** the excuse list is maintained by hand in two places (code and this file). The tests pin the gate logic, not the list.
+- **Revisit if:** more than 6 rows are genuinely unavailable. Then replace the company (see Nestlé, PROGRESS open question) rather than raising the cap.
+
+### Excused rows
+None yet.

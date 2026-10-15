@@ -50,12 +50,12 @@ def test_bad_label_rejected(label):
 
 def test_valid_row_is_complete(repo):
     complete, pending, errors, _ = run(repo, [good_row(repo)])
-    assert (complete, pending, errors) == (1, [], [])
+    assert (complete, pending, errors) == ({("TCS", "Q2 FY25")}, [], [])
 
 
 def test_row_without_filename_is_pending_not_error(repo):
     complete, pending, errors, _ = run(repo, [good_row(repo, filename="", sha256="", call_date="", source_url="")])
-    assert (complete, pending, errors) == (0, ["TCS Q2 FY25"], [])
+    assert (complete, pending, errors) == (set(), ["TCS Q2 FY25"], [])
 
 
 @pytest.mark.parametrize("over, expect", [
@@ -71,7 +71,7 @@ def test_row_without_filename_is_pending_not_error(repo):
 ])
 def test_bad_row_is_an_error(repo, over, expect):
     complete, _, errors, _ = run(repo, [good_row(repo, **over)])
-    assert complete == 0
+    assert complete == set()
     assert any(expect in e for e in errors), errors
 
 
@@ -104,7 +104,7 @@ def test_init_then_fill_sha(repo):
     cm.write_manifest(m, rows)
     assert cm.fill_sha(m, repo / "raw") == 1
     complete, pending, errors, _ = cm.check(m, repo / "companies.yaml", repo / "raw")
-    assert (complete, len(pending), errors) == (1, 15, [])
+    assert (len(complete), len(pending), errors) == (1, 15, [])
 
 
 def test_real_companies_file_is_valid():
@@ -112,3 +112,41 @@ def test_real_companies_file_is_valid():
     assert errors == []
     assert len(companies) == 12
     assert {c["sector"] for c in companies.values()} == {"it_services", "private_bank", "consumer"}
+
+
+THREE_SECTORS = {"A1": {"sector": "it"}, "B1": {"sector": "bank"}, "C1": {"sector": "consumer"},
+                 "C2": {"sector": "consumer"}}
+
+
+def all_rows(symbols, labels):
+    return {(s, q) for s in symbols for q in labels}
+
+
+def test_phase2_gate_needs_one_transcript_per_sector():
+    g = cm.gates({("A1", "Q2 FY25"), ("B1", "Q1 FY27")}, THREE_SECTORS)
+    assert g["phase2"] == (False, "sectors with a transcript: 2/3")
+    g = cm.gates({("A1", "Q2 FY25"), ("B1", "Q1 FY27"), ("C2", "Q3 FY25")}, THREE_SECTORS)
+    assert g["phase2"][0] is True
+    assert g["A"][0] is False
+
+
+def test_gate_a_is_latest_4_quarters_for_every_company():
+    latest = all_rows(THREE_SECTORS, cm.quarters(*cm.TIER_A))
+    assert cm.gates(latest, THREE_SECTORS)["A"] == (True, "16/16 latest-4-quarter rows complete")
+    assert cm.gates(latest - {("C2", "Q1 FY27")}, THREE_SECTORS)["A"][0] is False
+    assert cm.gates(latest, THREE_SECTORS)["B"][0] is False  # older 4 quarters still missing
+
+
+def test_gate_b_allows_only_logged_excuses_up_to_the_cap(monkeypatch):
+    full = all_rows(THREE_SECTORS, cm.quarters(*cm.WINDOW))
+    assert cm.gates(full, THREE_SECTORS)["B"][0] is True
+    gap = {("C2", "Q2 FY25"), ("C2", "Q3 FY25")}
+    assert cm.gates(full - gap, THREE_SECTORS)["B"][0] is False  # missing and not excused
+    monkeypatch.setattr(cm, "EXCUSED", {k: "not published" for k in gap})
+    assert cm.gates(full - gap, THREE_SECTORS)["B"] == (True, "30/32 complete, 2 excused (max 6)")
+    monkeypatch.setattr(cm, "MAX_EXCUSED", 1)
+    assert cm.gates(full - gap, THREE_SECTORS)["B"][0] is False  # over the cap
+
+
+def test_tier_a_is_the_last_4_quarters_of_the_window():
+    assert cm.quarters(*cm.TIER_A) == cm.quarters(*cm.WINDOW)[-4:]

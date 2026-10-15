@@ -2,7 +2,7 @@
 
 ## Status
 - Phase 0 (audit and setup): **done**.
-- **Phase 1 (corpus): tooling done. Waiting on Aarana's manual downloads.** `scripts/check_manifest.py` currently reports 0 / 90 complete rows.
+- **Phase 1 (corpus): tooling done. Waiting on Aarana's manual downloads.** Gates (D12): `phase2` 0/3 sectors · `A` 0/48 · `B` 0/96.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -60,8 +60,8 @@ Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_mod
 ### Done (Claude Code)
 - `data/companies.yaml`: the 12 companies (NSE symbol, name, sector, aliases). Aliases are checked to be unique across companies.
 - `data/manifest.csv`: all 96 expected rows (12 × Q2 FY25 → Q1 FY27), with `symbol`, `fiscal_label` and `period_end` pre-filled.
-- `scripts/check_manifest.py`: checks every filled row (known symbol, label in window, `period_end` matches the label, call within 120 days after quarter end, https `source_url`, file exists, sha256 matches, no duplicate quarter or PDF). It lists pending rows, absent rows and unreferenced PDFs. `--fill-sha` computes hashes so nobody types them. Exit 1 until there are ≥90 complete rows and 0 errors.
-- `scripts/test_check_manifest.py`: 23 tests, all passing. Ruff is clean.
+- `scripts/check_manifest.py`: checks every filled row (known symbol, label in window, `period_end` matches the label, call within 120 days after quarter end, https `source_url`, file exists, sha256 matches, no duplicate quarter or PDF). It lists pending rows, absent rows and unreferenced PDFs. `--fill-sha` computes hashes so nobody types them. Reports three gates (D12) and exits 1 if `--gate` (default `B`) fails or any row has an error.
+- `scripts/test_check_manifest.py`: 27 tests, all passing. Ruff is clean.
 - 1 row partly filled: **INFY Q2 FY25** (v1's real PDF, call date 2024-10-17 from its cover page, sha filled). Its `source_url` is **empty and flagged**, because the download link isn't recorded anywhere. Find it and fill it in, or replace the PDF with a fresh download.
 - Housekeeping: `venv/` deleted; scratch files, `* 2` duplicates and the old v1 data moved to `../quantrag_v1_scratch/`; `git fetch --refetch` restored the missing blob (`git fsck` is clean), and the restored blob was scanned for keys with 0 hits, so the history scan now covers everything.
 
@@ -72,14 +72,20 @@ Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_mod
 4. Run `.venv/bin/python scripts/check_manifest.py --fill-sha` and fix anything it reports.
 5. **Pick rows by the quarter's end date, not the cover's label.** For example, a cover saying "Q1 FY'24" was a July 2023 call. Nestlé India in particular may label its quarters differently around its change of financial year (D9).
 6. If a site blocks access or a transcript doesn't exist, **leave the row pending** and note it here. Don't use mirrors.
-- **Done when:** ≥90 complete rows and the checker exits 0.
+7. To excuse a row that can't be obtained: add it to `EXCUSED` in `scripts/check_manifest.py` **and** log the evidence under D12 in `docs/DECISIONS.md`. At most 6.
+- **Done when (D12):** `--gate phase2` passes → Phase 2 can start · `--gate A` passes → the latest 4 quarters are complete · `--gate B` passes → Phase 1 is done.
+- **Suggested order:** first one transcript per sector (unlocks Phase 2), then the latest 4 quarters for all 12 (Tier A), then the older 4 (Tier B).
 
 ### Next: Phase 2 (DB and ingestion)
-Starts once enough PDFs exist to test speaker parsing on 3 real transcripts (one per sector is ideal). It doesn't need all 96.
+Starts when `python scripts/check_manifest.py --gate phase2` passes: one real transcript per sector.
 
 ## Open questions
-1. **`main` has diverged from GitHub.** `origin/main` has 5 of Aarana's web edits from August (README rename to "Quant RAG", screenshot moved to `assets/asset.png`). Local `main` has the `v1-final` commit instead. Nothing has been pushed. Before pushing, merge `origin/main` into `main` (no conflicts expected: they touch only README and assets), then push `main`, the `v1-final` tag and `v2`. The untracked root `asset.png` is probably the same screenshot; check before deleting.
-2. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.
+1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.
+2. Untracked root `asset.png` is byte-identical to the committed `assets/asset.png`. It's safe to delete; left alone until approved.
+3. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.
 
 ## Resolved
 - Window → D8. Repo layout → D7. Missing git blob → restored with `git fetch --refetch`, `fsck` clean.
+- `main` diverged from GitHub → `origin/main` merged into `main` (clean: README + assets only). Pushed `main`, tag `v1-final` and `v2` on 2026-10-15, after a key scan of the outgoing commits found nothing.
+- "Why 90 of 96" → D12.
+- Infosys Q2 FY25 `source_url` → Aarana is adding the BSE link.

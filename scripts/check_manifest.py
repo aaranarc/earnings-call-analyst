@@ -1,10 +1,14 @@
 """Validate data/manifest.csv against data/raw/ and data/companies.yaml.
 
-    python scripts/check_manifest.py             # exit 1 on any error, or fewer than --min-rows complete rows
+    python scripts/check_manifest.py [--gate phase2|A|B]   # exit 1 on any row error, or if the gate fails (default B)
     python scripts/check_manifest.py --init      # write the 96 expected rows (symbol, fiscal_label, period_end)
     python scripts/check_manifest.py --fill-sha  # fill empty sha256 cells from the files in data/raw/
 
 A row is "pending" until its filename is filled in; pending rows are listed, not counted as errors.
+Gates (docs/DECISIONS.md D12):
+    phase2  at least 1 complete transcript per sector (enough to build and test ingestion)
+    A       every company complete for the latest 4 quarters (48 rows); no excuses
+    B       all 96 rows complete or excused in EXCUSED, at most 6 excused (so >= 90 complete)
 fiscal_label is our normalised April-March label: Q1 FY26 = Apr-Jun 2025, so period_end = 2025-06-30.
 """
 import argparse
@@ -21,6 +25,10 @@ ROOT = Path(__file__).resolve().parent.parent
 COLUMNS = ["symbol", "fiscal_label", "period_end", "call_date", "source_url", "filename", "sha256"]
 WINDOW = ("Q2 FY25", "Q1 FY27")  # docs/DECISIONS.md D8: same 8 quarters for every company
 MAX_CALL_LAG = timedelta(days=120)  # calls happen a few weeks after quarter end; 120 days catches typos
+TIER_A = ("Q2 FY26", "Q1 FY27")  # latest 4 quarters of WINDOW
+MAX_EXCUSED = 6  # brief's ">= 90 of 96"
+# (symbol, fiscal_label) -> reason. Each entry must also be logged in docs/DECISIONS.md D12.
+EXCUSED = {}
 LABEL_RE = re.compile(r"^Q([1-4]) FY(\d{2})$")
 
 
@@ -80,10 +88,10 @@ def write_manifest(path, rows):
 
 
 def check(manifest, companies_path, raw_dir):
-    """Returns (complete_count, pending, errors, notes)."""
+    """Returns (complete keys {(symbol, fiscal_label)}, pending, errors, notes)."""
     companies, errors = load_companies(companies_path)
     window = set(quarters(*WINDOW))
-    complete, pending, notes = 0, [], []
+    complete, pending, notes = set(), [], []
     keys, shas, files = set(), {}, set()
 
     for line, r in enumerate(read_manifest(manifest), start=2):
@@ -127,7 +135,7 @@ def check(manifest, companies_path, raw_dir):
                 errors.append(f"{where}: same sha256 as {shas[r['sha256']]} (duplicate PDF)")
             shas.setdefault(r["sha256"], where)
         if len(errors) == before:
-            complete += 1
+            complete.add(key)
 
     expected = {(s, q) for s in companies for q in window}
     missing = sorted(expected - keys)
@@ -137,6 +145,22 @@ def check(manifest, companies_path, raw_dir):
     if unlisted:
         notes.append(f"PDFs in data/raw/ not referenced by the manifest: {', '.join(unlisted)}")
     return complete, pending, errors, notes
+
+
+def gates(complete, companies):
+    """Returns {gate: (passed, detail)} for the phase2, A and B gates."""
+    sectors = {c["sector"] for c in companies.values()}
+    covered = {companies[s]["sector"] for s, _ in complete if s in companies}
+    tier_a = {(s, q) for s in companies for q in quarters(*TIER_A)}
+    full = {(s, q) for s in companies for q in quarters(*WINDOW)}
+    excused = set(EXCUSED) & full
+    missing_b = full - complete - excused
+    return {
+        "phase2": (covered == sectors, f"sectors with a transcript: {len(covered)}/{len(sectors)}"),
+        "A": (tier_a <= complete, f"{len(tier_a & complete)}/{len(tier_a)} latest-4-quarter rows complete"),
+        "B": (not missing_b and len(excused) <= MAX_EXCUSED,
+              f"{len(full & complete)}/{len(full)} complete, {len(excused)} excused (max {MAX_EXCUSED})"),
+    }
 
 
 def init(manifest, companies_path):
@@ -165,7 +189,7 @@ def main():
     ap.add_argument("--manifest", default=ROOT / "data/manifest.csv")
     ap.add_argument("--companies", default=ROOT / "data/companies.yaml")
     ap.add_argument("--raw", default=ROOT / "data/raw")
-    ap.add_argument("--min-rows", type=int, default=90)
+    ap.add_argument("--gate", choices=["phase2", "A", "B"], default="B")
     ap.add_argument("--init", action="store_true")
     ap.add_argument("--fill-sha", action="store_true")
     a = ap.parse_args()
@@ -180,10 +204,11 @@ def main():
         print("ERROR", e)
     for n in notes:
         print("NOTE ", n)
-    print(f"\ncomplete rows: {complete} (need {a.min_rows}) · pending: {len(pending)} · errors: {len(errors)}")
-    if pending:
-        print("pending:", ", ".join(pending))
-    sys.exit(1 if errors or complete < a.min_rows else 0)
+    print(f"\ncomplete rows: {len(complete)} · pending: {len(pending)} · errors: {len(errors)}")
+    results = gates(complete, load_companies(a.companies)[0])
+    for name, (ok, detail) in results.items():
+        print(f"gate {name:6} {'PASS' if ok else 'FAIL'}  {detail}")
+    sys.exit(1 if errors or not results[a.gate][0] else 0)
 
 
 if __name__ == "__main__":

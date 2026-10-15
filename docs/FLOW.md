@@ -14,7 +14,7 @@ How a request or pipeline actually moves through the code, as ordered `file → 
 1. `--init`: `load_companies(data/companies.yaml)` × `quarters(*WINDOW)` → `write_manifest(data/manifest.csv)` (refuses to overwrite)
 2. `--fill-sha`: `read_manifest` → `sha256(data/raw/<filename>)` for rows with a file and an empty hash → `write_manifest`
 3. `check(manifest, companies, raw)`: `load_companies` (duplicate symbols and aliases) → per row: symbol, `period_end(fiscal_label)`, window, duplicates → rows without `filename` are *pending* → `call_date` lag, `source_url`, file exists, `sha256` → notes for absent expected rows and unreferenced PDFs
-4. Print errors, notes and counts → exit 1 if any error or fewer than `--min-rows` (90) complete rows
+4. Print errors, notes and counts → `gates(complete, companies)`: `phase2` (1 per sector), `A` (`TIER_A` × all companies), `B` (`WINDOW` × all companies minus `EXCUSED`, ≤ `MAX_EXCUSED`) → exit 1 if any row error or the `--gate` (default `B`) fails
 
 ## v1 (tag `v1-final`)
 
