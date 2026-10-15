@@ -242,14 +242,13 @@ export default function Dashboard() {
             ))}
           </div>
           <div className="thesis-list">
-            {filtered.map((row, i) => {
+            {filtered.map((row) => {
               const Icon = statusIcon[row.status];
               return (
                 <button
                   className="thesis-card"
                   key={row.id}
                   onClick={() => setSelected(row.id)}
-                  style={{ animationDelay: `${i * 70}ms` }}
                 >
                   <div className="thesis-top">
                     <span className="company-avatar">

@@ -43,6 +43,9 @@ jobs:
       - name: Lint
         run: ruff check backend scripts eval --config backend/pyproject.toml
 
+      - name: Check bundled public snapshots
+        run: python scripts/export_public_data.py --check
+
       - name: Test with coverage
         working-directory: backend
         run: |

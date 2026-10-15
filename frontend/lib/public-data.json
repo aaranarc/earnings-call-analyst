@@ -1,0 +1,179 @@
+{
+  "coverage": {
+    "companies": [
+      {
+        "symbol": "TCS",
+        "name": "Tata Consultancy Services",
+        "sector": "it_services",
+        "aliases": [
+          "TCS",
+          "Tata Consultancy",
+          "Tata Consultancy Services"
+        ],
+        "documents": [
+          {
+            "symbol": "TCS",
+            "fiscal_label": "Q1 FY27",
+            "chunks": 69,
+            "numbers": 74,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf"
+          }
+        ]
+      },
+      {
+        "symbol": "INFY",
+        "name": "Infosys",
+        "sector": "it_services",
+        "aliases": [
+          "Infosys",
+          "INFY"
+        ],
+        "documents": [
+          {
+            "symbol": "INFY",
+            "fiscal_label": "Q2 FY25",
+            "chunks": 84,
+            "numbers": 99,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf"
+          }
+        ]
+      },
+      {
+        "symbol": "HCLTECH",
+        "name": "HCL Technologies",
+        "sector": "it_services",
+        "aliases": [
+          "HCLTech",
+          "HCL Tech",
+          "HCL Technologies",
+          "HCL"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "WIPRO",
+        "name": "Wipro",
+        "sector": "it_services",
+        "aliases": [
+          "Wipro"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "HDFCBANK",
+        "name": "HDFC Bank",
+        "sector": "private_bank",
+        "aliases": [
+          "HDFC Bank",
+          "HDFC",
+          "HDFCBANK"
+        ],
+        "documents": [
+          {
+            "symbol": "HDFCBANK",
+            "fiscal_label": "Q1 FY27",
+            "chunks": 62,
+            "numbers": 123,
+            "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/hdfc-bank-earnings-jul18-2026.pdf"
+          }
+        ]
+      },
+      {
+        "symbol": "ICICIBANK",
+        "name": "ICICI Bank",
+        "sector": "private_bank",
+        "aliases": [
+          "ICICI Bank",
+          "ICICI",
+          "ICICIBANK"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "AXISBANK",
+        "name": "Axis Bank",
+        "sector": "private_bank",
+        "aliases": [
+          "Axis Bank",
+          "Axis",
+          "AXISBANK"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "KOTAKBANK",
+        "name": "Kotak Mahindra Bank",
+        "sector": "private_bank",
+        "aliases": [
+          "Kotak Mahindra Bank",
+          "Kotak Bank",
+          "Kotak",
+          "KOTAKBANK"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "HINDUNILVR",
+        "name": "Hindustan Unilever",
+        "sector": "consumer",
+        "aliases": [
+          "Hindustan Unilever",
+          "HUL",
+          "HINDUNILVR"
+        ],
+        "documents": [
+          {
+            "symbol": "HINDUNILVR",
+            "fiscal_label": "Q1 FY27",
+            "chunks": 72,
+            "numbers": 72,
+            "source_url": "https://www.hul.co.in/files/jq26-earnings-call-transcript.pdf"
+          }
+        ]
+      },
+      {
+        "symbol": "ITC",
+        "name": "ITC",
+        "sector": "consumer",
+        "aliases": [
+          "ITC",
+          "ITC Limited"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "NESTLEIND",
+        "name": "Nestl\u00e9 India",
+        "sector": "consumer",
+        "aliases": [
+          "Nestl\u00e9 India",
+          "Nestle India",
+          "Nestl\u00e9",
+          "Nestle",
+          "NESTLEIND"
+        ],
+        "documents": []
+      },
+      {
+        "symbol": "ASIANPAINT",
+        "name": "Asian Paints",
+        "sector": "consumer",
+        "aliases": [
+          "Asian Paints",
+          "ASIANPAINT"
+        ],
+        "documents": []
+      }
+    ],
+    "as_of": "2026-10-15",
+    "source": "committed ingest snapshot"
+  },
+  "evaluation": {
+    "status": "pending",
+    "metrics": [],
+    "ablations": [],
+    "failure_cases": [],
+    "agreement": null,
+    "last_run": null
+  }
+}

@@ -78,8 +78,8 @@ release. Browser v1 data remains as a migration backup. Keep JSON exports before
 
 Official source candidates are recorded in `data/source_candidates.json`. Direct PDF downloads returned 403;
 these locations are not counted as ingested coverage. Once PDFs are available, verify identity, quarter, date,
-and SHA-256, register them in the manifest, run the manifest checker, dry-run parsing, then ingest and refresh
-`eval/results/ingest_stats.json`. Gate A remains all 12 companies × latest 4 quarters.
+and SHA-256, register them in the manifest, run the manifest checker, dry-run parsing, then ingest, refresh
+`eval/results/ingest_stats.json`, and run `python scripts/export_public_data.py` before deploying the web app. Gate A remains all 12 companies × latest 4 quarters.
 
 Phase 6 tools are documented in [EVALUATION.md](EVALUATION.md). Human review is a real dependency, not a flag the
 agent can truthfully set for itself. The deferred Phase 5 blind labels and Nestlé count remain owner tasks.
