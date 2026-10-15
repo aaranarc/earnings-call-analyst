@@ -5,7 +5,8 @@
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
 - **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
 - **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking.
-- **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`). Waiting for approval to start Phase 5. **Action: add `GEMINI_MODEL` to `.env`; choose the production model (D25).**
+- **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`).
+- **Pre-Phase 5 tasks: done** (CI green, gitleaks hook, router report, model pinned). **Phase 5 not started; waiting for Aarana.**
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -194,7 +195,16 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 
 **My read of all 14 outputs (not automated):** answers 1–8 and 10 are faithful to their cited excerpts, and refusals list what's available. Issues found: (1) the model added tables to single-company answers; fixed in code (D27) and re-run. (2) The TCS vs Infosys comparison labels TCS's **total** TCV as "Large Deal TCV"; kept as a known failure for the Phase 6 report. (3) "$2.4 bn" was rewritten as "$2.4 billion" (same value).
 
+## Pre-Phase 5: CI, secrets hook, router report, model pin (D28–D30)
+- **CI green:** run 38739812206: lint ✅, **126 passed, 4 skipped, coverage 75%, job 1 min 15 s** (first run, empty caches; both caches saved).
+- **gitleaks pre-push hook:** blocks pushes with findings; fails closed without gitleaks; install steps in README.
+- **Router:** 17/20 fully correct on 20 new labelled queries (companies 90%, periods 95%, intent 90%). Smoke hybrid+rerank recall@5 18 → 19/20 with the router on.
+- **Model:** `.env.example` pins `GEMINI_MODEL=gemini-3.1-flash-lite` (stable). Final choice on the gold set.
+- **Local tests now use `quantrag_test`,** never the dev database (D28 incident).
+- **Known failure kept for Phase 6:** TCS total TCV labelled "Large Deal TCV" (D27).
+
 ## Open questions
+- **Committed artifacts:** `backend/.coverage` and `backend/quantrag.egg-info/` are tracked on `v2`. GateGuard blocked my `git rm --cached`, so Aarana runs the clean-up command given in chat.
 - **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.
 0. **INFY Q2 FY25 `source_url` set on Aarana's verification, 2026-10-15.** infosys.com returns HTTP 403 to automated downloads (twice), so the tool couldn't compare hashes. Aarana confirmed the file at the URL has the same sha256 as `data/raw/INFY_Q2FY25.pdf` (`0c28ccd2…ce14a00`). Not re-checkable by script while the block stands.
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.

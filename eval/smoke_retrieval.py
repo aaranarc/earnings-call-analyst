@@ -4,7 +4,8 @@
     cd backend && SUPABASE_DB_URL=... python ../eval/smoke_retrieval.py --no-rerank    # 3 configs, no reranker
 
 A question counts as a hit if any of its top-5 chunks belongs to the expected document and contains one of its
-`quotes`. No company/period filters: the router (Phase 4) isn't built, so this measures raw retrieval.
+`quotes`. Without --router there are no company/period filters (raw retrieval); with --router each question is
+routed (generate/router.py) and its company/period filters are passed to retrieval.
 Each invocation is its own process, so peak RSS reflects exactly the models it loaded. Results are appended to
 eval/results/smoke_retrieval.json.
 """
@@ -21,11 +22,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import psutil
 import psycopg
 from pgvector.psycopg import register_vector
 
+import check_manifest as cm
+from generate.answer import latest_periods
+from generate.router import route
 from retrieve.search import EMBED_MODEL, RERANK_MODEL, Models, retrieve
 
 
@@ -49,6 +54,7 @@ def main():
     ap.add_argument("--batch-size", type=int, default=4)    # untuned fastembed default was 64
     ap.add_argument("--max-tokens", type=int, default=384)  # untuned default was 512
     ap.add_argument("--fuse-top", type=int, default=10)  # untuned default was 20
+    ap.add_argument("--router", action="store_true", help="route each question and pass its company/period filters")
     a = ap.parse_args()
     items = [json.loads(line) for line in (ROOT / "eval/smoke.jsonl").read_text().splitlines() if line.strip()]
 
@@ -58,6 +64,7 @@ def main():
     results = {}
     with psycopg.connect(os.environ["SUPABASE_DB_URL"], options="-c search_path=quantrag,public,extensions") as conn:
         register_vector(conn)
+        companies, latest = cm.load_companies(ROOT / "data/companies.yaml")[0], latest_periods(conn)
         for item in items:  # every expected chunk must exist, or the smoke set is wrong
             n = conn.execute("""select count(*) from chunks ch join documents d on d.id = ch.document_id
                                 join companies co on co.id = d.company_id where co.symbol = %s
@@ -69,7 +76,10 @@ def main():
             per_q, lat = {}, []
             for item in items:
                 t = time.perf_counter()
-                hits = retrieve(conn, models, item["question"], mode=mode, use_rerank=rr, fuse_top=a.fuse_top, top_n=5)
+                rt = route(item["question"], companies, latest, enabled=True) if a.router else None
+                hits = retrieve(conn, models, item["question"], rt.companies or None if rt else None,
+                                rt.periods or None if rt else None, mode=mode, use_rerank=rr, fuse_top=a.fuse_top,
+                                top_n=5)
                 lat.append(time.perf_counter() - t)
                 ranks = [i for i, h in enumerate(hits, 1) if is_hit(h, item)]
                 per_q[item["id"]] = ranks[0] if ranks else None
@@ -81,7 +91,7 @@ def main():
                   f"ranks {per_q}")
 
     run = {"label": a.label, "reranker_loaded": a.rerank,
-           "settings": {"batch_size": a.batch_size, "max_tokens": a.max_tokens, "fuse_top": a.fuse_top}, "startup_rss_mb": round(startup_rss, 1), "peak_rss_mb": round(peak_rss_mb(), 1),
+           "settings": {"batch_size": a.batch_size, "max_tokens": a.max_tokens, "fuse_top": a.fuse_top, "router": a.router}, "startup_rss_mb": round(startup_rss, 1), "peak_rss_mb": round(peak_rss_mb(), 1),
            "embed_model": EMBED_MODEL, "rerank_model": RERANK_MODEL if a.rerank else None,
            "git_sha": subprocess.run(["git", "rev-parse", "--short", "HEAD"], check=False, capture_output=True, text=True,
                                      cwd=ROOT).stdout.strip(),

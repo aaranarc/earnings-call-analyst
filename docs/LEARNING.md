@@ -55,3 +55,10 @@ Plain-English notes on what was built and why, one section per phase. Written so
 - **Structured output** means the model returns a fixed shape (answer text, optional table, refused yes/no, reason) instead of free text, so the code can rely on it.
 - **Refusing is a feature:** if nothing relevant is found, or the model says the excerpts don't answer it, the system says so and lists which quarters it *does* have for that company. Questions about a quarter that isn't ingested are refused before any LLM call, which costs nothing.
 - **Citation checks aren't truth checks:** one answer cited the right chunk but called TCS's total contract value "large deal" value. Checking that claims *match* their sources is what the Phase 5 number checker and the Phase 6 faithfulness judge are for.
+
+## Pre-Phase 5: CI and safety nets (2026-10-15)
+- **CI (continuous integration)** re-runs lint and every test on GitHub's machines on each push, with a real Postgres in a throwaway container. "It works on my laptop" isn't enough. The badge in the README shows whether the latest push passed.
+- **Coverage (75%)** is the share of code lines the tests actually execute. It shows what's untested (CLIs, the spot-check tool), not whether the tests are good.
+- **A pre-push hook** is a script git runs before every push. Ours runs gitleaks, a scanner for API keys and passwords, on just the new commits and refuses the push if it finds one. It "fails closed": no scanner means no push.
+- **Separate test and dev databases:** my own DB test wiped my local data because both used the same database. The guard stopped it touching Supabase, but not my laptop. Now tests get their own database.
+- **Measuring the router:** a labelled set of 20 questions (with the ideal answer for each) shows it gets 85% fully right, and exactly where it fails: sector questions like "which bank…" and "this quarter". Turning it on improved the reranked search from 18 to 19 of 20.

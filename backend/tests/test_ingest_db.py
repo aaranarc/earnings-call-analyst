@@ -2,7 +2,8 @@
 because the test drops and recreates the quantrag schema.
 
     docker run -d --name qr-pg -e POSTGRES_PASSWORD=pg -p 5433:5432 pgvector/pgvector:pg17
-    TEST_DATABASE_URL=postgresql://postgres:pg@localhost:5433/postgres pytest tests/test_ingest_db.py
+    docker exec qr-pg psql -U postgres -c 'create database quantrag_test'   # never the dev database
+    TEST_DATABASE_URL=postgresql://postgres:pg@localhost:5433/quantrag_test pytest tests/test_ingest_db.py
 """
 import os
 from urllib.parse import urlparse
