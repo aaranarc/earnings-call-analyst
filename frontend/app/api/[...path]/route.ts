@@ -1,3 +1,4 @@
+import publicData from "@/lib/public-data.json";
 // The backend credential is server-only. Never forward incoming authorization headers.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -6,6 +7,9 @@ const allowed = new Map([["health", "GET"], ["companies", "GET"], ["eval/latest"
 async function proxy(request: Request, context: {params: Promise<{path: string[]}>}) {
   const path = (await context.params).path.join("/");
   if (allowed.get(path) !== request.method) return Response.json({detail:"Not found"}, {status:404});
+  // These reports are already committed snapshots; serving the bundle avoids waking the API for page content.
+  if (path === "companies") return Response.json(publicData.coverage);
+  if (path === "eval/latest") return Response.json(publicData.evaluation);
   const headers: Record<string,string> = {"Content-Type":"application/json"};
   if (request.method === "POST") {
     const origin = request.headers.get("origin");

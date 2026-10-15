@@ -84,3 +84,7 @@ The model suggests support/challenge/insufficient with exact transcript quotatio
 Keep quoted evidence appends to the timeline and resets the assessment to unresolved. Suggestions never
 silently mark a thesis supported. One call cannot establish a cross-quarter trend; the UI says so.
 Deployment options, budget limits and setup: [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md).
+
+The web server serves bundled public coverage and evaluation snapshots immediately, so those pages do not wait
+for a sleeping API. Refresh them after ingestion/publication with `python scripts/export_public_data.py`;
+CI checks synchronization. `/api/health` warms the backend independently and model requests still use the API.

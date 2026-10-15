@@ -313,3 +313,12 @@ test("invalid saved research is never overwritten by creating a new thesis", asy
   expect(await page.evaluate(()=>localStorage.getItem('quantrag.theses.v2'))).toBe('corrupt-but-recoverable-by-owner');
   await expect(page.getByRole('dialog')).toBeVisible();
 });
+
+test("public coverage and eval are available without a running analyst API", async ({request}) => {
+  const coverage = await request.get('/api/companies');
+  expect(coverage.status()).toBe(200);
+  expect((await coverage.json()).source).toBe('committed ingest snapshot');
+  const evaluation = await request.get('/api/eval/latest');
+  expect(evaluation.status()).toBe(200);
+  expect((await evaluation.json()).status).toBe('pending');
+});

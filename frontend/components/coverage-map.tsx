@@ -20,6 +20,6 @@ export default function CoverageMap() {
     {data ? <>
       <div className="table-scroll"><table className="coverage-table"><caption className="sr-only">Available transcripts by company and quarter</caption><thead><tr><th>Company</th>{periods.map(p => <th key={p}>{p}</th>)}</tr></thead><tbody>{covered.map(c => <tr key={c.symbol}><th scope="row">{c.symbol}</th>{periods.map(p => <td key={p}>{c.documents.some(d => d.fiscal_label === p) ? <Link className="coverage-cell available" href={`/ask?q=${encodeURIComponent(`What did ${c.name} discuss in ${p}?`)}`} aria-label={`Ask about ${c.symbol} ${p}`}>●<span className="sr-only"> Available</span></Link> : <span className="coverage-cell missing" aria-label="No transcript">—</span>}</td>)}</tr>)}</tbody></table></div>
       <div className="chart-footnote"><span>● Available &nbsp; — Not ingested</span><span>Snapshot · {data.as_of}</span></div>
-    </> : <p className="section-copy">{failed ? "Start the analyst API to see available quarters." : "Checking the ingest snapshot."}</p>}
+    </> : <p className="section-copy">{failed ? "Coverage could not be loaded. Please refresh to retry." : "Checking the ingest snapshot."}</p>}
   </section>;
 }
