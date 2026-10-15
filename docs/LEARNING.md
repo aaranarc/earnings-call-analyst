@@ -12,3 +12,12 @@ Plain-English notes on what was built and why, one section per phase. Written so
 - v1's router matched company names as plain substrings ("HDFC" in the question). v2 uses an alias list per company, so "Tata Consultancy" and "TCS" resolve to the same company.
 - One memory reading is not a measurement: my first reranker run said 512 MB, and repeats said up to 692 MB. Now the script appends every run and I report the range.
 - I ran the baseline on an extracted copy of the tagged code, because simply opening the old vector database with a newer library version rewrote its files. Measuring something shouldn't change it.
+
+## Phase 1: Corpus tooling (2026-10-15)
+- **v1's corpus was much smaller than it looked:** 9 PDFs, but only 6 were real transcripts and only 1 made it into the shipped index. So v2's numbers can't honestly be presented as "improved from v1" on quality. There was no real v1 quality to compare against. The fair v1 → v2 comparison is memory (the reranker story).
+- A **manifest** (`data/manifest.csv`) is a written list of exactly which files make up the dataset: where each came from, which quarter it covers, and a fingerprint of its bytes. The dataset becomes reproducible, and anyone can check they have the same files.
+- The fingerprint is a **SHA-256 hash**: change one byte of the PDF and the hash changes completely. A tool computes it (`--fill-sha`) so nobody types it by hand. Later, ingestion uses it to skip PDFs already in the database (idempotency).
+- **Indian fiscal years run April to March:** Q1 FY26 is April–June 2025. Companies write labels inconsistently, so we store our own normalised label *and* the calendar quarter-end date, and code checks that the two agree. Rule: trust the date, not the label on the cover.
+- I chose a **fixed window** (the same 8 quarters for every company) so a question like "compare TCS and Infosys last quarter" always has both sides available.
+- The checker treats an unfilled row as **pending, not an error**, so the corpus can be filled gradually and the tool still tells you exactly what's left.
+- **Aliases** (TCS = Tata Consultancy Services) live in one YAML file that both the checker and the router (Phase 4) read. The checker refuses an alias shared by two companies, because an ambiguous alias would route a question to the wrong company.

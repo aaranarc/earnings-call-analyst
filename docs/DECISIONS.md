@@ -44,3 +44,34 @@ One dated entry per meaningful decision. Never rewrite old entries; add a new en
 - **Why:** three sectors with four peers each make comparisons meaningful. The audit also found that the Apple/Microsoft/Reliance PDFs are synthetic one-line stubs, so they can't be in an honest corpus.
 - **Trade-off:** loses JPMorgan, v1's only well-covered company.
 - **Revisit if:** a legitimate source of US transcripts is added later.
+
+## D7 · 2026-10-15 · `backend/` and `frontend/` at the repo root
+- **Decided (Aarana):** no `quantrag/` wrapper folder. This repo *is* QuantRAG.
+- **Why:** one less level of nesting, and nothing else lives in this repo.
+- **Trade-off:** the v1 folders (`app/`, `models/`, `chroma_db/`) sit beside the v2 ones until they are removed with approval.
+- **Revisit if:** never, unless the repo starts hosting a second project.
+
+## D8 · 2026-10-15 · Corpus window: Q2 FY25 → Q1 FY27, the same 8 quarters for all 12 companies
+- **Decided (Aarana):** fixed window, 12 × 8 = 96 expected transcripts. Q2 FY27 arrives later through the weekly ingest.
+- **Options:** fixed window · "latest 8 available" per company.
+- **Why fixed:** comparisons across companies line up quarter by quarter, and the gold set can name the same periods for every company.
+- **Trade-off:** the newest quarter isn't in the starting corpus.
+- **Applied:** of v1's real PDFs only Infosys Q2 FY25 is in the window (kept as `data/raw/INFY_Q2FY25.pdf`). HDFC Q1/Q2 FY24 and Infosys Q1 FY25 are outside it. v1's filenames mislabelled them ("HDFC 2024 Q1" is a July 2023 call). The JPMorgan PDFs, the three synthetic stubs and the out-of-window PDFs were moved to `../quantrag_v1_scratch/v1_data/`, not deleted.
+- **Revisit if:** the window rolls forward (the weekly ingest adds new quarters, and `WINDOW` in `scripts/check_manifest.py` is then updated with a new entry here).
+
+## D9 · 2026-10-15 · `fiscal_label` is our normalised April–March label, derived from `period_end`
+- **Decided:** `fiscal_label` always follows the Indian April–March year (Q1 FY26 = Apr–Jun 2025, ending 2025-06-30), and `scripts/check_manifest.py` rejects any row whose `period_end` doesn't match its label.
+- **Why:** companies label quarters inconsistently ("Q1 FY'24", "Q1 2024", calendar years). One rule, checked by code, means the router and the gold set can trust the label.
+- **Trade-off:** our label can differ from the label printed on a company's PDF. **Nestlé India** in particular used a calendar financial year until it moved to April–March, so its PDFs from around that change may carry different quarter names. I'm not certain how Nestlé labelled the transition quarters, so pick its rows **by the quarter's end date**, not by the name on the cover.
+- **Revisit if:** a covered company uses a non-March year end.
+
+## D10 · 2026-10-15 · Phase 1 tooling: tests beside the script, a Python 3.11 dev venv, pinned deps in `backend/pyproject.toml`
+- **Decided:** `scripts/test_check_manifest.py` sits next to the script it tests (pytest's default import mode puts that folder on the path, so no config is needed). Dev venv at `.venv/` (git-ignored) on Python 3.11, the only suitable local interpreter. Pinned: PyYAML 6.0.3, pytest 9.1.1, ruff 0.17.0.
+- **Why:** the smallest setup that runs. `backend/pyproject.toml` is the brief's single pinned-deps file and grows in Phase 2.
+- **Trade-off:** the brief targets a `python:3.12` image; local dev is 3.11 for now. Nothing in Phase 1 depends on the difference.
+- **Revisit if:** Phase 2 adds anything that differs between 3.11 and 3.12. Then install 3.12 locally.
+
+## D11 · 2026-10-15 · v1 scratch files moved out of the repo, not deleted
+- **Decided (Aarana):** `venv/` deleted (broken). The untracked `test_*.py` scratch files and the `* 2` duplicates (including `.env 2`, which holds real keys) were moved to `../quantrag_v1_scratch/`.
+- **Why:** keeps the repo clean without losing anything.
+- **Revisit if:** never. Delete that folder by hand once it's no longer needed.

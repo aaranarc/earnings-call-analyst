@@ -1,8 +1,12 @@
 # QuantRAG v2: Progress
 
 ## Status
-- **Phase 0 (audit and setup): done, waiting for Aarana's approval to start Phase 1.**
+- Phase 0 (audit and setup): **done**.
+- **Phase 1 (corpus): tooling done. Waiting on Aarana's manual downloads.** `scripts/check_manifest.py` currently reports 0 / 90 complete rows.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
+
+## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
+v1's data folder held 9 PDFs, but **only 6 were real transcripts** (JPMorgan, HDFC and Infosys, two quarters each). The other 3 (Apple, Microsoft, Reliance) were one-line placeholders. The shipped index held just **one** real transcript (JPMorgan Q2 2024, 88 chunks). So v1's memory and latency figures describe a system answering over roughly one transcript, and v2's quality numbers have **no v1 equivalent** to compare against. Any "v1 → v2" claim must say this. Only the reranker memory story (peak RAM with and without the PyTorch reranker) is a like-for-like comparison.
 
 ## Phase 0: v1 audit
 
@@ -30,7 +34,7 @@
 ### What v2 reuses
 - The router *concept* (per-company filtered retrieval for comparisons), rebuilt with `companies.yaml` aliases.
 - The memory-endpoint idea, as `peak RSS` in the eval harness and `/health`.
-- The real HDFC and Infosys PDFs, only if they fall inside the Phase 1 window (see open questions).
+- Of v1's real PDFs, only Infosys Q2 FY25 is inside the Phase 1 window (D8).
 - Nothing else in v1 code is reused directly.
 
 ## v1 baselines ("before" figures)
@@ -48,16 +52,34 @@ Caveats: measured on a macOS arm64 laptop (Python 3.11.15), not Render's Linux b
 - Drop the US PDFs (and the synthetic stubs).
 - Tag after committing the WIP v1 edits plus `re_ingest.py` (done).
 
-## Cleanup candidates (not touched: ask before deleting)
-Untracked: `.env 2` (contains keys; git-ignored now), `.gitignore 2`, `Dockerfile 2`, `README 2.md`, `requirements 2.txt`, `asset.png`, `test_cohere.py`, `test_dns_patch.py`, `test_endpoints.py`, `test_gemini.py`, `test_hf_api.py`, `test_jpm.py`, `test_models.py`, `test_response.py`, `test_urllib3_patch.py`, plus the broken local `venv/` (points to a removed Anaconda Python).
+## Cleanup candidates (ask before deleting)
+Done in Phase 1 (D11): untracked scratch files and `* 2` duplicates moved to `../quantrag_v1_scratch/`, `venv/` deleted.
 Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_model.py 22-34-15-124.py`, `app/services/resave_model copy.py`, `app/services/resave_model.py`, `resave_model.py`, `scratch.py`, `app/test_service.py`, `chroma_db/`, `models/`, the `.DS_Store` files.
 
-## Next: Phase 1 (corpus)
-- **Aarana:** manually download about 96 transcripts (12 companies × last 8 quarters) into `data/raw/` and fill in `data/manifest.csv`.
-- **Claude Code:** `data/companies.yaml`, the `data/manifest.csv` header, `scripts/check_manifest.py` (file exists, sha256 matches, fiscal_label ↔ period_end consistent), plus tests.
+## Phase 1: corpus
+### Done (Claude Code)
+- `data/companies.yaml`: the 12 companies (NSE symbol, name, sector, aliases). Aliases are checked to be unique across companies.
+- `data/manifest.csv`: all 96 expected rows (12 × Q2 FY25 → Q1 FY27), with `symbol`, `fiscal_label` and `period_end` pre-filled.
+- `scripts/check_manifest.py`: checks every filled row (known symbol, label in window, `period_end` matches the label, call within 120 days after quarter end, https `source_url`, file exists, sha256 matches, no duplicate quarter or PDF). It lists pending rows, absent rows and unreferenced PDFs. `--fill-sha` computes hashes so nobody types them. Exit 1 until there are ≥90 complete rows and 0 errors.
+- `scripts/test_check_manifest.py`: 23 tests, all passing. Ruff is clean.
+- 1 row partly filled: **INFY Q2 FY25** (v1's real PDF, call date 2024-10-17 from its cover page, sha filled). Its `source_url` is **empty and flagged**, because the download link isn't recorded anywhere. Find it and fill it in, or replace the PDF with a fresh download.
+- Housekeeping: `venv/` deleted; scratch files, `* 2` duplicates and the old v1 data moved to `../quantrag_v1_scratch/`; `git fetch --refetch` restored the missing blob (`git fsck` is clean), and the restored blob was scanned for keys with 0 hits, so the history scan now covers everything.
+
+### Aarana's checklist (manual, per brief: no scripting against NSE)
+1. For each pending row, download the earnings-call transcript PDF from the company's investor-relations page or its BSE/NSE corporate announcement ("Earnings Call Transcript").
+2. Save it as `data/raw/{SYMBOL}_Q{n}FY{yy}.pdf` (for example `TCS_Q3FY26.pdf`).
+3. In `data/manifest.csv` fill in `call_date` (from the cover page, YYYY-MM-DD), `source_url` (the exact PDF link) and `filename`. Leave `sha256` empty.
+4. Run `.venv/bin/python scripts/check_manifest.py --fill-sha` and fix anything it reports.
+5. **Pick rows by the quarter's end date, not the cover's label.** For example, a cover saying "Q1 FY'24" was a July 2023 call. Nestlé India in particular may label its quarters differently around its change of financial year (D9).
+6. If a site blocks access or a transcript doesn't exist, **leave the row pending** and note it here. Don't use mirrors.
+- **Done when:** ≥90 complete rows and the checker exits 0.
+
+### Next: Phase 2 (DB and ingestion)
+Starts once enough PDFs exist to test speaker parsing on 3 real transcripts (one per sector is ideal). It doesn't need all 96.
 
 ## Open questions
-1. **Which 8 quarters?** As of 2026-10-15, the latest likely reported quarter is Q2 FY27 (Jul–Sep 2026), and not all 12 companies will have reported it yet. My proposal: the window is Q3 FY25 → Q2 FY27, with "latest available" per company. The existing 2024 HDFC/Infosys PDFs (labelled "2024 Q1/Q2", probably Q4 FY24/Q1 FY25) would fall outside it.
-2. **Corrupt local git object:** one old blob of `chroma_db/chroma.sqlite3` is missing (`git fsck` reports `missing blob 5b4d89d…`). The current tree is fine. `git fetch origin` may restore it. Harmless for v2, but fix before any history rewrite.
-3. **Repo layout:** the brief shows a `quantrag/` root. I propose `backend/` and `frontend/` directly at this repo's root (it is already the QuantRAG repo).
-4. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.
+1. **`main` has diverged from GitHub.** `origin/main` has 5 of Aarana's web edits from August (README rename to "Quant RAG", screenshot moved to `assets/asset.png`). Local `main` has the `v1-final` commit instead. Nothing has been pushed. Before pushing, merge `origin/main` into `main` (no conflicts expected: they touch only README and assets), then push `main`, the `v1-final` tag and `v2`. The untracked root `asset.png` is probably the same screenshot; check before deleting.
+2. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.
+
+## Resolved
+- Window → D8. Repo layout → D7. Missing git blob → restored with `git fetch --refetch`, `fsck` clean.

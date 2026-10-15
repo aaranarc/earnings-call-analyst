@@ -1,0 +1,54 @@
+# Covered companies. `symbol` is the NSE symbol. The router (Phase 4) matches `aliases`
+# case-insensitively on word boundaries, so keep aliases unambiguous across companies.
+# fiscal_label everywhere is our normalised April–March label (docs/DECISIONS.md D9).
+
+- symbol: TCS
+  name: Tata Consultancy Services
+  sector: it_services
+  aliases: [TCS, Tata Consultancy, Tata Consultancy Services]
+- symbol: INFY
+  name: Infosys
+  sector: it_services
+  aliases: [Infosys, INFY]
+- symbol: HCLTECH
+  name: HCL Technologies
+  sector: it_services
+  aliases: [HCLTech, HCL Tech, HCL Technologies, HCL]
+- symbol: WIPRO
+  name: Wipro
+  sector: it_services
+  aliases: [Wipro]
+
+- symbol: HDFCBANK
+  name: HDFC Bank
+  sector: private_bank
+  aliases: [HDFC Bank, HDFC, HDFCBANK]
+- symbol: ICICIBANK
+  name: ICICI Bank
+  sector: private_bank
+  aliases: [ICICI Bank, ICICI, ICICIBANK]
+- symbol: AXISBANK
+  name: Axis Bank
+  sector: private_bank
+  aliases: [Axis Bank, Axis, AXISBANK]
+- symbol: KOTAKBANK
+  name: Kotak Mahindra Bank
+  sector: private_bank
+  aliases: [Kotak Mahindra Bank, Kotak Bank, Kotak, KOTAKBANK]
+
+- symbol: HINDUNILVR
+  name: Hindustan Unilever
+  sector: consumer
+  aliases: [Hindustan Unilever, HUL, HINDUNILVR]
+- symbol: ITC
+  name: ITC
+  sector: consumer
+  aliases: [ITC, ITC Limited]
+- symbol: NESTLEIND
+  name: Nestlé India
+  sector: consumer
+  aliases: [Nestlé India, Nestle India, Nestlé, Nestle, NESTLEIND]
+- symbol: ASIANPAINT
+  name: Asian Paints
+  sector: consumer
+  aliases: [Asian Paints, ASIANPAINT]

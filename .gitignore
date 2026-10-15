@@ -1,5 +1,6 @@
 # Environments
 venv/
+.venv/
 .env*
 !.env.example
 
@@ -8,7 +9,7 @@ __pycache__/
 *.pyc
 
 # Data & DBs
-data/
+data/raw/
 *.pdf
 
 # Models (except the json/pkl files you want to track, but let's just track them specifically)
