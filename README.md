@@ -10,7 +10,17 @@
 
 ---
 
-> **Live Demo:** (https://quant-rag.onrender.com)
+> **v2 rebuild in progress (branch `v2`)** · [![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=v2)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Av2)
+> Tests: 126 passed, 4 skipped (real-transcript tests need the git-ignored PDFs) · **Coverage: 75%** of `ingest`, `numcheck`, `retrieve`, `generate`, `check_manifest`. From CI run [38739812206](https://github.com/aaranarc/earnings-call-analyst/actions/runs/38739812206), 2026-10-15; re-run in CI to update. Progress: [PROGRESS.md](PROGRESS.md). The rest of this README describes v1 and will be rewritten in Phase 11.
+>
+> **Before you push:** this repo blocks pushes that contain secrets. Install the hook once per clone:
+> ```bash
+> brew install gitleaks                    # or see https://github.com/gitleaks/gitleaks#installing
+> git config core.hooksPath .githooks      # use the repo's hooks (.githooks/pre-push)
+> ```
+> The hook scans only the commits being pushed and blocks the push if gitleaks finds anything. If gitleaks isn't installed, the push is blocked too (fail closed). Found a real secret? Remove it from history *and* rotate it.
+
+> **Live Demo (v1):** (https://quant-rag.onrender.com)
 
 ![App Screenshot](./assets/ss.png)
 
