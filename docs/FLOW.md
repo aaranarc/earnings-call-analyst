@@ -3,6 +3,8 @@
 How a request or pipeline actually moves through the code, as ordered `file → function` chains. Update before and after every phase.
 
 ## Currently changing
+**Phase 5 (built; evaluation awaiting labels):** added the **number checker**: `backend/numcheck/match.py` takes each number in a generated answer (and each comparison-table cell), extracted by `numcheck/extract.py`, looks it up in `quantrag.chunk_numbers` for the cited chunks, then other chunks of the same documents, then arithmetic on cited numbers → `verified` / `found_elsewhere` / `derived` / `unverified`. Called at the end of `generate/answer.py: answer()` (new `numbers` field). Plus the checker evaluation: `eval/numbers_label.py` (builds a labelling sheet from real answers) and `eval/numbers_eval.py` (precision/recall of `unverified` against Aarana's labels in `eval/numbers_gold.jsonl`).
+
 **Phase 4 (done):** added **routing + generation**: `backend/generate/router.py` (rule-based: companies via `companies.yaml` aliases, periods via regex / "last quarter", route = single · comparison · risk · out_of_scope, `numeric` flag; `ROUTER_ENABLED=false` → everything single, no filter) → Phase 3 `retrieve()` with the router's filters → `backend/generate/answer.py` (numbered context `[c1]…`, Gemini via LangChain structured output, citation validation, refusal) → CLI `python -m generate "question"`. Model ID from `GEMINI_MODEL` (never hard-coded).
 
 **Phase 3 (done):** added **retrieval**: `backend/retrieve/` (`dense` pgvector cosine · `fts` Postgres `websearch_to_tsquery` + `ts_rank_cd` · `rrf` fusion · `rerank` fastembed cross-encoder · per-company retrieval for comparisons) and a CLI `python -m retrieve "question"`. Plus `eval/smoke.jsonl` + `eval/smoke_retrieval.py` (10 hand-written questions, recall@5 per configuration, peak RSS). Reads the Phase 2 tables only; no writes.
@@ -38,7 +40,8 @@ How a request or pipeline actually moves through the code, as ordered `file → 
 4. `format_context(hits)` → `[c1] company · quarter · speaker (role, section) · page` + text → `PROMPT` (+ comparison or risk rule)
 5. `make_llm()`: `ChatGoogleGenerativeAI(model=$GEMINI_MODEL, temperature=0).with_structured_output(LLMAnswer)` → `.invoke(prompt)`
 6. Drop the table unless `kind == comparison` → `validate()`: remove out-of-range `[cN]`, blank invalid table cells, collect cited excerpts → no valid citation or `refused` → refusal (with coverage list)
-7. Risk route: append "early-warning system not connected yet" → return `{route, hits, answer_markdown, comparison_table, citations[{n, chunk_id, symbol, fiscal_label, speaker, role, page}], refused, refusal_reason, timing_s}`
+7. `check_numbers(conn, hits, answer)` → `numcheck/match.py: load_sources()` (`chunk_numbers` of the cited chunks + other chunks of their documents) → `check_text()` per sentence of the answer and per table cell: `extract()` each number → cited-chunk match → same-document match → one-chunk arithmetic → status
+8. Risk route: append "early-warning system not connected yet" → return `{route, hits, answer_markdown, comparison_table, citations[{n, chunk_id, symbol, fiscal_label, speaker, role, page}], refused, refusal_reason, timing_s}`
 
 ### Retrieval (Phase 3)
 `cd backend && python -m retrieve "question" [--company …] [--period …] [--mode …] [--no-rerank]` → `retrieve/__main__.py: main()` → `Models(rerank)` (fastembed `bge-small-en-v1.5` + `Xenova/ms-marco-MiniLM-L-6-v2`, tokenizer truncation 384) → `retrieve/search.py: retrieve(conn, models, query, companies, periods, mode, use_rerank)`

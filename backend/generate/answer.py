@@ -2,7 +2,8 @@
 
 The model sees numbered context chunks [c1]..[cN] and must cite every claim. Citations are then checked in code:
 markers that don't point at a provided chunk are removed, and a non-refused answer with no valid citation is
-turned into a refusal. Numbers are never extracted by the LLM; numcheck does that (Phase 5).
+turned into a refusal. Numbers are never extracted by the LLM: numcheck extracts every number from the final answer
+(and each table cell) and checks it against the cited chunks (Phase 5).
 """
 import os
 import re
@@ -11,6 +12,7 @@ import time
 from pydantic import BaseModel, Field
 
 from generate.router import route
+from numcheck.match import check_text, load_sources
 from retrieve.search import retrieve
 
 CITE = re.compile(r"\[c(\d+)\]")
@@ -120,7 +122,7 @@ def answer(question, conn, models, companies, llm=None, use_rerank=True):
     rt = route(question, companies, latest_periods(conn))
     timing = {"route": time.perf_counter() - t0}
     out = {"question": question, "route": rt.__dict__, "hits": [], "answer_markdown": "", "comparison_table": None,
-           "citations": [], "refused": False, "refusal_reason": None, "timing_s": timing}
+           "citations": [], "numbers": [], "refused": False, "refusal_reason": None, "timing_s": timing}
     if rt.kind == "out_of_scope":
         out.update(refused=True, refusal_reason=_refusal(
             "I can only answer questions about the earnings calls I cover.", conn, companies, None))
@@ -159,5 +161,24 @@ def answer(question, conn, models, companies, llm=None, use_rerank=True):
                citations=[{"n": i, "chunk_id": hits[i - 1].chunk_id, "symbol": hits[i - 1].symbol,
                            "fiscal_label": hits[i - 1].fiscal_label, "speaker": hits[i - 1].speaker,
                            "role": hits[i - 1].role, "page": hits[i - 1].page} for i in cited])
+    t = time.perf_counter()
+    out["numbers"] = check_numbers(conn, hits, ans)
+    timing["numcheck"] = time.perf_counter() - t
     timing["total"] = time.perf_counter() - t0
     return out
+
+
+def check_numbers(conn, hits, ans):
+    """Every number in the answer text and in each table cell, with its status (numcheck/match.py)."""
+    cited_by_n = {i: h.chunk_id for i, h in enumerate(hits, start=1)}
+    chunk_numbers, elsewhere = load_sources(conn, [h.chunk_id for h in hits])
+    found = [("answer", c) for c in check_text(ans.answer_markdown, cited_by_n, chunk_numbers, elsewhere)]
+    for r, row in enumerate(ans.comparison_table or []):
+        for k, cell in enumerate(row.cells):
+            if cell.citations:  # "not discussed" cells have none
+                text = cell.value + " " + "".join(f"[c{i}]" for i in cell.citations)
+                found += [(f"table:{r}:{k}", c) for c in check_text(text, cited_by_n, chunk_numbers, elsewhere)]
+    return [{"where": where, "raw": c.raw, "value": c.value, "unit": c.unit, "status": c.status,
+             "start": c.start, "end": c.end, "formula": c.formula,
+             "source": None if not c.source else {"chunk_id": c.source.chunk_id, "raw": c.source.raw}}
+            for where, c in found]

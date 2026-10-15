@@ -15,7 +15,7 @@ SCALE_WORDS = {"crore": "crore", "crores": "crore", "cr": "crore", "lakh": "lakh
                "million": "million", "mn": "million", "billion": "billion", "bn": "billion", "trillion": "trillion"}
 CURRENCY = {"₹": "INR", "rs": "INR", "rs.": "INR", "inr": "INR", "$": "USD", "us$": "USD", "usd": "USD"}
 UNITS = {"%": "%", "per cent": "%", "percent": "%", "bps": "bps", "basis points": "bps", "basis point": "bps",
-         "x": "x", "times": "x"}
+         "x": "x", "times": "x", "percentage points": "pp", "percentage point": "pp", "pp": "pp", "ppt": "pp"}
 NEGATIVE_CUES = re.compile(r"\b(?:decline[sd]?|declining|down|fell|fall(?:ing|s)?|drop(?:ped|s)?|decrease[sd]?|"
                            r"contraction|contracted|lower by|negative)\b(?:\s+\w+){0,2}\s*$", re.IGNORECASE)
 MONTHS = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?"
@@ -26,7 +26,7 @@ PATTERN = re.compile(
     rf"(?P<neg>[-−–](?=\d))?(?P<a>{NUM})"
     rf"(?:\s*(?:-|–|—|to)\s*(?P<b>{NUM}))?"
     rf"(?:\s?(?P<scale>crores?|cr|lakhs?|million|mn|billion|bn|trillion)\b)?"
-    rf"(?:\s?(?P<unit>%|per cent|percent|bps|basis points?|x\b|times\b))?",
+    rf"(?:\s?(?P<unit>%|percentage points?\b|pp\b|ppt\b|per cent\b|percent\b|bps\b|basis points?\b|x\b|times\b))?",
     re.IGNORECASE,
 )
 
@@ -39,6 +39,7 @@ class Number:
     scale: str | None
     start: int
     end: int
+    decimals: int = 0  # digits after the decimal point as written: "2.40%" -> 2 (the precision the speaker stated)
 
 
 def _skip(text, m):
@@ -80,5 +81,7 @@ def extract(text: str) -> list[Number]:
         raw = m.group(0).strip()
         for g in ("a", "b"):
             if m[g]:
-                out.append(Number(raw, sign * float(m[g].replace(",", "")) * mult, unit, scale, m.start(), m.end()))
+                digits = m[g].split(".")[1] if "." in m[g] else ""
+                out.append(Number(raw, sign * float(m[g].replace(",", "")) * mult, unit, scale, m.start(), m.end(),
+                                  len(digits)))
     return out

@@ -23,7 +23,7 @@ NOT_SPEAKERS = {"disclaimer", "note", "speakers", "management", "corporate parti
                 "analysts", "moderator note"}
 SAFE_HARBOUR = re.compile(r"forward[- ]looking|safe harbou?r|risks and uncertainties|sec\.gov", re.IGNORECASE)
 PAGE_NO = re.compile(r"^page \d+ of \d+$", re.IGNORECASE)
-SENTENCE_END = re.compile(r"(?<!\bMr)(?<!\bMs)(?<!\bDr)(?<!\bMrs)(?<=[.!?])\s+(?=[A-Z“\"(₹$0-9])")
+SENTENCE_END = re.compile(r"(?<!\bMr\.)(?<!\bMs\.)(?<!\bDr\.)(?<!\bMrs\.)(?<!\bRs\.)(?<=[.!?])\s+(?=[A-Z“\"(₹$0-9])")
 
 
 @dataclass

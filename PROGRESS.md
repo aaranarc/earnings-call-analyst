@@ -6,7 +6,8 @@
 - **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
 - **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking.
 - **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`).
-- **Pre-Phase 5 tasks: done** (CI green, gitleaks hook, router report, model pinned). **Phase 5 not started; waiting for Aarana.**
+- **Pre-Phase 5 tasks: done** (CI green, gitleaks hook, router report, model pinned).
+- **Phase 5 (number checker): built and wired in; evaluation waiting on Aarana's labels** (112 rows in `eval/numbers_to_label.csv`). Approve or reject the corrupted copies (D32) before labelling.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -202,6 +203,31 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - **Model:** `.env.example` pins `GEMINI_MODEL=gemini-3.1-flash-lite` (stable). Final choice on the gold set.
 - **Local tests now use `quantrag_test`,** never the dev database (D28 incident).
 - **Known failure kept for Phase 6:** TCS total TCV labelled "Large Deal TCV" (D27).
+
+## Phase 5: Number checker
+### Done
+- `backend/numcheck/match.py`: `verified` / `found_elsewhere` / `derived` (formula) / `unverified` per number, using the citations in the number's own sentence (D31). Wired into `generate/answer.py`: every answer now has `numbers[]` (where, raw, value, unit, status, offsets, formula, source chunk). Table cells are checked against their own citations.
+- Extractor: stated precision (`decimals`) and a `pp` unit. Stored numbers unchanged (0 rows differ), so no re-ingest.
+- Tests: **67 number tests** (45 extraction + 22 matching: every format in the brief, precision, units, signs, ranges, sentence-level citations, derivations, made-up numbers) against the brief's ≥ 25. Full suite locally: **153 passed** (incl. DB tests on `quantrag_test`).
+- Labelling sheet: `eval/numbers_label.py` → 37 real answers → **112 rows: 77 real numbers + 35 corrupted copies, shuffled, checker verdicts hidden** (D32). `eval/numbers_eval.py` scores a labelled sheet into `eval/numbers_gold.jsonl` + `eval/results/numcheck_<date>_<sha>.json`.
+
+### Not done (needs Aarana)
+- **Label the sheet.** Phase 5's done-condition (checker precision/recall for `unverified` in `eval/results/`) can't be met without human labels. Nothing is reported until then.
+
+### Labelling guide (fill the `label` column of `eval/numbers_to_label.csv`; use `notes` for anything odd)
+| Label | When |
+|---|---|
+| `verified` | the number is written in one of the **cited excerpts shown in that row**: same value at the precision the answer uses (rounding is fine: "25%" for "25.3%"), same unit and scale ("bn" = "billion"). Direction words may differ ("130 bps" vs "down 130 bps"). |
+| `derived` | not written in the excerpts, but you can compute it **exactly** from two numbers in **one** cited excerpt (difference, % change, share, percentage points, % → bps). |
+| `found_elsewhere` | not in the cited excerpts and not derivable, but it **is** stated somewhere else in the same transcript (check the PDF). |
+| `unverified` | none of the above: wrong value, wrong unit or scale, wrong company or quarter, or not in the transcript at all. |
+- Label the **number**, not the sentence. If the number is right but attached to the wrong metric (e.g. TCS's total TCV called "large deal TCV"), label it by presence and say so in `notes`.
+- If it isn't a quantity at all (e.g. "1" in "stage 1"), label it by presence and write `not a figure` in `notes`.
+- Then run `python eval/numbers_eval.py`.
+
+### Found while generating answers
+- **a12 "What was TCS's cash conversion as a share of net income?" was refused**, though chunk 585 says "Our cash conversion remained strong at 93% of net income." It was also a smoke-set retrieval miss (s12). A real failure case for the Phase 6 report.
+- a30 (A&P as a share of turnover) and a31 (per-branch % increase) were refused because they need a calculation the prompt forbids. That's the intended behaviour (D27).
 
 ## Open questions
 - **Committed artifacts:** `backend/.coverage` and `backend/quantrag.egg-info/` are tracked on `v2`. GateGuard blocked my `git rm --cached`, so Aarana runs the clean-up command given in chat.

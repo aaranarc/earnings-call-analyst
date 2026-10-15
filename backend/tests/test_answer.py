@@ -6,6 +6,7 @@ import pytest
 import check_manifest as cm
 import generate.answer as ga
 from generate.answer import LLMAnswer, validate
+from numcheck.match import Source
 from retrieve.search import Hit
 
 COMPANIES, _ = cm.load_companies(Path(cm.ROOT) / "data/companies.yaml")
@@ -32,6 +33,8 @@ def wired(monkeypatch):
                                                                      if not symbols or s in symbols})
     state = {"hits": [hit(101), hit(102), hit(103, "INFY")]}
     monkeypatch.setattr(ga, "retrieve", lambda *a, **k: state["hits"])
+    nums = {101: [Source(101, "2.2%", 2.2, "%", None)]}
+    monkeypatch.setattr(ga, "load_sources", lambda conn, ids: ({i: nums.get(i, []) for i in ids}, []))
     return state
 
 
@@ -113,3 +116,14 @@ def test_table_only_kept_for_comparisons(wired):
     out = run("Compare TCS and Infosys on deals",
               FakeLLM(LLMAnswer(answer_markdown="See [c3].", comparison_table=table)))
     assert out["comparison_table"][0]["cells"][0]["value"] == "$2.4 bn"
+
+
+def test_numbers_are_checked_in_answer_and_table(wired):
+    table = [{"metric": "Growth", "cells": [{"company": "TCS", "value": "2.2%", "citations": [1]},
+                                           {"company": "Infosys", "value": "9.9%", "citations": [3]}]}]
+    out = run("Compare TCS and Infosys revenue growth",
+              FakeLLM(LLMAnswer(answer_markdown="TCS grew 2.2% [c1]; Infosys grew 9.9% [c3].", comparison_table=table)))
+    got = [(n["where"], n["raw"], n["status"]) for n in out["numbers"]]
+    assert got == [("answer", "2.2%", "verified"), ("answer", "9.9%", "unverified"),
+                   ("table:0:0", "2.2%", "verified"), ("table:0:1", "9.9%", "unverified")]
+    assert out["numbers"][0]["source"] == {"chunk_id": 101, "raw": "2.2%"}
