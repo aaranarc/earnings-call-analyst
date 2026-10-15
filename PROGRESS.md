@@ -2,7 +2,8 @@
 
 ## Status
 - Phase 0 (audit and setup): **done**.
-- **Phase 1 (corpus): tooling done. Waiting on Aarana's manual downloads.** Gates (D12): `phase2` 0/3 sectors · `A` 0/48 · `B` 0/96.
+- **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **FAIL** 2/3 sectors (HDFCBANK Q1 FY27's PDF is in, but its `source_url` is empty) · `A` 2/48 · `B` 2/96. Complete: TCS Q1 FY27, HINDUNILVR Q1 FY27.
+- **Phase 2 (DB + ingestion): code and tests done, not yet run against a database.** Started at Aarana's request with the 3 sector PDFs on disk, while the `phase2` gate still fails on missing links.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -76,8 +77,28 @@ Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_mod
 - **Done when (D12):** `--gate phase2` passes → Phase 2 can start · `--gate A` passes → the latest 4 quarters are complete · `--gate B` passes → Phase 1 is done.
 - **Suggested order:** first one transcript per sector (unlocks Phase 2), then the latest 4 quarters for all 12 (Tier A), then the older 4 (Tier B).
 
-### Next: Phase 2 (DB and ingestion)
-Starts when `python scripts/check_manifest.py --gate phase2` passes: one real transcript per sector.
+## Phase 2: DB and ingestion
+### Done
+- `db/schema.sql`: the brief's schema in `quantrag`, idempotent, plus a unique `(company, quarter)` on documents and lookup indexes.
+- `backend/ingest/parse.py`: PDF → page text → headers/footers removed → speaker turns with role (management / analyst / moderator) and section (prepared / qa) → boilerplate dropped. Handles both "Name: text" and name-on-its-own-line layouts.
+- `backend/ingest/chunk.py`: one speaker per chunk, ≤450 tokens, sentence split with 1-sentence overlap. `backend/ingest/run.py`: manifest → parse → chunk → fastembed `BAAI/bge-small-en-v1.5` → DB, one transaction per document, skip by sha256, logs counts, average tokens and schema size.
+- `backend/numcheck/extract.py`: number extraction + normalisation, pulled forward from Phase 5 (D13).
+- Tests: 57 backend tests (38 number extraction, 7 parsing including the 4 real transcripts, 6 chunking, 3 DB). **54 pass, 3 skipped** (the DB tests, no local Postgres yet). Plus 27 checker tests. Ruff is clean.
+- Pinned deps in `backend/pyproject.toml`. `.env.example` has key names only.
+
+### Measured on the 4 transcripts on disk: `cd backend && python -m ingest.run --dry-run` (no DB)
+| Transcript | Chunks | Avg tokens | Median | Max | Chunks under 50 tokens | Numbers |
+|---|---|---|---|---|---|---|
+| TCS Q1 FY27 | 69 | 124 | 91 | 434 | 21 | 85 |
+| HDFC Bank Q1 FY27 | 62 | 175 | 132 | 445 | 13 | 136 |
+| HUL Q1 FY27 | 72 | 139 | 114 | 440 | 16 | 87 |
+| Infosys Q2 FY25 | 84 | 105 | 85 | 446 | 24 | 111 |
+Chunks are far below the brief's ~350–500 tokens (D14).
+
+### Blocked / not done
+1. **No database yet.** Docker is installed but not running, and no `SUPABASE_DB_URL` exists. So: the DB tests (incl. "re-running adds 0 rows") haven't run, nothing is ingested, and the DB size vs the 500 MB Supabase free tier isn't measured. Needs: start Docker Desktop (local test DB) **and/or** create the Supabase project and put its URL in `.env`.
+2. **Ingestion only takes rows that pass the checker,** so HDFCBANK Q1 FY27 and INFY Q2 FY25 are skipped until their `source_url`s are filled in.
+3. **Phase 2 done-condition** (all manifest docs ingested; 0 rows on re-run; chunk count, avg tokens and DB size logged) can't be met until 1 and 2 are resolved.
 
 ## Open questions
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.

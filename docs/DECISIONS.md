@@ -89,3 +89,32 @@ One dated entry per meaningful decision. Never rewrite old entries; add a new en
 
 ### Excused rows
 None yet.
+
+## D13 · 2026-10-15 · Number extractor built in Phase 2, not Phase 5
+- **Decided:** `backend/numcheck/extract.py` (find + normalise numbers) is built now. The matcher (verified / derived / unverified) stays in Phase 5.
+- **Why:** Phase 2 ingestion must fill `chunk_numbers` "using the same numcheck extractor that Phase 5 uses". Building it later would mean re-ingesting everything, or a backfill step that idempotent ingest (skip by sha256) doesn't do.
+- **Trade-off:** extractor changes in Phase 5 require re-ingesting (drop the documents and run again). Tolerable while the corpus is small.
+- **Choices inside:** values are signed: an explicit minus or a nearby decline word ("down 130 bps") makes them negative. The Phase 5 matcher should fall back to absolute values when an answer drops the direction word. Years, Q/FY/H labels, dates and ordinals are skipped. A range ("20–22%") gives two numbers sharing one `raw`.
+- **Revisit if:** the Phase 5 checker evaluation shows extraction misses (recall on `numbers_gold.jsonl`).
+
+## D14 · 2026-10-15 · Chunks are single speaker turns, so they're much smaller than the brief's ~350–500 tokens
+- **Measured (4 transcripts, `bge-small` tokenizer, `python -m ingest.run --dry-run`):** average 105–175 tokens per chunk, median 85–132, max 446. 13–24 chunks per call are under 50 tokens (e.g. "Got it. Thanks, and all the best.").
+- **Why:** earnings-call Q&A is a rapid back-and-forth. The brief's two chunking rules conflict ("~350–500 tokens" vs "never mix two speakers"). I kept **never mix speakers** because each chunk then has exactly one speaker and role for citations, and long turns still split at 450 tokens.
+- **Options:** (a) one turn per chunk (chosen) · (b) analyst question + management answer as one "exchange" chunk (mixes speakers; better context for short follow-ups) · (c) drop chunks under N tokens (loses short but factual answers like "Yes, 24%").
+- **Mitigation:** each vector embeds a small header with company, quarter, speaker and role (D15), so a short follow-up still carries its context.
+- **Revisit if:** Phase 6 hit-rate on Q&A-sourced gold questions is weak. Then run (b) as an ablation.
+
+## D15 · 2026-10-15 · Embed "company quarter · speaker (role): text"; store raw text
+- **Decided:** the vector is computed from `"{company name} {fiscal_label} · {speaker} ({role}): {chunk text}"`. `chunks.text` (and so the keyword index and citations) stays the raw transcript text.
+- **Why:** a short turn like "And what about margins?" means nothing on its own. The header lets dense retrieval tie it to the company, quarter and speaker. The raw text keeps citations exact.
+- **Trade-off:** changing the header format means re-embedding everything.
+- **Revisit if:** the ablation shows the header doesn't help, or hurts.
+
+## D16 · 2026-10-15 · Ingestion details
+- **Only rows that pass `check_manifest.py` are ingested.** A row with an error (e.g. missing `source_url`) is reported and skipped, so every stored document has a source link for the citation drawer.
+- **One transaction per document,** and skip if the `sha256` is already stored. Re-running is safe and adds 0 rows. A crash mid-document leaves nothing behind.
+- **Text extraction:** pdfplumber per page; pypdf for pages where pdfplumber emits `(cid:N)` codes (TCS). Then Unicode NFKC (ligatures "ﬁ" → "fi", otherwise keyword search misses "financial") and one font-specific fix: pypdf renders TCS's "ff" ligature as "Ư" (checked: every occurrence is "ff").
+- **Speaker roles:** moderator by name; analyst if the moderator introduces them ("question is from the line of X from Y"); management if named on the cover or if they speak before Q&A opens (TCS has no participant list). All speakers in the 4 test transcripts got a role, none `unknown`.
+- **Boilerplate dropped:** moderator turns, labelled "Disclaimer:"/"Note:" blocks, sentences matching forward-looking / safe-harbour wording, turns under 5 words, running headers/footers (lines repeated at page edges on ≥50% of pages) and "Page N of M".
+- **The DB test runs only against localhost** (`TEST_DATABASE_URL`), because it drops the `quantrag` schema.
+- **Revisit if:** a new transcript layout breaks the speaker rules. Add it as a real-PDF test case first.
