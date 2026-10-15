@@ -2,7 +2,7 @@
 
 **An earnings-call analyst that cites every claim and checks every number.**
 
-[![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=v2)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Av2)
+[![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain)
 ![status](https://img.shields.io/badge/status-v2.0--alpha-orange)
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
@@ -76,7 +76,7 @@ the file it comes from.
 | v1 for comparison, **macOS** | peak **171.8 MB** without reranker; **511.7–691.7 MB** with its PyTorch reranker (5 runs) | v1 effectively indexed one real transcript | [`v1_baseline.json`](eval/results/v1_baseline.json) |
 | Router accuracy | **17/20** fully correct (companies 18/20, periods 19/20, intent 18/20) | 20 hand-labelled queries incl. known gaps | [`router_report.json`](eval/results/router_report.json) |
 | Answers with valid citations | **10/10** answerable · **3/3** unanswerable refused · **1/1** out of scope refused | automated checks; faithfulness not judged yet | [`phase4_check.json`](eval/results/phase4_check.json) |
-| CI | see the file: tests passed / skipped, coverage, run link | GitHub Actions with a pgvector service container | [`ci_latest.json`](eval/results/ci_latest.json) |
+| CI | [![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) | Test counts and coverage are reported by GitHub Actions | [Latest Actions run on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) |
 | Number checker precision / recall | **TBD**: 120 numbers are waiting for blind human labels | | (`eval/results/numcheck_*.json` once labelled) |
 
 ## Known limitations

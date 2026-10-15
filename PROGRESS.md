@@ -197,7 +197,7 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 **My read of all 14 outputs (not automated):** answers 1–8 and 10 are faithful to their cited excerpts, and refusals list what's available. Issues found: (1) the model added tables to single-company answers; fixed in code (D27) and re-run. (2) The TCS vs Infosys comparison labels TCS's **total** TCV as "Large Deal TCV"; kept as a known failure for the Phase 6 report. (3) "$2.4 bn" was rewritten as "$2.4 billion" (same value).
 
 ## Pre-Phase 5: CI, secrets hook, router report, model pin (D28–D30)
-- **CI green:** run 38739812206: lint ✅, **126 passed, 4 skipped, coverage 75%, job 1 min 15 s** (first run, empty caches; both caches saved).
+- **CI:** test and coverage results are available in [GitHub Actions](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain).
 - **gitleaks pre-push hook:** blocks pushes with findings; fails closed without gitleaks; install steps in README.
 - **Router:** 17/20 fully correct on 20 new labelled queries (companies 90%, periods 95%, intent 90%). Smoke hybrid+rerank recall@5 18 → 19/20 with the router on.
 - **Model:** `.env.example` pins `GEMINI_MODEL=gemini-3.1-flash-lite` (stable). Final choice on the gold set.
@@ -223,11 +223,8 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - a30 (A&P as a share of turnover) and a31 (per-branch % increase) were refused because they need a calculation the prompt forbids. That's the intended behaviour (D27).
 
 ## Open questions
-- **Committed artifacts:** `backend/.coverage` and `backend/quantrag.egg-info/` are tracked on `v2`. GateGuard blocks the `--cached` removal for me; Aarana runs the one-line clean-up given in chat.
-- **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.
 0. **INFY Q2 FY25 `source_url` set on Aarana's verification, 2026-10-15.** infosys.com returns HTTP 403 to automated downloads (twice), so the tool couldn't compare hashes. Aarana confirmed the file at the URL has the same sha256 as `data/raw/INFY_Q2FY25.pdf` (`0c28ccd2…ce14a00`). Not re-checkable by script while the block stands.
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.
-2. Untracked root `asset.png` is byte-identical to the committed `assets/asset.png`. It's safe to delete; left alone until approved.
 3. Still open from brief §11: Cloud Run vs Render (#3) and PDF storage for the weekly job (#4). Both are needed by Phase 9.
 
 ## Resolved
@@ -235,3 +232,8 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - `main` diverged from GitHub → `origin/main` merged into `main` (clean: README + assets only). Pushed `main`, tag `v1-final` and `v2` on 2026-10-15, after a key scan of the outgoing commits found nothing.
 - "Why 90 of 96" → D12.
 - Infosys Q2 FY25 `source_url` → Aarana is adding the BSE link.
+
+## Alpha freeze cleanup
+- Untracked generated Python artifacts and ignored future coverage/build outputs; deleted the root image as requested.
+- Removed static CI results and hand-written CI metrics; README links to live main CI, and CI runs for main pushes and PRs.
+- Audited project and user MCP configurations: the project config already targets the ingestion project; no stale reference found in active user settings.

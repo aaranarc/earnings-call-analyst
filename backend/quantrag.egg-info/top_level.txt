@@ -1,4 +1,0 @@
-generate
-ingest
-numcheck
-retrieve
