@@ -20,3 +20,6 @@ data/raw/
 
 # Claude Code MCP config (contains the Supabase project ref)
 .mcp.json
+
+# Answer keys and corruption maps: never committed while labelling is in progress (D33)
+eval/private/

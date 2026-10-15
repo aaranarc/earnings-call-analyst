@@ -7,7 +7,7 @@
 - **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking.
 - **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`).
 - **Pre-Phase 5 tasks: done** (CI green, gitleaks hook, router report, model pinned).
-- **Phase 5 (number checker): built and wired in; evaluation waiting on Aarana's labels** (112 rows in `eval/numbers_to_label.csv`). Approve or reject the corrupted copies (D32) before labelling.
+- **Phase 5 (number checker): built and wired in; evaluation waiting on Aarana's labels** (120 rows, labelling page ready: `python eval/label_server.py`).
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -209,28 +209,21 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - `backend/numcheck/match.py`: `verified` / `found_elsewhere` / `derived` (formula) / `unverified` per number, using the citations in the number's own sentence (D31). Wired into `generate/answer.py`: every answer now has `numbers[]` (where, raw, value, unit, status, offsets, formula, source chunk). Table cells are checked against their own citations.
 - Extractor: stated precision (`decimals`) and a `pp` unit. Stored numbers unchanged (0 rows differ), so no re-ingest.
 - Tests: **67 number tests** (45 extraction + 22 matching: every format in the brief, precision, units, signs, ranges, sentence-level citations, derivations, made-up numbers) against the brief's ≥ 25. Full suite locally: **153 passed** (incl. DB tests on `quantrag_test`).
-- Labelling sheet: `eval/numbers_label.py` → 37 real answers → **112 rows: 77 real numbers + 35 corrupted copies, shuffled, checker verdicts hidden** (D32). `eval/numbers_eval.py` scores a labelled sheet into `eval/numbers_gold.jsonl` + `eval/results/numcheck_<date>_<sha>.json`.
+- Labelling sheet: `eval/numbers_label.py` → 37 real answers (saved in `eval/private/`) → **120 rows: 77 real + 33 value corruptions + 10 context swaps**, shuffled under ids `n001…` (D32, D34). The answer key is only in git-ignored `eval/private/numcheck_key.json` (D33).
+- Labelling page: `python eval/label_server.py`, then open http://127.0.0.1:8765. Local only. One row at a time, number highlighted in the sentence, same-value numbers highlighted in the excerpts; keys 1/2/3 = supported / not supported / unsure; saves after every click to `eval/labels/numbers_labels.csv`. Checked: listens on 127.0.0.1 only, rejects bad labels, never sends key fields, renders correctly (headless-Chrome screenshot).
+- Scoring: `python eval/numbers_eval.py`: red and any-flag precision/recall for real / corrupted / all, plus recall per corruption type. Partial results stay in `eval/private/` until every row is labelled.
 
 ### Not done (needs Aarana)
-- **Label the sheet.** Phase 5's done-condition (checker precision/recall for `unverified` in `eval/results/`) can't be met without human labels. Nothing is reported until then.
-
-### Labelling guide (fill the `label` column of `eval/numbers_to_label.csv`; use `notes` for anything odd)
-| Label | When |
-|---|---|
-| `verified` | the number is written in one of the **cited excerpts shown in that row**: same value at the precision the answer uses (rounding is fine: "25%" for "25.3%"), same unit and scale ("bn" = "billion"). Direction words may differ ("130 bps" vs "down 130 bps"). |
-| `derived` | not written in the excerpts, but you can compute it **exactly** from two numbers in **one** cited excerpt (difference, % change, share, percentage points, % → bps). |
-| `found_elsewhere` | not in the cited excerpts and not derivable, but it **is** stated somewhere else in the same transcript (check the PDF). |
-| `unverified` | none of the above: wrong value, wrong unit or scale, wrong company or quarter, or not in the transcript at all. |
-- Label the **number**, not the sentence. If the number is right but attached to the wrong metric (e.g. TCS's total TCV called "large deal TCV"), label it by presence and say so in `notes`.
-- If it isn't a quantity at all (e.g. "1" in "stage 1"), label it by presence and write `not a figure` in `notes`.
-- Then run `python eval/numbers_eval.py`.
+- **Label the 120 rows** with the page. Phase 5's done-condition (checker metrics in `eval/results/`) needs this. The guide is on the page (click "Labelling guide").
+- **Don't open** `eval/private/` or the old `eval/results/numcheck_answers.json` from commit `efa92f7` until done (D33).
+- **Expect** context swaps to pass as `verified`; that's the known limitation of value-based checking (D34).
 
 ### Found while generating answers
-- **a12 "What was TCS's cash conversion as a share of net income?" was refused**, though chunk 585 says "Our cash conversion remained strong at 93% of net income." It was also a smoke-set retrieval miss (s12). A real failure case for the Phase 6 report.
+- **Phase 6 failure case (kept): a12 "What was TCS's cash conversion as a share of net income?" was refused**, though chunk 585 says "Our cash conversion remained strong at 93% of net income." It was also a smoke-set retrieval miss (s12). A real failure case for the Phase 6 report.
 - a30 (A&P as a share of turnover) and a31 (per-branch % increase) were refused because they need a calculation the prompt forbids. That's the intended behaviour (D27).
 
 ## Open questions
-- **Committed artifacts:** `backend/.coverage` and `backend/quantrag.egg-info/` are tracked on `v2`. GateGuard blocked my `git rm --cached`, so Aarana runs the clean-up command given in chat.
+- **Committed artifacts:** `backend/.coverage` and `backend/quantrag.egg-info/` are tracked on `v2`. GateGuard blocks the `--cached` removal for me; Aarana runs the one-line clean-up given in chat.
 - **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.
 0. **INFY Q2 FY25 `source_url` set on Aarana's verification, 2026-10-15.** infosys.com returns HTTP 403 to automated downloads (twice), so the tool couldn't compare hashes. Aarana confirmed the file at the URL has the same sha256 as `data/raw/INFY_Q2FY25.pdf` (`0c28ccd2…ce14a00`). Not re-checkable by script while the block stands.
 1. **Nestlé India coverage is unverified.** Aarana asked: if BSE lists fewer than 6 Nestlé transcripts in the window, propose an FMCG replacement. BSE returned **HTTP 403** to an automated fetch of the Nestlé announcements page (scrip 500790) on 2026-10-15, so per brief rule 4 the check stopped there. No workaround was tried. Needs a manual count by Aarana on BSE (or approval to check Nestlé India's own investor-relations page instead). No replacement is proposed until the count is known.
