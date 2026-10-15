@@ -104,6 +104,29 @@ Container: `docker run -d --name qr-pg -e POSTGRES_PASSWORD=pg -p 127.0.0.1:5433
   - Per document: TCS 69 chunks / 14 speakers · INFY 84 / 17 · HDFCBANK 62 / 11 · HINDUNILVR 72 / 9
 - Rough sizing: ~0.5 MB per transcript locally → 96 transcripts ≈ 50 MB, well inside Supabase free's 500 MB. To be confirmed on Supabase.
 
+### Spot-check before Supabase (2026-10-15), local DB, `cd backend && python -m ingest.spot_check`
+Labels below are my (Claude Code's) manual judgments on a reproducible random sample. **Right** = a real quantity, with the value, unit and scale as the speaker meant them.
+
+**Chunks (seed 42, 3 per document): 12 of 12 have the correct speaker, role and section.**
+| Document | Chunk: speaker (role, section, page) | Verdict |
+|---|---|---|
+| HDFCBANK Q1 FY27 | Sashidhar Jagdishan (management, prepared, p2) · Srinivasan Vaidyanathan (management, qa, p4) · Srinivasan Vaidyanathan (management, qa, p12) | ✅ ✅ ✅ |
+| HINDUNILVR Q1 FY27 | Nihal Jham (analyst, qa, p14) · Priya Nair (management, qa, p14) · Yogesh Mulgaonkar (management, qa, p15; reading out collected investor questions) | ✅ ✅ ✅ |
+| INFY Q2 FY25 | Bryan Bergin (analyst, qa, p9) · Jonathan Lee (analyst, qa, p10) · Prashant Kothari (analyst, qa, p21) | ✅ ✅ ✅ |
+| TCS Q1 FY27 | Nehal Shah (management, prepared, p2) · Sudeep Kunnumal (management, prepared, p7) · Gaurav Rateria (analyst, qa, p21) | ✅ ✅ ✅ |
+Notes, not mis-tags: the Nehal Shah chunk keeps one leftover disclaimer sentence ("We have outlined these risks in the second slide…"; the safe-harbour filter drops only sentences with its keywords). The Prashant Kothari chunk is only pleasantries ("Okay. All right. Thank you very much."), see D17.
+
+**Numbers (20 random each round):**
+| Round | Extractor state | Stored numbers | Right | Precision | Wrong ones |
+|---|---|---|---|---|---|
+| 1 (seed 42) | as built in Phase 2 | 419 | 16/20 | **80%** | `360` (360-degree), `50` (Fortune 50), `6` (list marker "6."), `00` (5:00 PM) |
+| 2 (seed 42, new data) | + skip times, X-degree compounds, index names, list markers | 386 | 17/20 | **85%** | `4` (S/4HANA), `27` (full year '27), `40` in "40, 50 basis points" (value right, unit missing) |
+| 3 (seed 7) | + skip numbers fused to letters or after ' / ’ | 368 | 18/20 | **90%** | `11` in "11 odd percent" (value right, unit missing), `3` in "stage 3 assets" (a label) |
+
+Each fix came with regression tests (`backend/tests/test_numbers.py`, now 45 cases), and local ingest was re-run after each (`truncate` on the local container only).
+- **Known remaining misses:** a unit written once for a list ("40, 50 basis points"), "N odd percent", and category labels ("stage 3"). Left for Phase 5: the matcher can compare values when a stored number has no unit. The Phase 5 checker evaluation (~100 hand-labelled numbers, `eval/numbers_gold.jsonl`) is the real measurement. These 20-number samples are small (one wrong = 5 points).
+- After the fixes: 4 documents, 287 chunks (avg 133 tokens), **368 numbers**, schema 2.0 MB on local Postgres.
+
 ### Not done
 1. **Supabase ingest:** waiting for Aarana to add `SUPABASE_DB_URL` (Mumbai, session pooler) to `.env`. Then: `cd backend && python -m ingest.run`, and record chunk count, average tokens and schema size here. The schema-wiping DB tests are never run against it (they refuse non-localhost URLs).
 2. **Phase 2 done-condition** = the Supabase run above, plus a second run adding 0 rows there.

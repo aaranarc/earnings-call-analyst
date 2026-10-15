@@ -125,3 +125,10 @@ None yet.
 - **How to judge it:** run it as a Phase 6 ablation on the same gold set (hit-rate@5 and MRR@10 on Q&A-sourced questions), keeping single-turn chunks as the baseline. Adopt it only if it wins.
 - **Trade-off if adopted:** a chunk then has two speakers, so citations must show both (speaker becomes "analyst → management"). The D14 rule "never mix speakers" would be superseded by a new entry.
 - **Revisit if:** the ablation shows no gain. Then try dropping trivial chunks (under ~20 tokens of thanks/greetings) next.
+
+## D18 · 2026-10-15 · Extractor skip rules added from the pre-Supabase spot-check
+- **Decided:** plain numbers (no currency, scale or unit) are also skipped when they're a time (`5:00`), part of a compound adjective (`360-degree`, `5-year`), after an index or list name (`Fortune 50`, `Nifty 50`), a 1–2-digit list marker followed by a capitalised sentence (`…growth. 6. Overall…`), fused to letters (`S/4HANA`), or after an apostrophe or slash (`'27`).
+- **Why:** these were the wrong extractions in two rounds of 20-number spot-checks (PROGRESS.md). Measured precision went 80% → 85% → 90% on fresh samples.
+- **Trade-off:** a real figure that ends a sentence with no unit and is 1–2 digits ("headcount grew by 12.") is now skipped. `5-year` durations are dropped as numbers. Both are rare in transcripts and low-value for the checker.
+- **Not fixed (on purpose):** units written once for a list ("40, 50 basis points"), "11 odd percent", and labels like "stage 3". Fixing these by more regex would overfit 20-number samples. They wait for the Phase 5 evaluation on ~100 hand-labelled numbers.
+- **Revisit if:** Phase 5's checker precision/recall shows these classes matter.

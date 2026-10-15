@@ -70,6 +70,13 @@ def test_range_gives_two_numbers_with_shared_unit(text, values, unit):
     "in 2H of the year and H1",
     "Q2 FY '25 Earnings Conference Call",
     "COVID19 and model v1.5",
+    # found in the Phase 2 spot-check (PROGRESS.md)
+    "deepening 360-degree partnership with clients",
+    "a deal with a Global Fortune 50 European firm",
+    "volume growth. 6. Overall deal pipeline remains strong.",
+    "We will look to end the call by 5:00 PM.",
+    "S/4HANA transformation is a big part of this deal",
+    "full year '27 will be ahead of full year ’26",
 ])
 def test_labels_dates_years_and_ordinals_are_ignored(text):
     assert extract(text) == []
@@ -84,3 +91,8 @@ def test_offsets_point_at_the_mention():
 def test_several_numbers_in_one_sentence():
     nums = extract("TCV of $9.5 billion, revenue ₹72,275 crore, margin 24%, up 130 bps")
     assert [(n.unit, n.scale) for n in nums] == [("USD", "billion"), ("INR", "crore"), ("%", None), ("bps", None)]
+
+
+def test_spot_check_fixes_keep_real_figures():
+    assert [n.value for n in extract("a 5-year CAGR of 12% and the top 10 clients")] == [12.0, 10.0]
+    assert [n.value for n in extract("revenue grew 6.5% in Q2. 6 new logos were added.")] == [6.5, 6.0]
