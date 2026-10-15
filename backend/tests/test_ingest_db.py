@@ -87,3 +87,22 @@ def test_keyword_column_is_generated(setup):
     (hits,) = conn.execute("select count(*) from chunks where tsv @@ websearch_to_tsquery('english', 'wage hikes')"
                            ).fetchone()
     assert hits == 2
+
+
+def test_source_context_stays_within_document(setup):
+    from quantrag.api import source_neighbors
+    conn, ingest = setup
+    ingest()
+    ids = [r[0] for r in conn.execute("select id from chunks order by id")]
+    neighbors = source_neighbors(conn, ids[1])
+    assert [n["chunk_id"] for n in neighbors] == [ids[0], ids[2]]
+    assert [n["position"] for n in neighbors] == ["before", "after"]
+    assert neighbors[1]["section"] == "qa"
+    assert len(source_neighbors(conn, ids[0])) == 1
+    assert source_neighbors(conn, 999999) == []
+    # A following chunk from another document must never become adjacent context.
+    doc, = conn.execute("""insert into documents(company_id, fiscal_label, period_end, call_date, source_url, sha256)
+        select id, 'Q2 FY27', '2026-09-30', '2026-10-15', 'https://example.com/next.pdf', 'test-other-doc'
+        from companies limit 1 returning id""").fetchone()
+    conn.execute("insert into chunks(document_id, text) values (%s, 'Unrelated next document')", (doc,))
+    assert [n["position"] for n in source_neighbors(conn, ids[-1])] == ["before"]

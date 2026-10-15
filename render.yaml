@@ -1,20 +1,25 @@
+# Free API option. Hosting/billing choice is intentionally deferred to the owner.
+# For an always-on paid API, change the plan in Render after confirming the cost.
 services:
   - type: web
-    name: quant-rag-api
-    env: docker
+    name: quantrag-api
+    runtime: docker
     dockerfilePath: ./Dockerfile
-    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    plan: free
+    autoDeployTrigger: "off"
     envVars:
+      - key: APP_ENV
+        value: production
+      - key: API_ACCESS_TOKEN
+        generateValue: true
+      - key: SUPABASE_DB_URL
+        sync: false
       - key: GEMINI_API_KEY
         sync: false
-    plan: free
-
-  - type: web
-    name: quant-rag
-    env: docker
-    dockerfilePath: ./Dockerfile
-    dockerCommand: streamlit run app/ui/streamlit_app.py --server.port $PORT --server.address 0.0.0.0
-    envVars:
-      - key: API_URL
-        value: https://quant-rag-api.onrender.com
-    plan: free
+      - key: GEMINI_MODEL
+        sync: false
+      - key: DAILY_REQUEST_LIMIT
+        value: "100"
+      - key: USAGE_DB_PATH
+        value: /tmp/quantrag-usage.sqlite3

@@ -7,7 +7,7 @@
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
 > **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
-> small corpus (4 transcripts). There's no web app or hosted demo yet. Every number below comes from a file in
+> small corpus (4 transcripts). A local thesis dashboard is available; a hosted deployment is not yet available. Every number below comes from a file in
 > [`eval/results/`](eval/results/) and can be re-run.
 >
 > *Research and educational project. Not investment advice.*
@@ -37,7 +37,7 @@ python -m quantrag.ask "Compare TCS and Infosys on large deal wins"
 | Retrieve | vector search + Postgres keyword search, fused with RRF, re-ranked by a small cross-encoder; per-company retrieval for comparisons | `backend/retrieve/` |
 | Route | rule-based: companies by alias, quarters ("Q1 FY27", "last two quarters"), intent (single / comparison / risk / out of scope) | `backend/generate/router.py` |
 | Answer | Gemini with structured output; every sentence cites `[cN]`; citations validated in code; refuses when the transcripts don't say, and lists what *is* available | `backend/generate/answer.py` |
-| Number check | every number in the answer is looked up in the passage its sentence cites: ✅ verified · 🟡 derived / found elsewhere · 🔴 unverified | `backend/numcheck/` |
+| Number check | every number in the answer is looked up in the passage its sentence cites: ✅ value matched · 🟡 derived / found elsewhere · 🔴 unmatched | `backend/numcheck/` |
 
 ## Architecture
 
@@ -93,7 +93,7 @@ the file it comes from.
   transcript says 93%; a long multi-topic CFO turn is never retrieved for palm-oil questions (D24).
 - **Router gaps:** sector questions ("which bank…") and "this quarter" aren't understood (D30).
 - **Memory figures are from macOS** and vary by up to ~140 MB between identical runs. Cloud Run (Linux) needs its own measurement.
-- **No API, web app or deployment yet**, and no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
+- **Local API and dashboard available; no hosted deployment yet**, and no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
   still in the repo pending removal.
 
 ## Roadmap
@@ -102,18 +102,23 @@ the file it comes from.
 |---|---|---|
 | Phase 5 eval | blind-label 120 numbers; publish checker precision/recall per corruption type | labelling page ready |
 | Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 4/96 |
-| Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | next |
-| Phase 7 | FastAPI with streaming answers (SSE), rate limits, health | planned |
-| Phase 8 | Next.js web app: chat with citation drawer, number badges, "how this was answered" panel, public eval page | planned |
-| Phase 9 | Cloud Run + Vercel deployment; weekly GitHub Actions ingest | planned |
+| Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | [Retrieval, generation and calibration tooling ready](docs/EVALUATION.md); human-reviewed runs pending |
+| Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
+| Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |
+| Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | images/runbook ready; hosting decision deferred |
 | Phase 10 | risk route backed by the separate distress early-warning (EWS) API | planned |
 | Phase 11 | README, demo GIF, architecture write-up | planned |
-| Promise tracker | spec in `docs/01b` (not yet in this repo) | planned |
-| Telegram bot | spec in `docs/01b` (not yet in this repo) | planned |
+| Thesis tracker | source-quoted AI suggestions, multi-period evidence timeline, manual assessment, import/export, printable brief | implemented on demand |
+| Telegram bot | Optional delivery channel | deferred by owner |
 
 Progress and the exact next steps: [`PROGRESS.md`](PROGRESS.md). Every design decision and its trade-off:
 [`docs/DECISIONS.md`](docs/DECISIONS.md). How a request flows through the code: [`docs/FLOW.md`](docs/FLOW.md).
 Plain-English notes: [`docs/LEARNING.md`](docs/LEARNING.md).
+
+## Dashboard
+
+The local dashboard adds a thesis workspace, cited Q&A, evidence drawers, number checks and retrieval traces.
+[Setup and limitations](frontend/README.md). On-demand thesis checks propose exact source quotes; you review the suggestion and choose the assessment. Example scenarios are explicitly labelled. [Production setup](docs/DEPLOYMENT.md).
 
 ## Run locally
 

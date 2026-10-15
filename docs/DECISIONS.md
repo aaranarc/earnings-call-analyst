@@ -249,3 +249,31 @@ None yet.
 - **Scoring:** positive = not supported. Two flag definitions: **red** (`unverified`) and **any non-green** (`unverified`, `found_elsewhere` or `derived`). Precision and recall for each, for real / corrupted / all, plus **recall per corruption type**.
 - **Known limitation, expected:** the checker matches **values**, not what they describe. All 10 context swaps came out `verified` (checker's own verdicts), so their recall should be ~0 under either flag definition. Catching wrong attribution needs claim-level checking (does the excerpt say *this company's* *metric* in *this quarter* is X?). That's the Phase 6 faithfulness judge's job, not value matching.
 - **Revisit if:** context-swap errors turn out common in real answers (the gold set and judge will show). Then add a cheap attribution check: the company and period in the sentence must match the cited chunk's metadata.
+
+## D35 · 2026-10-15 · Phase 6 retrieval tooling before human gold data
+- Build a validator and retrieval runner independently of the deferred Phase 5 labels. Never manufacture gold labels or report benchmark results without human review.
+- Measure hit@5, MRR@10, and evidence completeness separately (D24). Exclude unanswerable questions from evidence denominators.
+- Use a global ranking for retrieval ablations, including comparison questions; production retains per-company retrieval. This allows meaningful rank cutoffs, but does not measure the production comparison context.
+- Read-only corpus validation precedes model loading. Reports retain gold/corpus hashes and settings and refuse overwrites. See `docs/EVALUATION.md` for commands and remaining Phase 6 work.
+
+## D36 · 2026-10-15 · Dashboard-first thesis workspace
+- Owner chose an evidence-backed thesis dashboard and supplied dark magenta/violet tokens with Geist fonts. Telegram is deferred.
+- Add a Next.js frontend and a local FastAPI adapter for the existing RAG engine. Keep credentials on the server; API database transactions are read-only.
+- Stream progress followed by the fully validated answer rather than exposing unchecked generation tokens. Health checks stay lightweight; model warm-up happens on the first question.
+- User assessments remain manual and unresolved by default. Label demonstration scenarios explicitly; never fabricate cross-quarter evidence for the current single-quarter corpus.
+- Preserve browser-local notes and source references. Editing evidence resets assessment and review. Authentication, automatic matching, cross-device persistence and production deployment remain future work.
+- Coverage is the dated ingest snapshot. Public gold metrics stay empty until a completed, reviewed report is published.
+
+## D37 · 2026-10-15 · Append-only evidence and honest coverage gates
+- Replace the editable two-slot interface with evidence timeline entries. Store period, capture date (unknown for legacy notes), kind and source-bearing text. Adding an entry resets assessment/review; historic evidence is retained.
+- Workspace v2 validates imports and migrates v1 while preserving its storage key as a recovery copy. Import merges identical rows, retains conflicting rows as distinct copies, rejects malformed data before writing. Export/import operate on real research; illustrative examples cannot be exported as personal data.
+- Number badges describe a value match, not a verified claim. Citation drawers expose section metadata and adjacent stored chunks from the same document; neighbors are context, not necessarily generation inputs.
+- Refuse before retrieval when a named company's requested fiscal periods are missing. Comparisons using multiple periods display a warning rather than implying same-quarter comparability.
+- Official TCS Q2–Q4 FY26 and Infosys Q2 FY26 sources were located, but direct PDF downloads returned HTTP 403. Recorded candidates separately in `data/source_candidates.json`; no fabricated PDFs, manifest completion, hashes or corpus expansion.
+
+## D38 · 2026-10-15 · Source-quoted suggestions and a bounded portfolio release
+- On-demand thesis checks evaluate only selected ingested periods, validate every quoted span against its cited chunk, and propose support/challenge/insufficient. Missing coverage or invalid quotations never produce a supported assessment. The user reviews and saves evidence; adding it resets their assessment.
+- A generation evaluator uses explicit non-Gemini judge configuration, a fixed claim-level rubric, input hashes and frozen corpus provenance. Human agreement and the planned reviewed gold are required before deliberate public-report publication; numeric value matches are not semantic numeric precision.
+- Production POST endpoints require a server-only shared token. A Next route handler passes it from server environment, bounds bodies, limits routes/methods and rejects explicit cross-origin submissions. Anonymous portfolio use is bounded by a transactional daily request budget; this is not account authentication or a dollar billing cap.
+- Images run as non-root; retrieval models ship in the API image. Single API worker bounds model memory. SQLite budgets persist only with a persistent volume; free ephemeral hosting resets them on replacement.
+- Owner deferred the hosting choice until release checks after discussing Render idle sleep. No paid service or public deployment is authorized by that deferral.

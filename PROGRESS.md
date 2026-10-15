@@ -237,3 +237,38 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Untracked generated Python artifacts and ignored future coverage/build outputs; deleted the root image as requested.
 - Removed static CI results and hand-written CI metrics; README links to live main CI, and CI runs for main pushes and PRs.
 - Audited project and user MCP configurations: the project config already targets the ingestion project; no stale reference found in active user settings.
+
+## Phase 6: retrieval evaluation tooling
+- Added `eval/retrieval_eval.py`: offline human-review/schema checks, corpus evidence checks, dense/keyword/hybrid × router × optional reranker runs, and per-question evidence metrics with provenance.
+- Added an opt-in global ranking mode for evaluation; production comparison fan-out remains the default.
+- Usage and gold schema: `docs/EVALUATION.md`. No held-out gold set or benchmark results were created.
+- Still needed: human-reviewed gold questions, generation/refusal scoring, cross-family judge and human agreement calibration, model comparison, ablations on gold, and the failure-case report. Phase 5 labels and Nestlé counting remain deferred to Aarana.
+
+## Dashboard-first product slice
+- Implemented the supplied dark Geist/magenta/violet UI across landing, thesis workspace, Ask, Eval and pipeline pages.
+- Added local persistence, thesis evidence comparison, manual assessments, export, source drawers, inline number checks, comparison tables, retrieval traces, and saving cited answers into a thesis.
+- Added local FastAPI endpoints and Next.js proxy. Confirmed a live cited answer with number checks against the configured corpus.
+- Automated browser tests cover mobile widths, evidence transfer, persistence and accessibility. Public evaluation results remain pending.
+- Automatic cross-quarter thesis extraction/matching, production authentication/deployment and complete Phase 6 judging remain unbuilt. Telegram, Nestlé counting and number labels remain deferred.
+
+## Visual research workspace refresh
+- Replaced the magenta/violet glow with charcoal panels, neutral typography and a restrained pale-lime accent, following the supplied Qenora and visual-report references.
+- Added an API-backed company/quarter coverage map, clickable manual-assessment breakdown, evidence progress markers, and a printable research brief preserving saved source references.
+- Shortened landing and thesis cards; Ask exposes citation and number-match counts without inventing financial time series.
+- Still local: deployment follows evaluation/guardrail work and production access/usage controls. Phase 5 labels, reviewed gold questions and Nestlé coverage remain outstanding; automated thesis matching is not implemented.
+
+## Research workflow hardening
+- Evidence timeline is append-only, supports any number of periods up to storage validation limits, and preserves the original two notes through v1 migration. Adding new evidence resets manual assessment/review.
+- Added validated JSON import with preview, conflict-safe merge and export/restore; original v1 storage remains available for recovery.
+- Number-match wording no longer implies claim verification; cited sources show Q&A/prepared metadata and adjacent stored excerpts.
+- Missing requested company/period coverage now refuses before retrieval. Mixed-period comparisons carry a visible warning.
+- Coverage sourcing blocked by HTTP 403 on official PDF downloads. See `data/source_candidates.json` for verified source locations; corpus remains unchanged. Full Gate A is 48 transcripts across all 12 companies, not just the four-company demo subset.
+- Remaining: obtain/validate PDFs and expand overlap; human-reviewed Phase 6 gold set and generation/judge calibration; source-backed automated thesis suggestions; deployment usage controls/hosting. Labels and Nestlé count remain deferred.
+
+## Release implementation status (supersedes earlier remaining-work notes)
+- Added on-demand thesis checking: selected company/period retrieval → conservative model suggestion → exact-quote/period validation → reviewable evidence. Saving appends source quotes and keeps the final assessment manual.
+- Added generation/refusal evaluator, explicit cross-family judge adapter, human-agreement calculation and guarded public-report publication. No human gold, calibration result or benchmark number has been invented.
+- Added production-only server token enforcement, bounded server-side Next proxy, atomic daily request reservations, generation timeouts/output limits, API/web images, Compose preview and deployment runbook. Replaced the old v1 Render configuration.
+- Live check confirmed source-backed TCS suggestions while assessment remained unresolved; a missing-quarter comparison refused with no retrieved context.
+- Hosting selection is explicitly deferred by the owner until release checks. Official PDF downloads remain blocked by 403; reviewed gold questions, independent human calibration, deferred number labels and Nestlé count remain real data/review dependencies.
+- Background scheduled ingest, automatic status changes, Telegram and optional distress API are not part of this on-demand dashboard release.
