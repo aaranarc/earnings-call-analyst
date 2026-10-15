@@ -1,6 +1,7 @@
 # Environments
 venv/
-.env
+.env*
+!.env.example
 
 # Byte-compiled
 __pycache__/

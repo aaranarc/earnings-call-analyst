@@ -326,14 +326,25 @@ with st.sidebar:
                     st.markdown(f"<div class='risk-label'>XGBoost Output: {tier}</div>", unsafe_allow_html=True)
                     st.plotly_chart(plot_risk_gauge(score, tier), use_container_width=True)
                     
-                    st.markdown("""
-                    <div style='font-size: 11px; color: #98989D; font-family: "Roboto Mono", monospace; padding-top: 12px; border-top: 1px solid #2A2A2A;'>
-                        <strong>EXPLAINABILITY (SHAP Proxies):</strong><br>
-                        • ROA(C) impact: 34%<br>
-                        • Debt Ratio impact: 28%<br>
-                        • Net Value Growth: 15%
-                    </div>
-                    """, unsafe_allow_html=True)
+                    shap_factors = data.get("shap_factors", [])
+                    if shap_factors:
+                        factors_html = "".join([f"• {f['feature']}: {f['impact']:.1f}%<br>" for f in shap_factors])
+                        st.markdown(f"""
+                        <div style='font-size: 11px; color: #98989D; font-family: "Roboto Mono", monospace; padding-top: 12px; border-top: 1px solid #2A2A2A;'>
+                            <strong style="color: #EDEDED;">TOP RISK DRIVERS (SHAP):</strong><br>
+                            {factors_html}
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    rag_context = data.get("rag_context", "")
+                    if rag_context:
+                        st.markdown(f"""
+                        <div style='font-size: 12px; line-height: 1.5; color: #D4D4D4; margin-top: 12px; padding: 12px; background: #1E1E1E; border-left: 3px solid #F59E0B; border-radius: 2px;'>
+                            <strong>AI Context (from transcripts):</strong><br>
+                            {rag_context}
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
                     st.markdown("</div>", unsafe_allow_html=True)
             except:
                 st.error("Connection failed.")
@@ -470,6 +481,17 @@ with tab3:
                         st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
                         st.markdown(f"<div class='risk-label'>Risk Tier: {tier}</div>", unsafe_allow_html=True)
                         st.plotly_chart(plot_risk_gauge(score, tier), use_container_width=True)
+                        
+                        shap_factors = data.get("shap_factors", [])
+                        if shap_factors:
+                            factors_html = "".join([f"• {f['feature']}: {f['impact']:.1f}%<br>" for f in shap_factors])
+                            st.markdown(f"""
+                            <div style='font-size: 11px; color: #98989D; font-family: "Roboto Mono", monospace; padding-top: 12px; border-top: 1px solid #2A2A2A;'>
+                                <strong style="color: #EDEDED;">TOP RISK DRIVERS (SHAP):</strong><br>
+                                {factors_html}
+                            </div>
+                            """, unsafe_allow_html=True)
+                            
                         st.markdown("</div>", unsafe_allow_html=True)
                     else:
                         st.error(f"ERR: {res.text}")

@@ -227,7 +227,45 @@ Answer:"""
         risk_score = float(predictions[0])
         risk_tier = "High" if risk_score > 0.7 else "Medium" if risk_score > 0.3 else "Low"
 
+        # Calculate SHAP values dynamically
+        import shap
+        import numpy as np
+        
+        explainer = shap.TreeExplainer(self.risk_model)
+        shap_values = explainer.shap_values(scaled_input)
+        
+        # Get absolute SHAP values for the single instance
+        abs_shap_values = np.abs(shap_values[0])
+        total_impact = np.sum(abs_shap_values)
+        
+        # Avoid division by zero
+        if total_impact > 0:
+            impact_percentages = (abs_shap_values / total_impact) * 100
+        else:
+            impact_percentages = abs_shap_values
+            
+        feature_importance = [
+            {"feature": feat.strip(), "impact": float(pct)} 
+            for feat, pct in zip(self.feature_names, impact_percentages)
+        ]
+        
+        # Sort by impact and get top 3
+        top_factors = sorted(feature_importance, key=lambda x: x["impact"], reverse=True)[:3]
+        
+        # Automated RAG contextualization for top factors if company is provided
+        rag_context = ""
+        if company_name and risk_score > 0.3: # Only run RAG if there's actual risk
+            try:
+                top_feature = top_factors[0]["feature"]
+                query = f"Explain {company_name}'s {top_feature} or related financial health."
+                rag_result = self.ask(query)
+                rag_context = rag_result.get("answer", "")
+            except Exception as e:
+                print(f"Error fetching RAG context: {e}")
+
         return {
             "risk_score": round(risk_score, 3),
-            "risk_tier": risk_tier
+            "risk_tier": risk_tier,
+            "shap_factors": top_factors,
+            "rag_context": rag_context
         }
