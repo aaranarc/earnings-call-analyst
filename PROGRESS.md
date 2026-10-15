@@ -272,3 +272,10 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Live check confirmed source-backed TCS suggestions while assessment remained unresolved; a missing-quarter comparison refused with no retrieved context.
 - Hosting selection is explicitly deferred by the owner until release checks. Official PDF downloads remain blocked by 403; reviewed gold questions, independent human calibration, deferred number labels and Nestlé count remain real data/review dependencies.
 - Background scheduled ingest, automatic status changes, Telegram and optional distress API are not part of this on-demand dashboard release.
+
+## Public free deployment (supersedes hosting deferral)
+- Owner chose free deployment tonight and confirmed the Render workspace “aarana's supabase”.
+- Dashboard: https://quantrag.vercel.app (Vercel Hobby). API: https://quantrag-api.onrender.com (Render Free). No paid resources provisioned.
+- Coverage/eval snapshots ship with the web deployment so browsing stays available while the API sleeps. Live model requests wake the API.
+- Vercel was deployed using source files; GitHub integration and automatic redeploys are not configured. Render also uses explicit deployments. See docs/DEPLOYMENT.md.
+- Corpus expansion, human-reviewed gold/calibration, the deferred number labels and Nestlé count remain data/review work; public benchmark scores remain pending.

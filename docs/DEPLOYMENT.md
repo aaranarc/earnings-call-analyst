@@ -1,7 +1,24 @@
 # QuantRAG release and deployment
 
-The dashboard and API have separate runtime containers. The current hosting choice is deliberately deferred
-until the owner reviews the release checks. Nothing in these files provisions a paid service automatically.
+The dashboard is live at **https://quantrag.vercel.app** on Vercel Hobby. The API is live at
+**https://quantrag-api.onrender.com** on Render Free, in the owner-confirmed “aarana's supabase” workspace.
+The owner chose free hosting for this release; no paid service was provisioned.
+
+## Current public release
+
+- Vercel project: `quantrag` (`prj_HBdoTQAKlGjb5JkJnu16Pt3OunMI`), Next.js root `frontend/`, Node 22.
+- Render service: `quantrag-api` (`srv-db8hmsivcj2c73aehuug`), Docker from `main`, Oregon, `/health` check.
+- Vercel keeps `API_ACCESS_TOKEN` server-only, matching Render. `API_ORIGIN` points to the API and
+  `PUBLIC_ORIGIN` is `https://quantrag.vercel.app`. Render holds the database URL and Gemini credentials.
+- Public coverage and evaluation snapshots ship with the frontend. Browsing them does not wait for a sleeping
+  API. Live answers and thesis checks wake Render and can take about a minute after an idle period.
+- The frontend was deployed through Vercel's source-files API. GitHub integration is not installed, so pushing
+  Git does not redeploy Vercel. Connect this repository in Vercel to enable automatic frontend deployments,
+  or repeat the source-files deployment from the reviewed frontend files. Render auto-deploy is also off;
+  explicitly deploy the reviewed `main` commit when API code changes.
+- Free Render uses `/tmp/quantrag-usage.sqlite3`; the daily request budget resets when the instance is replaced.
+  This is an instance-lifetime guard, not a durable billing cap. Research notes remain in each browser;
+  export JSON to back them up.
 
 ## Local production preview
 

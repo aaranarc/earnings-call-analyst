@@ -277,3 +277,9 @@ None yet.
 - Production POST endpoints require a server-only shared token. A Next route handler passes it from server environment, bounds bodies, limits routes/methods and rejects explicit cross-origin submissions. Anonymous portfolio use is bounded by a transactional daily request budget; this is not account authentication or a dollar billing cap.
 - Images run as non-root; retrieval models ship in the API image. Single API worker bounds model memory. SQLite budgets persist only with a persistent volume; free ephemeral hosting resets them on replacement.
 - Owner deferred the hosting choice until release checks after discussing Render idle sleep. No paid service or public deployment is authorized by that deferral.
+
+## D39 · Free public portfolio deployment
+- Owner explicitly chose free hosting and confirmed Render workspace “aarana's supabase”, superseding D38's hosting deferral. Use Vercel Hobby for the Next frontend and Render Free for the Docker API.
+- Accept Render idle sleep. Serve committed coverage/eval snapshots in Next without waiting for the API; warm health silently and show progress/retry for live queries.
+- Keep the same server-only token in Vercel and Render; frontend PUBLIC_ORIGIN is the canonical https://quantrag.vercel.app. No paid service was provisioned.
+- Vercel source-files deployment avoids requiring an unconfigured GitHub integration. Auto-deploy is not claimed; future code releases need an explicit deployment until integration is connected.
