@@ -3,7 +3,7 @@
 ## Status
 - Phase 0 (audit and setup): **done**.
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
-- **Phase 2 (DB + ingestion): code and tests done, not yet run against a database.** Started at Aarana's request with the 3 sector PDFs on disk, while the `phase2` gate still fails on missing links.
+- **Phase 2 (DB + ingestion): verified on local Postgres; Supabase ingest pending** (waiting for `SUPABASE_DB_URL`).
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -83,7 +83,7 @@ Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_mod
 - `backend/ingest/parse.py`: PDF → page text → headers/footers removed → speaker turns with role (management / analyst / moderator) and section (prepared / qa) → boilerplate dropped. Handles both "Name: text" and name-on-its-own-line layouts.
 - `backend/ingest/chunk.py`: one speaker per chunk, ≤450 tokens, sentence split with 1-sentence overlap. `backend/ingest/run.py`: manifest → parse → chunk → fastembed `BAAI/bge-small-en-v1.5` → DB, one transaction per document, skip by sha256, logs counts, average tokens and schema size.
 - `backend/numcheck/extract.py`: number extraction + normalisation, pulled forward from Phase 5 (D13).
-- Tests: 57 backend tests (38 number extraction, 7 parsing including the 4 real transcripts, 6 chunking, 3 DB). **54 pass, 3 skipped** (the DB tests, no local Postgres yet). Plus 27 checker tests. Ruff is clean.
+- Tests: 57 backend tests (38 number extraction, 7 parsing including the 4 real transcripts, 6 chunking, 3 DB). **All 57 pass** when `TEST_DATABASE_URL` points at the local container (otherwise the 3 DB tests skip). Plus 27 checker tests. Ruff is clean.
 - Pinned deps in `backend/pyproject.toml`. `.env.example` has key names only.
 
 ### Measured on the 4 transcripts on disk: `cd backend && python -m ingest.run --dry-run` (no DB)
@@ -95,10 +95,18 @@ Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_mod
 | Infosys Q2 FY25 | 84 | 105 | 85 | 446 | 24 | 111 |
 Chunks are far below the brief's ~350–500 tokens (D14).
 
-### Blocked / not done
-1. **No database yet.** Docker is installed but not running, and no `SUPABASE_DB_URL` exists. So: the DB tests (incl. "re-running adds 0 rows") haven't run, nothing is ingested, and the DB size vs the 500 MB Supabase free tier isn't measured. Needs: start Docker Desktop (local test DB) **and/or** create the Supabase project and put its URL in `.env`.
-2. **All 4 rows on disk now pass the checker.** HDFCBANK Q1 FY27's link was added and verified (the file at the URL has the same sha256 as `data/raw`).
-3. **Phase 2 done-condition** (all manifest docs ingested; 0 rows on re-run; chunk count, avg tokens and DB size logged) can't be met until 1 and 2 are resolved.
+### Local Postgres run (2026-10-15)
+Container: `docker run -d --name qr-pg -e POSTGRES_PASSWORD=pg -p 127.0.0.1:5433:5432 pgvector/pgvector:pg17` (Postgres 17.11, pgvector 0.8.7). Stop with `docker stop qr-pg`.
+- `TEST_DATABASE_URL=postgresql://postgres:pg@localhost:5433/postgres pytest tests/test_ingest_db.py`: **3 passed**, including the second-run-adds-nothing test.
+- Real pipeline (`SUPABASE_DB_URL` set to the local container, `python -m ingest.run`, twice):
+  - run 1: 4 documents, **287 chunks (avg 133 tokens)**, 419 numbers; `quantrag` schema **2.0 MB**
+  - run 2: "4 already ingested · 0 to ingest", totals unchanged (**idempotent on real data**)
+  - Per document: TCS 69 chunks / 14 speakers · INFY 84 / 17 · HDFCBANK 62 / 11 · HINDUNILVR 72 / 9
+- Rough sizing: ~0.5 MB per transcript locally → 96 transcripts ≈ 50 MB, well inside Supabase free's 500 MB. To be confirmed on Supabase.
+
+### Not done
+1. **Supabase ingest:** waiting for Aarana to add `SUPABASE_DB_URL` (Mumbai, session pooler) to `.env`. Then: `cd backend && python -m ingest.run`, and record chunk count, average tokens and schema size here. The schema-wiping DB tests are never run against it (they refuse non-localhost URLs).
+2. **Phase 2 done-condition** = the Supabase run above, plus a second run adding 0 rows there.
 
 ## Open questions
 0. **INFY Q2 FY25 `source_url` set on Aarana's verification, 2026-10-15.** infosys.com returns HTTP 403 to automated downloads (twice), so the tool couldn't compare hashes. Aarana confirmed the file at the URL has the same sha256 as `data/raw/INFY_Q2FY25.pdf` (`0c28ccd2…ce14a00`). Not re-checkable by script while the block stands.
