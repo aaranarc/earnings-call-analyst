@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-15",
+  "database": "supabase",
+  "documents": [
+    {
+      "symbol": "HDFCBANK",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 62,
+      "numbers": 123
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 72,
+      "numbers": 72
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 84,
+      "numbers": 99
+    },
+    {
+      "symbol": "TCS",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 69,
+      "numbers": 74
+    }
+  ],
+  "totals": {
+    "documents": 4,
+    "chunks": 287,
+    "numbers": 368,
+    "avg_tokens_per_chunk": 133.2,
+    "median_tokens_per_chunk": 99,
+    "max_tokens_per_chunk": 446,
+    "quantrag_schema_mb": 2.16,
+    "database_mb": 12.8,
+    "supabase_free_tier_mb": 500
+  },
+  "manifest_target": {
+    "companies": 12,
+    "quarters": 8,
+    "transcripts": 96
+  }
+}

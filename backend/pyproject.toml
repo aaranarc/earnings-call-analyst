@@ -25,7 +25,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["ingest", "numcheck", "retrieve", "generate"]
+packages = ["ingest", "numcheck", "retrieve", "generate", "quantrag"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "../scripts"]
