@@ -4,7 +4,7 @@
 - Phase 0 (audit and setup): **done**.
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
 - **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
-- **Phase 3 (retrieval): built and smoke-tested untuned.** Waiting for Aarana's go-ahead on tuning (reranker memory, keyword query).
+- **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking. Waiting for approval to start Phase 4.
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -144,34 +144,38 @@ All complete manifest rows ingested ✅ · re-run adds 0 rows ✅ (local and Sup
 - CLI: `cd backend && python -m retrieve "question" [--company TCS] [--period "Q1 FY27"] [--mode dense|fts|hybrid] [--no-rerank]`.
 - `backend/tests/test_retrieve.py`: RRF on a hand-worked example (3 tests). Backend total: 64 pass, 3 DB tests skip without `TEST_DATABASE_URL`.
 
-### Smoke test (untuned): `eval/smoke.jsonl` (10 hand-written questions, 4 transcripts), `eval/smoke_retrieval.py`
-Expected chunk = the chunk(s) of the right document containing a hand-picked quote (all 10 verified to exist). **No company filter** (no router yet), so this is raw retrieval. Local Postgres (same 287 chunks as Supabase). Results in `eval/results/smoke_retrieval.json`.
+### Smoke set
+`eval/smoke.jsonl`: **20 hand-written questions, 5 per company**. Several quote exact figures (₹72,275 crore, INR2,731 crores, 85.9%, 60 basis points) to test keyword search. Expected chunk = right document + contains a hand-picked quote (all verified to exist). No company filter (router not built), local Postgres, 3 runs per setting in separate processes. Raw results: `eval/results/smoke_retrieval.json`; the first 10-question untuned run is kept in `smoke_retrieval_10q_untuned.json`. Labels are mine; s05 was widened after seeing results (D21). **Aarana to review.**
 
+### Tuning log (one change at a time; details in DECISIONS)
+| Step | Change | hybrid recall@5 | hybrid+rerank recall@5 | Peak RSS (reranker on) | Decision |
+|---|---|---|---|---|---|
+| 0 | untuned, 20 questions | 14/20 | 19/20 | 1,118–1,183 MB | — |
+| — | s05 palm oil | — | — | — | not an ingest bug; label too narrow (D21) |
+| 1 | keyword OR semantics | **19/20** | 18/20 | 1,116–1,191 MB | kept (D22) |
+| 2a | reranker batch 8, 384 tokens | 19/20 | 18/20 | 468–599 MB | rejected (>512 once) |
+| 2a | batch 4, 256 tokens | 19/20 | 17/20 | 399–426 MB | rejected (recall lower) |
+| 2a | batch 4, 384 tokens | 19/20 | 18/20 | 374–516 MB (6 runs) | rejected (>512 once) |
+| 2b | + rerank top 10 instead of 20 | 19/20 | 18/20 | **386–419 MB (6 runs)** | **kept (D23)** |
+| 2c | smaller cross-encoder | — | — | — | n/a: already MiniLM-L-6 |
+
+### Final: all six configurations, 20 questions, shipped defaults (3 runs)
 | Configuration | recall@5 | p50 latency | Misses |
 |---|---|---|---|
-| vector only | 6/10 | 7 ms | s01, s04, s05, s08 |
-| keyword only | 1/10 | 1 ms | all but s03 |
-| hybrid (RRF) | 6/10 | 7 ms | s01, s04, s05, s08 |
-| vector + rerank | **9/10** | 1,098 ms | s05 |
-| keyword + rerank | 1/10 | 1 ms | all but s03 |
-| hybrid (RRF) + rerank | **9/10** | 1,134 ms | s05 |
+| vector only | 14/20 | 5–6 ms | s01 s04 s08 s12 s14 s20 |
+| keyword only (OR) | 15/20 | ~2 ms | s02 s08 s13 s18 s19 |
+| **hybrid (RRF)** | **19/20** | **~7 ms** | s08 |
+| vector + rerank | 15/20 | 338–356 ms | s01 s08 s12 s14 s20 |
+| keyword + rerank | 17/20 | 425–446 ms | s02 s08 s12 |
+| hybrid + rerank | 18/20 | 429–463 ms | s08 s12 |
 
-| Process | Startup RSS | Peak RSS |
-|---|---|---|
-| reranker not loaded | 254.0 MB | **260.8 MB** |
-| reranker loaded and used | 354.2 MB | **1,046.0 MB** |
-(one run each; macOS RSS varies run to run, see the v1 baseline. v1 for comparison: 171.8 MB without reranker, 512–692 MB with its PyTorch reranker.)
+| Process | Peak RSS (3 runs) |
+|---|---|
+| reranker not loaded | 274–285 MB |
+| reranker loaded and used | 410–419 MB (386–419 MB over 6 runs) |
+| v1 for comparison | 172 MB without reranker · 512–692 MB with PyTorch reranker |
 
-**What this says (before any tuning):**
-1. **Keyword search is nearly useless as specified.** `websearch_to_tsquery` ANDs every word of a natural-language question, so almost nothing matches (1/10). Hybrid therefore equals vector-only. The keyword leg will need OR-semantics or keyword extraction to contribute.
-2. **The reranker is the single biggest quality lever:** 6/10 → 9/10, lifting s01, s04 and s08 into the top 5.
-3. **The ONNX reranker did not fix memory; it made it worse.** Loading it costs ~100 MB, but scoring 20 candidates per query pushes peak RSS to **~1 GB** (4× without it, and above v1's 512–692 MB PyTorch peak). It also adds ~1.1 s per query. Likely causes, untested: all 20 passages (up to ~470 tokens) scored in one batch, and ONNX Runtime's memory arena keeping the peak allocation. The brief's resume line "cut peak RAM by moving to ONNX" is **not true yet**.
-4. s05 (HUL palm oil) is missed by every configuration. Diagnose before tuning.
-
-### Proposed tuning (needs approval; one change at a time, re-run the smoke set after each)
-a. Reranker memory: score in small batches (e.g. 4) and cap the passage length; measure peak RSS and recall again. If still too heavy, try ONNX Runtime with the CPU memory arena off, or rerank fewer candidates (top 10).
-b. Keyword leg: OR the terms (`websearch_to_tsquery` → replace `&` with `|`), so `ts_rank_cd` ranks partial matches.
-c. Then re-measure all six configurations.
+**Takeaways:** (1) keyword OR + vector via RRF is the biggest win: 14 → 19/20 with no model cost. (2) Reranker memory is now under 512 MB, with ~90 MB headroom on macOS, down from ~1.1 GB, so the v1 OOM story has a measured fix. (3) **On this small set the reranker no longer adds recall** (hybrid 19 vs hybrid+rerank 18) and costs ~0.44 s. Whether to keep it is a Phase 6 ablation on the full gold set. (4) s08 (Infosys tax rate) is missed by every hybrid configuration. Worth a look when the gold set exists.
 
 ## Open questions
 - **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.

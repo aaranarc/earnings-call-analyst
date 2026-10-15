@@ -45,10 +45,14 @@ def main():
     g.add_argument("--rerank", action="store_true")
     g.add_argument("--no-rerank", action="store_true")
     ap.add_argument("--out", default=str(ROOT / "eval/results/smoke_retrieval.json"))
+    ap.add_argument("--label", default="defaults", help="name of the change being measured")
+    ap.add_argument("--batch-size", type=int, default=4)    # untuned fastembed default was 64
+    ap.add_argument("--max-tokens", type=int, default=384)  # untuned default was 512
+    ap.add_argument("--fuse-top", type=int, default=10)  # untuned default was 20
     a = ap.parse_args()
     items = [json.loads(line) for line in (ROOT / "eval/smoke.jsonl").read_text().splitlines() if line.strip()]
 
-    models = Models(rerank=a.rerank)
+    models = Models(rerank=a.rerank, rerank_batch=a.batch_size, rerank_max_tokens=a.max_tokens)
     startup_rss = psutil.Process().memory_info().rss / 2**20
     configs = [(m, r) for r in ([False, True] if a.rerank else [False]) for m in ("dense", "fts", "hybrid")]
     results = {}
@@ -65,7 +69,7 @@ def main():
             per_q, lat = {}, []
             for item in items:
                 t = time.perf_counter()
-                hits = retrieve(conn, models, item["question"], mode=mode, use_rerank=rr, top_n=5)
+                hits = retrieve(conn, models, item["question"], mode=mode, use_rerank=rr, fuse_top=a.fuse_top, top_n=5)
                 lat.append(time.perf_counter() - t)
                 ranks = [i for i, h in enumerate(hits, 1) if is_hit(h, item)]
                 per_q[item["id"]] = ranks[0] if ranks else None
@@ -76,7 +80,8 @@ def main():
             print(f"{name:16} recall@5 {hit}/{len(items)}  p50 {statistics.median(lat) * 1000:6.1f} ms  "
                   f"ranks {per_q}")
 
-    run = {"reranker_loaded": a.rerank, "startup_rss_mb": round(startup_rss, 1), "peak_rss_mb": round(peak_rss_mb(), 1),
+    run = {"label": a.label, "reranker_loaded": a.rerank,
+           "settings": {"batch_size": a.batch_size, "max_tokens": a.max_tokens, "fuse_top": a.fuse_top}, "startup_rss_mb": round(startup_rss, 1), "peak_rss_mb": round(peak_rss_mb(), 1),
            "embed_model": EMBED_MODEL, "rerank_model": RERANK_MODEL if a.rerank else None,
            "git_sha": subprocess.run(["git", "rev-parse", "--short", "HEAD"], check=False, capture_output=True, text=True,
                                      cwd=ROOT).stdout.strip(),

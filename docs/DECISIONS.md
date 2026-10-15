@@ -145,3 +145,35 @@ None yet.
 - **Measured (smoke set, one run, untuned):** recall@5 6/10 → 9/10 with rerank; latency ~1.1 s/query; **peak RSS 1,046 MB vs 261 MB without** (load alone ≈ +100 MB; the rest appears during scoring).
 - **Trade-off accepted for now:** none. At ~1 GB it wouldn't fit a 512 MB host and would push Cloud Run to 2 GiB. Tuning (PROGRESS Phase 3 a–c) needs Aarana's approval.
 - **Revisit if:** batching and length caps don't bring peak RSS well under 512 MB. Then compare `jina-reranker-v1-tiny-en`, or rerank fewer candidates.
+
+## D21 · 2026-10-15 · Smoke s05 (HUL palm oil) was a labelling miss, not an ingest or retrieval bug
+- **Checked first, as asked:** the expected chunk (798, CFO prepared remarks) **is in the database**; nothing was filtered at ingest, so no re-ingest was needed. Its vector ranks 33rd of 287 for the question, because palm oil is one line in a 2,085-character turn covering several segments.
+- **What retrieval returned instead:** chunks 841, 806 and 804 (dense ranks 1, 2, 7), Q&A answers by the CFO about palm-oil inflation. 804 and 841 directly answer "how did HUL respond" ("within this is to drive premiumization… Dove and Pears"; "What we are doing to counter… is to increase premiumisation").
+- **Decided:** widen s05's expected quotes to include 804 and 841. The original label was too narrow: I had picked one chunk when three answer the question.
+- **Caveat:** this changes a test label *after* seeing results, which can flatter scores. It's justified only because both chunks literally answer the question. Aarana should confirm it when reviewing the smoke set, and the Phase 6 gold set must be labelled before any system output is seen.
+
+## D22 · 2026-10-15 · Keyword search uses OR semantics (any term), ordered by ts_rank_cd
+- **Change:** `fts()` turns the `websearch_to_tsquery` AND query into OR (`replace(...::text, '&', '|')::tsquery`). `ts_rank_cd` still orders the results: more matched terms, closer together, ranks higher.
+- **Why:** with AND, a natural-language question only matches chunks containing *every* non-stopword in it, so keyword search found 1/20 smoke questions, even ones quoting exact figures.
+- **Measured (20 questions, 3 runs each, local DB):** keyword-only recall@5 **1/20 → 15/20**; hybrid (RRF) without reranker **14/20 → 19/20** (p50 ≈ 7 ms, peak RSS ≈ 284 MB); hybrid + rerank 19/20 → 18/20 (s08 drops out); vector-only unchanged (14/20).
+- **Trade-off:** OR matches far more chunks (common words like "growth" match many), so keyword precision relies on `ts_rank_cd` ordering and on RRF. Slightly slower (≈0.4 → 1.8 ms).
+- **Revisit if:** the Phase 6 gold set shows keyword noise hurting hybrid. Then try a minimum-match rule (at least half the terms) or `ts_rank` with length normalisation.
+
+## D23 · 2026-10-15 · Reranker memory: batch 4, 384-token cap, rerank the top 10 (supersedes D20's top 20)
+- **Target (Aarana):** peak RSS ≤ 512 MB with reranking on, recall@5 no lower than before tuning. **Measured on the 20-question smoke set, 3+ runs per setting, local DB, macOS arm64:**
+
+| Setting (batch, max tokens, reranked) | Peak RSS, reranker on | hybrid+rerank recall@5 | p50 latency |
+|---|---|---|---|
+| untuned (64, 512, 20) | 1,116–1,191 MB | 18/20 (after D22) | 1.0–1.6 s |
+| (a) 8, 384, 20 | 468–599 MB | 18/20 | 0.99–1.09 s |
+| (a) 4, 256, 20 | 399–426 MB | 17/20 (s20 lost to truncation) | 0.62–0.65 s |
+| (a) 4, 384, 20 | 374–516 MB (6 runs) | 18/20 | 0.72–0.98 s |
+| **(b) 4, 384, 10** | **386–419 MB (6 runs)** | **18/20** | **0.43–0.46 s** |
+| (c) smaller model | not applicable: already MiniLM-L-6, the smallest in fastembed | | |
+
+- **Decided:** batch 4, 384 tokens, top 10. It's the only setting under 512 MB in every run with recall unchanged. Batch 4 / 384 / top 20 went over 512 MB once in 6 runs.
+- **Why it works:** loading the model costs ~100 MB. The rest is inference memory, which grows with passages scored at once × their length, and ONNX Runtime keeps its peak allocation. Smaller batches and shorter inputs shrink that peak.
+- **Trade-off:** the reranker sees 10 candidates instead of 20, so it relies on hybrid fusion to surface the answer. Vector + rerank drops 19 → 15/20, but hybrid + rerank, the configuration we use, stays at 18/20.
+- **Honest note on "no lower than now":** before any tuning, hybrid + rerank scored 19/20 on the 20 questions. The one-question drop (s08) came from D22 (keyword OR), not from this memory tuning. Meanwhile hybrid **without** the reranker rose 14 → 19/20 at ~7 ms and ~285 MB. On this small set the reranker no longer adds recall. Phase 6 must ablate "hybrid" vs "hybrid + rerank" on the full gold set before deciding whether to keep it.
+- **Caveat:** macOS RSS varies a lot between runs (one setting ranged 374–516 MB). Re-measure on Linux (Cloud Run's container) in Phase 9 before relying on the 512 MB headroom.
+- **Revisit if:** Phase 6 shows the reranker doesn't earn its ~0.44 s and ~130 MB, or Cloud Run memory differs.

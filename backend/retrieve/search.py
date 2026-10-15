@@ -1,7 +1,7 @@
 """Hybrid retrieval over quantrag.chunks.
 
     dense (pgvector cosine) ─┐
-                             ├─ rrf ─ top 20 ─ rerank (cross-encoder) ─ top n
+                             ├─ rrf ─ top 10 ─ rerank (cross-encoder) ─ top n
     fts (Postgres keyword) ──┘
 
 Every hit carries its rank and score from each stage, for the UI's "How this was answered" panel.
@@ -40,13 +40,16 @@ class Hit:
 class Models:
     """Loaded once (at API startup in Phase 7). The reranker is optional because it's the memory-heavy part."""
 
-    def __init__(self, rerank=True):
+    def __init__(self, rerank=True, rerank_batch=4, rerank_max_tokens=384):  # D23: peak RSS ≤ 512 MB
         from fastembed import TextEmbedding
         self.embedder = TextEmbedding(EMBED_MODEL)
         self.reranker = None
+        self.rerank_batch = rerank_batch  # passages scored per ONNX call; drives peak memory (D20)
         if rerank:
             from fastembed.rerank.cross_encoder import TextCrossEncoder
             self.reranker = TextCrossEncoder(RERANK_MODEL)
+            # question + passage are truncated together to this many tokens
+            self.reranker.model.tokenizer.enable_truncation(max_length=rerank_max_tokens)
 
     def embed_query(self, query):
         return next(iter(self.embedder.query_embed(query)))
@@ -69,8 +72,9 @@ def dense(conn, qvec, companies=None, periods=None, k=30):
 
 
 def fts(conn, query, companies=None, periods=None, k=30):
-    # ts_rank_cd is cover density ranking, not BM25 (no document-length saturation or IDF); see LEARNING.md
-    tsq = "websearch_to_tsquery('english', %(query)s)"
+    # OR semantics: any query term may match (websearch_to_tsquery alone ANDs every word of a question, D22).
+    # ts_rank_cd still orders by how many terms match and how close together. It is not BM25; see LEARNING.md
+    tsq = "replace(websearch_to_tsquery('english', %(query)s)::text, '&', '|')::tsquery"
     params = {"query": query, "companies": companies, "periods": periods, "k": k}
     return _run(conn, {"score": f"ts_rank_cd(ch.tsv, {tsq})", "where": f"ch.tsv @@ {tsq}", "order": "score desc"},
                 params, "fts")
@@ -97,7 +101,7 @@ def rerank_text(h):
 
 
 def rerank(models, query, hits, top_n):
-    scores = list(models.reranker.rerank(query, [rerank_text(h) for h in hits]))
+    scores = list(models.reranker.rerank(query, [rerank_text(h) for h in hits], batch_size=models.rerank_batch))
     for h, s in zip(hits, scores):
         h.scores["rerank"] = float(s)
     out = sorted(hits, key=lambda h: -h.scores["rerank"])
@@ -119,7 +123,7 @@ def _one(conn, models, query, qvec, companies, periods, mode, use_rerank, k, fus
 
 
 def retrieve(conn, models, query, companies=None, periods=None, mode="hybrid", use_rerank=True,
-             k=30, fuse_top=20, top_n=5, per_company_n=6):
+             k=30, fuse_top=10, top_n=5, per_company_n=6):  # fuse_top: candidates reranked (D23)
     """mode: dense | fts | hybrid. With 2+ companies, retrieves per company and keeps per_company_n each."""
     qvec = models.embed_query(query) if mode != "fts" else None
     if companies and len(companies) > 1:
