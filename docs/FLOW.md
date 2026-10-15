@@ -3,6 +3,8 @@
 How a request or pipeline actually moves through the code, as ordered `file → function` chains. Update before and after every phase.
 
 ## Currently changing
+**Phase 3 (in progress):** adds **retrieval**: `backend/retrieve/` (`dense` pgvector cosine · `fts` Postgres `websearch_to_tsquery` + `ts_rank_cd` · `rrf` fusion · `rerank` fastembed cross-encoder · per-company retrieval for comparisons) and a CLI `python -m retrieve "question"`. Plus `eval/smoke.jsonl` + `eval/smoke_retrieval.py` (10 hand-written questions, recall@5 per configuration, peak RSS). Reads the Phase 2 tables only; no writes.
+
 **Phase 2 (done for the current corpus; run on local Postgres and Supabase):** added the **ingestion** pipeline: `data/manifest.csv` (complete rows) → `backend/ingest/` (PDF text per page → speaker turns + roles → boilerplate removed → speaker-aware chunks → fastembed embeddings) → Postgres schema `quantrag` (`db/schema.sql`). Adds `backend/numcheck/extract.py` (number extraction + normalisation), pulled forward from Phase 5 because ingestion stores its output in `chunk_numbers` (D13). No v1 path changes.
 
 **Phase 1 (tooling done; corpus downloads pending):** added a new, standalone pipeline, **corpus check**: `data/companies.yaml` + `data/manifest.csv` + `data/raw/*.pdf` → `scripts/check_manifest.py`. No v1 runtime path changes. The v1 ingest input (`data/US`, `data/India`) has been moved out of the repo, so `re_ingest.py` no longer has data to read.

@@ -132,3 +132,16 @@ None yet.
 - **Trade-off:** a real figure that ends a sentence with no unit and is 1–2 digits ("headcount grew by 12.") is now skipped. `5-year` durations are dropped as numbers. Both are rare in transcripts and low-value for the checker.
 - **Not fixed (on purpose):** units written once for a list ("40, 50 basis points"), "11 odd percent", and labels like "stage 3". Fixing these by more regex would overfit 20-number samples. They wait for the Phase 5 evaluation on ~100 hand-labelled numbers.
 - **Revisit if:** Phase 5's checker precision/recall shows these classes matter.
+
+## D19 · 2026-10-15 · Why local showed 419 numbers and Supabase 368 (addendum to D18)
+- **What happened:** the extractor changed *between* runs. Local run 1 used the first Phase 2 extractor: **419** numbers. After the first D18 skip rules, the local re-ingest gave **386**. After the second, **368**. Supabase was ingested once, after both fixes: **368**. The local DB was re-ingested each time (`truncate quantrag.documents cascade` on the local container only), so local and Supabase now match: 287 chunks, 368 numbers.
+- **Rule going forward:** any extractor or parser change must be followed by re-ingesting **every** database that holds data (drop the affected documents and run `python -m ingest.run`), and the new counts go in PROGRESS.md. Idempotent ingest skips by sha256, so it will **not** pick up extractor changes on its own.
+- **Revisit if:** extractor changes become frequent. Then add a stored `extractor_version` per document and re-extract numbers in place.
+
+## D20 · 2026-10-15 · Reranker: `Xenova/ms-marco-MiniLM-L-6-v2` via fastembed, measured untuned
+- **Decided:** the same cross-encoder v1 used (`cross-encoder/ms-marco-MiniLM-L-6-v2`), in its ONNX export from fastembed's supported list. It reranks the top 20 RRF results on the same "company quarter · speaker (role): text" form used for embedding (D15).
+- **Options:** MiniLM-L-6 (80 MB) · MiniLM-L-12 (120 MB) · `jina-reranker-v1-tiny-en` (130 MB) · `bge-reranker-base` (1 GB, too big).
+- **Why:** same model as v1 makes the v1-vs-v2 memory comparison like-for-like, and it's the smallest option.
+- **Measured (smoke set, one run, untuned):** recall@5 6/10 → 9/10 with rerank; latency ~1.1 s/query; **peak RSS 1,046 MB vs 261 MB without** (load alone ≈ +100 MB; the rest appears during scoring).
+- **Trade-off accepted for now:** none. At ~1 GB it wouldn't fit a 512 MB host and would push Cloud Run to 2 GiB. Tuning (PROGRESS Phase 3 a–c) needs Aarana's approval.
+- **Revisit if:** batching and length caps don't bring peak RSS well under 512 MB. Then compare `jina-reranker-v1-tiny-en`, or rerank fewer candidates.

@@ -3,7 +3,8 @@
 ## Status
 - Phase 0 (audit and setup): **done**.
 - **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
-- **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`. Waiting for approval to start Phase 3.
+- **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
+- **Phase 3 (retrieval): built and smoke-tested untuned.** Waiting for Aarana's go-ahead on tuning (reranker memory, keyword query).
 - Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
@@ -136,6 +137,41 @@ Project `cjttcgxtmgcpvzqtzzkg` (Mumbai `ap-south-1`, session pooler, port 5432),
 
 ### Phase 2 done-condition: met for the current corpus
 All complete manifest rows ingested ✅ · re-run adds 0 rows ✅ (local and Supabase) · speaker-parsing tests on real transcripts ✅ · idempotency test ✅ · chunk count, avg tokens and DB size logged ✅. The corpus itself is still 4 of 96 (Phase 1 gates A and B).
+
+## Phase 3: Retrieval
+### Done
+- `backend/retrieve/search.py`: `dense` (pgvector cosine) · `fts` (`websearch_to_tsquery` + `ts_rank_cd`, as the brief specifies) · `rrf` (k=60) · `rerank` (fastembed `Xenova/ms-marco-MiniLM-L-6-v2`, top 20 fused → top n) · per-company retrieval for 2+ companies (top 6 each). Every hit keeps rank and score from each stage.
+- CLI: `cd backend && python -m retrieve "question" [--company TCS] [--period "Q1 FY27"] [--mode dense|fts|hybrid] [--no-rerank]`.
+- `backend/tests/test_retrieve.py`: RRF on a hand-worked example (3 tests). Backend total: 64 pass, 3 DB tests skip without `TEST_DATABASE_URL`.
+
+### Smoke test (untuned): `eval/smoke.jsonl` (10 hand-written questions, 4 transcripts), `eval/smoke_retrieval.py`
+Expected chunk = the chunk(s) of the right document containing a hand-picked quote (all 10 verified to exist). **No company filter** (no router yet), so this is raw retrieval. Local Postgres (same 287 chunks as Supabase). Results in `eval/results/smoke_retrieval.json`.
+
+| Configuration | recall@5 | p50 latency | Misses |
+|---|---|---|---|
+| vector only | 6/10 | 7 ms | s01, s04, s05, s08 |
+| keyword only | 1/10 | 1 ms | all but s03 |
+| hybrid (RRF) | 6/10 | 7 ms | s01, s04, s05, s08 |
+| vector + rerank | **9/10** | 1,098 ms | s05 |
+| keyword + rerank | 1/10 | 1 ms | all but s03 |
+| hybrid (RRF) + rerank | **9/10** | 1,134 ms | s05 |
+
+| Process | Startup RSS | Peak RSS |
+|---|---|---|
+| reranker not loaded | 254.0 MB | **260.8 MB** |
+| reranker loaded and used | 354.2 MB | **1,046.0 MB** |
+(one run each; macOS RSS varies run to run, see the v1 baseline. v1 for comparison: 171.8 MB without reranker, 512–692 MB with its PyTorch reranker.)
+
+**What this says (before any tuning):**
+1. **Keyword search is nearly useless as specified.** `websearch_to_tsquery` ANDs every word of a natural-language question, so almost nothing matches (1/10). Hybrid therefore equals vector-only. The keyword leg will need OR-semantics or keyword extraction to contribute.
+2. **The reranker is the single biggest quality lever:** 6/10 → 9/10, lifting s01, s04 and s08 into the top 5.
+3. **The ONNX reranker did not fix memory; it made it worse.** Loading it costs ~100 MB, but scoring 20 candidates per query pushes peak RSS to **~1 GB** (4× without it, and above v1's 512–692 MB PyTorch peak). It also adds ~1.1 s per query. Likely causes, untested: all 20 passages (up to ~470 tokens) scored in one batch, and ONNX Runtime's memory arena keeping the peak allocation. The brief's resume line "cut peak RAM by moving to ONNX" is **not true yet**.
+4. s05 (HUL palm oil) is missed by every configuration. Diagnose before tuning.
+
+### Proposed tuning (needs approval; one change at a time, re-run the smoke set after each)
+a. Reranker memory: score in small batches (e.g. 4) and cap the passage length; measure peak RSS and recall again. If still too heavy, try ONNX Runtime with the CPU memory arena off, or rerank fewer candidates (top 10).
+b. Keyword leg: OR the terms (`websearch_to_tsquery` → replace `&` with `|`), so `ts_rank_cd` ranks partial matches.
+c. Then re-measure all six configurations.
 
 ## Open questions
 - **Two Supabase project refs.** `.env`'s `SUPABASE_DB_URL` is project `cjttcgxtmgcpvzqtzzkg`; the Supabase MCP server added to `.mcp.json` points at `ceuairnslwoxuhtrdfio`. Ingestion went into the `.env` one. Confirm which project is intended, and fix the other. `.mcp.json` is untracked and not committed (it would publish the project ref and make every clone connect to it); suggest adding it to `.gitignore` and `read_only=true` to the MCP URL.

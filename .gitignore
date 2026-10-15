@@ -17,3 +17,6 @@ data/raw/
 
 # Streamlit
 .streamlit/credentials.toml
+
+# Claude Code MCP config (contains the Supabase project ref)
+.mcp.json

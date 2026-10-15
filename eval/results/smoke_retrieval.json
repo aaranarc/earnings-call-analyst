@@ -1,0 +1,199 @@
+{
+  "runs": [
+    {
+      "reranker_loaded": false,
+      "startup_rss_mb": 254.0,
+      "peak_rss_mb": 260.8,
+      "embed_model": "BAAI/bge-small-en-v1.5",
+      "rerank_model": null,
+      "git_sha": "d8144b7",
+      "machine": "Darwin arm64",
+      "python": "3.11.15",
+      "configs": {
+        "dense": {
+          "recall_at_5": 0.6,
+          "hits": 6,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": 2,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": null,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 0.0068,
+          "max_s": 0.0272
+        },
+        "fts": {
+          "recall_at_5": 0.1,
+          "hits": 1,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": null,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": null,
+            "s07": null,
+            "s08": null,
+            "s09": null,
+            "s10": null
+          },
+          "p50_s": 0.0005,
+          "max_s": 0.006
+        },
+        "hybrid": {
+          "recall_at_5": 0.6,
+          "hits": 6,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": 2,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": null,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 0.007,
+          "max_s": 0.0117
+        }
+      }
+    },
+    {
+      "reranker_loaded": true,
+      "startup_rss_mb": 354.2,
+      "peak_rss_mb": 1046.0,
+      "embed_model": "BAAI/bge-small-en-v1.5",
+      "rerank_model": "Xenova/ms-marco-MiniLM-L-6-v2",
+      "git_sha": "d8144b7",
+      "machine": "Darwin arm64",
+      "python": "3.11.15",
+      "configs": {
+        "dense": {
+          "recall_at_5": 0.6,
+          "hits": 6,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": 2,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": null,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 0.0075,
+          "max_s": 0.0108
+        },
+        "fts": {
+          "recall_at_5": 0.1,
+          "hits": 1,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": null,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": null,
+            "s07": null,
+            "s08": null,
+            "s09": null,
+            "s10": null
+          },
+          "p50_s": 0.0008,
+          "max_s": 0.0027
+        },
+        "hybrid": {
+          "recall_at_5": 0.6,
+          "hits": 6,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": 2,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": null,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 0.0093,
+          "max_s": 0.0124
+        },
+        "dense + rerank": {
+          "recall_at_5": 0.9,
+          "hits": 9,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": 2,
+            "s02": 2,
+            "s03": 1,
+            "s04": 3,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": 1,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 1.0975,
+          "max_s": 2.1958
+        },
+        "fts + rerank": {
+          "recall_at_5": 0.1,
+          "hits": 1,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": null,
+            "s02": null,
+            "s03": 1,
+            "s04": null,
+            "s05": null,
+            "s06": null,
+            "s07": null,
+            "s08": null,
+            "s09": null,
+            "s10": null
+          },
+          "p50_s": 0.0014,
+          "max_s": 0.1109
+        },
+        "hybrid + rerank": {
+          "recall_at_5": 0.9,
+          "hits": 9,
+          "of": 10,
+          "rank_of_expected": {
+            "s01": 2,
+            "s02": 2,
+            "s03": 1,
+            "s04": 3,
+            "s05": null,
+            "s06": 3,
+            "s07": 1,
+            "s08": 1,
+            "s09": 1,
+            "s10": 1
+          },
+          "p50_s": 1.1336,
+          "max_s": 1.9087
+        }
+      }
+    }
+  ]
+}
