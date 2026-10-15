@@ -1,0 +1,100 @@
+# Execution flow (traceability)
+
+How a request or pipeline actually moves through the code, as ordered `file → function` chains. Update before and after every phase.
+
+## Currently changing
+**Phase 5 (built; evaluation awaiting labels):** added the **number checker**: `backend/numcheck/match.py` takes each number in a generated answer (and each comparison-table cell), extracted by `numcheck/extract.py`, looks it up in `quantrag.chunk_numbers` for the cited chunks, then other chunks of the same documents, then arithmetic on cited numbers → `verified` / `found_elsewhere` / `derived` / `unverified`. Called at the end of `generate/answer.py: answer()` (new `numbers` field). Plus the checker evaluation, labelled blind:
+`eval/numbers_label.py [--regenerate]` → (Gemini answers → `eval/private/numcheck_answers.json`) → real numbers + `corrupt_value()` + `context_swaps()` → each re-checked with `check_text()` → shuffled → `eval/numbers_to_label.csv` (no verdicts) + `eval/private/numcheck_key.json` (git-ignored) →
+`eval/label_server.py` (127.0.0.1:8765; reads the sheet only) → `eval/labels/numbers_labels.csv` →
+`eval/numbers_eval.py` (labels + key → red / any-flag precision & recall, recall per corruption type; partial → `eval/private/`, complete → `eval/numbers_gold.jsonl` + `eval/results/numcheck_<date>_<sha>.json`).
+
+**Phase 4 (done):** added **routing + generation**: `backend/generate/router.py` (rule-based: companies via `companies.yaml` aliases, periods via regex / "last quarter", route = single · comparison · risk · out_of_scope, `numeric` flag; `ROUTER_ENABLED=false` → everything single, no filter) → Phase 3 `retrieve()` with the router's filters → `backend/generate/answer.py` (numbered context `[c1]…`, Gemini via LangChain structured output, citation validation, refusal) → CLI `python -m generate "question"`. Model ID from `GEMINI_MODEL` (never hard-coded).
+
+**Phase 3 (done):** added **retrieval**: `backend/retrieve/` (`dense` pgvector cosine · `fts` Postgres `websearch_to_tsquery` + `ts_rank_cd` · `rrf` fusion · `rerank` fastembed cross-encoder · per-company retrieval for comparisons) and a CLI `python -m retrieve "question"`. Plus `eval/smoke.jsonl` + `eval/smoke_retrieval.py` (10 hand-written questions, recall@5 per configuration, peak RSS). Reads the Phase 2 tables only; no writes.
+
+**Phase 2 (done for the current corpus; run on local Postgres and Supabase):** added the **ingestion** pipeline: `data/manifest.csv` (complete rows) → `backend/ingest/` (PDF text per page → speaker turns + roles → boilerplate removed → speaker-aware chunks → fastembed embeddings) → Postgres schema `quantrag` (`db/schema.sql`). Adds `backend/numcheck/extract.py` (number extraction + normalisation), pulled forward from Phase 5 because ingestion stores its output in `chunk_numbers` (D13). No v1 path changes.
+
+**Phase 1 (tooling done; corpus downloads pending):** added a new, standalone pipeline, **corpus check**: `data/companies.yaml` + `data/manifest.csv` + `data/raw/*.pdf` → `scripts/check_manifest.py`. No v1 runtime path changes. The v1 ingest input (`data/US`, `data/India`) has been moved out of the repo, so `re_ingest.py` no longer has data to read.
+
+**Phase 0 (done):** added `scripts/v1_baseline.py`, which imports v1's `RAGService` from an extracted `v1-final` copy and calls `ask()` / `retrieve_with_routing()` to measure them. The v1 paths below are documented as they exist at tag `v1-final`.
+
+## v2
+
+### Ingestion (Phase 2)
+`cd backend && python -m ingest.run` → `ingest/run.py: main()` (needs `SUPABASE_DB_URL`) → `ingest(conn, manifest, companies, raw)`
+1. Execute `db/schema.sql` (idempotent) → `register_vector` → upsert `companies` from `data/companies.yaml`
+2. `check_manifest.check()` → keep complete rows only (errors are logged and skipped) → drop rows whose `sha256` is already in `documents`
+3. If anything is left: `Embedder()` loads fastembed `BAAI/bge-small-en-v1.5` + an untruncated copy of its tokenizer
+4. Per document: `ingest/parse.py: parse_transcript(pdf)`
+   1. `pdf_pages`: pdfplumber per page → pypdf if `(cid:` appears → NFKC + "Ư"→"ff"
+   2. `strip_headers`: drop "Page N of M" and lines repeated at page edges on ≥50% of pages → `[(page, line)]`
+   3. `segment`: analyst names from moderator intros; cover = lines before the first real speaker; speaker lines = "Name: text" or a known name alone on a line → `Turn`s; `section` split at the moderator's Q&A announcement; role = moderator / analyst (introduced) / management (cover or pre-Q&A speaker)
+   4. `drop_boilerplate`: moderator turns, Disclaimer/Note blocks, safe-harbour sentences, turns under 5 words
+5. `ingest/chunk.py: chunk_turns(turns, embedder.count)` → one chunk per turn, or sentence windows ≤450 tokens with 1-sentence overlap; page = page where the chunk starts
+6. `embedder.embed(["{company} {label} · {speaker} ({role}): {text}", ...])`
+7. One transaction: insert `documents` → per chunk insert `chunks` (raw text + vector; `tsv` is generated by Postgres) → `numcheck/extract.py: extract(text)` → insert `chunk_numbers`
+8. Log this run's documents, chunks, average tokens and numbers, plus database totals and `quantrag` schema size
+
+### Answering a question (Phase 4)
+`cd backend && python -m generate "question"` → `generate/__main__.py: main()` → `load_companies(companies.yaml)` + `Models()` → `generate/answer.py: answer(question, conn, models, companies)`
+1. `latest_periods(conn)` → `coverage()`: latest ingested quarter per company
+2. `generate/router.py: route()` → `Route(kind, companies, periods, numeric, reason)`. `out_of_scope` → refusal listing covered companies; stop (no retrieval, no LLM)
+3. `retrieve/search.py: retrieve(conn, models, question, route.companies, route.periods)` (Phase 3 flow; per-company for comparisons). No hits (or best rerank < `REFUSAL_MIN_RERANK`, when set) → refusal listing what's available; stop
+4. `format_context(hits)` → `[c1] company · quarter · speaker (role, section) · page` + text → `PROMPT` (+ comparison or risk rule)
+5. `make_llm()`: `ChatGoogleGenerativeAI(model=$GEMINI_MODEL, temperature=0).with_structured_output(LLMAnswer)` → `.invoke(prompt)`
+6. Drop the table unless `kind == comparison` → `validate()`: remove out-of-range `[cN]`, blank invalid table cells, collect cited excerpts → no valid citation or `refused` → refusal (with coverage list)
+7. `check_numbers(conn, hits, answer)` → `numcheck/match.py: load_sources()` (`chunk_numbers` of the cited chunks + other chunks of their documents) → `check_text()` per sentence of the answer and per table cell: `extract()` each number → cited-chunk match → same-document match → one-chunk arithmetic → status
+8. Risk route: append "early-warning system not connected yet" → return `{route, hits, answer_markdown, comparison_table, citations[{n, chunk_id, symbol, fiscal_label, speaker, role, page}], refused, refusal_reason, timing_s}`
+
+### Retrieval (Phase 3)
+`cd backend && python -m retrieve "question" [--company …] [--period …] [--mode …] [--no-rerank]` → `retrieve/__main__.py: main()` → `Models(rerank)` (fastembed `bge-small-en-v1.5` + `Xenova/ms-marco-MiniLM-L-6-v2`, tokenizer truncation 384) → `retrieve/search.py: retrieve(conn, models, query, companies, periods, mode, use_rerank)`
+1. `models.embed_query(query)` (skipped for keyword-only)
+2. If 2+ companies: run steps 3–5 once per company (top 6 each), sequentially, and concatenate
+3. `dense()`: `1 - (embedding <=> q)` over `chunks ⋈ documents ⋈ companies`, optional company/period filter, top 30 · `fts()`: `replace(websearch_to_tsquery(q)::text, '&', '|')::tsquery` (OR), `ts_rank_cd`, same filters, top 30
+4. `rrf([dense, fts], k=60)` → one list; each hit keeps dense/fts/rrf scores and ranks
+5. `rerank()` (if on): top 10 fused → `TextCrossEncoder.rerank(query, ["company quarter · speaker (role): text"], batch_size=4)` → top 5
+6. Return `Hit`s with every stage's score (for the UI's "How this was answered" panel)
+
+Smoke test: `eval/smoke_retrieval.py --rerank|--no-rerank [--batch-size --max-tokens --fuse-top --label]` → for each of `eval/smoke.jsonl`'s 20 questions × 3 or 6 configurations → `retrieve()` → hit if a top-5 chunk is from the right document and contains an expected quote → recall@5, p50, peak RSS → appended to `eval/results/smoke_retrieval.json`
+
+### Corpus check (Phase 1)
+`python scripts/check_manifest.py [--init | --fill-sha]` → `main()`
+1. `--init`: `load_companies(data/companies.yaml)` × `quarters(*WINDOW)` → `write_manifest(data/manifest.csv)` (refuses to overwrite)
+2. `--fill-sha`: `read_manifest` → `sha256(data/raw/<filename>)` for rows with a file and an empty hash → `write_manifest`
+3. `check(manifest, companies, raw)`: `load_companies` (duplicate symbols and aliases) → per row: symbol, `period_end(fiscal_label)`, window, duplicates → rows without `filename` are *pending* → `call_date` lag, `source_url`, file exists, `sha256` → notes for absent expected rows and unreferenced PDFs
+4. Print errors, notes and counts → `gates(complete, companies)`: `phase2` (1 per sector), `A` (`TIER_A` × all companies), `B` (`WINDOW` × all companies minus `EXCUSED`, ≤ `MAX_EXCUSED`) → exit 1 if any row error or the `--gate` (default `B`) fails
+
+## v1 (tag `v1-final`)
+
+### User asks a question (Streamlit → API)
+1. `app/ui/streamlit_app.py` chat input → `requests.post(f"{API_URL}/ask", json={"question": ...}, timeout=120)`
+2. `app/main.py: ask()` → `get_service()` (lazy singleton) → `RAGService.__init__` on first call: `load_dotenv`, Chroma `PersistentClient(chroma_db/)` or `HttpClient(CHROMA_HOST)`, `ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite")`
+3. `app/services/rag_service.py: RAGService.ask(question)`
+   1. `retrieve_with_routing(question, n_results=5)`
+      - `self.embeddings` (lazy `GoogleGenerativeAIEmbeddings("models/gemini-embedding-2")`) `.embed_query`
+      - `get_corpus_summary()` → `collection.get()` (reads **all** metadata on every question) → unique company names
+      - companies = names that appear as substrings of the lowercased question
+      - ≥2 companies → one `collection.query(where={"company": c}, n_results=5 // len(companies))` per company, run in sequence
+      - otherwise → one `collection.query`, filtered when exactly one company matched
+   2. Build the context as `[company quarter year]: text` and the sources list (first 200 chars, deduplicated by company/quarter/year)
+   3. f-string prompt → `self.llm.invoke([HumanMessage])` → return `{"answer", "sources"}`
+4. Any exception → 500 with `str(e)` **and the full traceback** in the JSON body.
+
+### Company list
+`streamlit_app.py` → `GET /companies` → `main.get_companies()` → `svc.collection.get()` → set of (company, market, quarter, year).
+
+### Risk score
+`streamlit_app.py` (sidebar or tab 3) → `POST /risk-score` → `main.risk_score()` → `RAGService.predict_risk(financial_ratios?, company_name?)`
+1. `_ensure_risk_models()` loads XGBoost `models/xgboost_bankruptcy.json` + scaler + winsorise bounds + feature names
+2. Baseline for every feature = `0.45 + (sha256(company_name) % 10) / 100`
+3. If a ticker is mapped: `yfinance.Ticker(t).info` → overwrite 4 features (debt ratio, ROA, operating margin, net-income flag)
+4. Manual ratios override → clip → scale → `Booster.predict` → tier (>0.7 High, >0.3 Medium)
+5. `shap.TreeExplainer` → top-3 features by |SHAP| share
+6. If score > 0.3 and a company was given → `self.ask("Explain {company}'s {top_feature} ...")` for `rag_context`
+
+### Ingestion (what built the shipped `chroma_db/`)
+`re_ingest.py: main()` → `shutil.rmtree(chroma_db)` → `PersistentClient` → walk `data/**.pdf` → `PyMuPDFLoader` (per page) → `RecursiveCharacterTextSplitter(1000, 200)` → filename → metadata (`company` and `country` from folders; `quarter = parts[1]`, which is the market, so the real quarter is lost) → ids `{company}_{quarter}_{year}_{i}` (same for Q1 and Q2) → batches of 100: `GoogleGenerativeAIEmbeddings.embed_documents` → `collection.add` → `sleep(2)`. Per-file errors are caught and printed. Result: the index holds JPMorgan Q2 + 3 stubs.
+`app/scripts/ingest.py` is an older, incompatible path (MiniLM 384-d into a Chroma server) and is not used.
+
+### Deploy
+`render.yaml`: two Docker services from the same `Dockerfile` (`python:3.11-slim`, `pip install -r requirements.txt`, `COPY . .`). The API runs `uvicorn app.main:app`, and the UI runs `streamlit run app/ui/streamlit_app.py` with `API_URL` pointing to the API service. The committed `chroma_db/` ships inside the image.

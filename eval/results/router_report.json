@@ -1,0 +1,562 @@
+{
+  "latest_ingested": {
+    "HDFCBANK": "Q1 FY27",
+    "HINDUNILVR": "Q1 FY27",
+    "INFY": "Q2 FY25",
+    "TCS": "Q1 FY27"
+  },
+  "summary": {
+    "companies": "18/20 (90%)",
+    "periods": "19/20 (95%)",
+    "intent": "18/20 (90%)",
+    "all_three": "17/20 (85%)"
+  },
+  "queries": [
+    {
+      "id": "r01",
+      "question": "How did Infosys describe the demand environment in Q2 FY25?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": [
+          "Q2 FY25"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": [
+          "Q2 FY25"
+        ],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r02",
+      "question": "What did HCL Technologies say about attrition?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "HCLTECH"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "HCLTECH"
+        ],
+        "periods": [],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r03",
+      "question": "HDFC Bank vs ICICI Bank: who grew deposits faster last quarter?",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "HDFCBANK",
+          "ICICIBANK"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "comparison",
+        "companies": [
+          "HDFCBANK",
+          "ICICIBANK"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ],
+        "reason": "2 companies"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r04",
+      "question": "Compare Asian Paints and Nestle India on volume growth",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "ASIANPAINT",
+          "NESTLEIND"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "comparison",
+        "companies": [
+          "ASIANPAINT",
+          "NESTLEIND"
+        ],
+        "periods": [],
+        "reason": "2 companies"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r05",
+      "question": "Is Kotak Mahindra Bank showing any credit stress?",
+      "expected": {
+        "kind": "risk",
+        "companies": [
+          "KOTAKBANK"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "risk",
+        "companies": [
+          "KOTAKBANK"
+        ],
+        "periods": [],
+        "reason": "risk wording"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r06",
+      "question": "What was HUL's EBITDA margin in Q1 FY27?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "HINDUNILVR"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "HINDUNILVR"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r07",
+      "question": "Tell me about TCS's AI revenue over the last two quarters",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q4 FY26",
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q4 FY26",
+          "Q1 FY27"
+        ],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r08",
+      "question": "Which bank had the best CASA ratio?",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "HDFCBANK",
+          "ICICIBANK",
+          "AXISBANK",
+          "KOTAKBANK"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [],
+        "periods": [],
+        "reason": "no company named: search all transcripts"
+      },
+      "ok": {
+        "companies": false,
+        "periods": true,
+        "intent": false,
+        "all_three": false
+      }
+    },
+    {
+      "id": "r09",
+      "question": "Did Wipro give revenue guidance for FY27?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "WIPRO"
+        ],
+        "periods": [
+          "Q1 FY27",
+          "Q2 FY27",
+          "Q3 FY27",
+          "Q4 FY27"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "WIPRO"
+        ],
+        "periods": [
+          "Q1 FY27",
+          "Q2 FY27",
+          "Q3 FY27",
+          "Q4 FY27"
+        ],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r10",
+      "question": "What's a good recipe for biryani?",
+      "expected": {
+        "kind": "out_of_scope",
+        "companies": [],
+        "periods": []
+      },
+      "got": {
+        "kind": "out_of_scope",
+        "companies": [],
+        "periods": [],
+        "reason": "no covered company and no earnings-call topic"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r11",
+      "question": "How were TCS deal wins this quarter?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": false,
+        "intent": true,
+        "all_three": false
+      }
+    },
+    {
+      "id": "r12",
+      "question": "Axis Bank and Kotak on slippages and provisions in Q4 FY26",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "AXISBANK",
+          "KOTAKBANK"
+        ],
+        "periods": [
+          "Q4 FY26"
+        ]
+      },
+      "got": {
+        "kind": "comparison",
+        "companies": [
+          "AXISBANK",
+          "KOTAKBANK"
+        ],
+        "periods": [
+          "Q4 FY26"
+        ],
+        "reason": "2 companies"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r13",
+      "question": "What did the CFO of Infosys say about margins?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "INFY"
+        ],
+        "periods": [],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r14",
+      "question": "Any downgrade risk for Hindustan Unilever versus ITC?",
+      "expected": {
+        "kind": "risk",
+        "companies": [
+          "HINDUNILVR",
+          "ITC"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "risk",
+        "companies": [
+          "HINDUNILVR",
+          "ITC"
+        ],
+        "periods": [],
+        "reason": "risk wording"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r15",
+      "question": "Summarise Tata Consultancy Services' Q1FY27 commentary on Europe",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "TCS"
+        ],
+        "periods": [
+          "Q1 FY27"
+        ],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r16",
+      "question": "Who won the cricket match yesterday?",
+      "expected": {
+        "kind": "out_of_scope",
+        "companies": [],
+        "periods": []
+      },
+      "got": {
+        "kind": "out_of_scope",
+        "companies": [],
+        "periods": [],
+        "reason": "no covered company and no earnings-call topic"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r17",
+      "question": "How is the IT services sector doing on pricing?",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "TCS",
+          "INFY",
+          "HCLTECH",
+          "WIPRO"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [],
+        "periods": [],
+        "reason": "no company named: search all transcripts"
+      },
+      "ok": {
+        "companies": false,
+        "periods": true,
+        "intent": false,
+        "all_three": false
+      }
+    },
+    {
+      "id": "r18",
+      "question": "Compare HDFC Bank's Q1 FY27 with Q4 FY26 on margins",
+      "expected": {
+        "kind": "comparison",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": [
+          "Q4 FY26",
+          "Q1 FY27"
+        ]
+      },
+      "got": {
+        "kind": "comparison",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": [
+          "Q4 FY26",
+          "Q1 FY27"
+        ],
+        "reason": "comparison wording"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r19",
+      "question": "What did analysts ask Nestle about its change of financial year?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "NESTLEIND"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "NESTLEIND"
+        ],
+        "periods": [],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    },
+    {
+      "id": "r20",
+      "question": "Did HDFC say anything about the ECLGS scheme?",
+      "expected": {
+        "kind": "single",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": []
+      },
+      "got": {
+        "kind": "single",
+        "companies": [
+          "HDFCBANK"
+        ],
+        "periods": [],
+        "reason": "one company"
+      },
+      "ok": {
+        "companies": true,
+        "periods": true,
+        "intent": true,
+        "all_three": true
+      }
+    }
+  ]
+}

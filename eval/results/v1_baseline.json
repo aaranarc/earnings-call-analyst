@@ -1,0 +1,152 @@
+{
+  "env": {
+    "python": "3.11.15",
+    "machine": "Darwin arm64",
+    "git_ref": "v1-final",
+    "packages": {
+      "chromadb": "1.5.9",
+      "langchain-google-genai": "4.4.2",
+      "langchain-core": "1.6.10",
+      "torch": "2.14.1",
+      "sentence-transformers": "6.1.0"
+    },
+    "note": "Local laptop, unpinned v1 requirements resolved on run date. Not Render's 512 MB Linux box."
+  },
+  "runs": {
+    "deployed": [
+      {
+        "mode": "deployed",
+        "questions": 10,
+        "startup_rss_mb": 159.5,
+        "latency_scope": "ask(): embed query + Chroma + Gemini generation",
+        "peak_rss_mb": 171.8,
+        "p50_s": 1.657,
+        "p95_s": 2.127,
+        "latencies_s": [
+          2.127,
+          1.723,
+          1.668,
+          1.646,
+          1.533,
+          1.708,
+          1.51,
+          1.583,
+          1.694,
+          1.568
+        ]
+      }
+    ],
+    "rerank": [
+      {
+        "mode": "rerank",
+        "questions": 10,
+        "startup_rss_mb": 204.0,
+        "latency_scope": "retrieve 15 + CrossEncoder rerank (cached embeddings, no generation)",
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "peak_rss_mb": 511.7,
+        "p50_s": 0.085,
+        "p95_s": 1.238,
+        "latencies_s": [
+          1.238,
+          0.092,
+          0.041,
+          0.579,
+          0.185,
+          0.176,
+          0.078,
+          0.066,
+          0.065,
+          0.066
+        ]
+      },
+      {
+        "mode": "rerank",
+        "questions": 10,
+        "startup_rss_mb": 339.3,
+        "latency_scope": "retrieve 15 + CrossEncoder rerank (cached embeddings, no generation)",
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "peak_rss_mb": 615.8,
+        "p50_s": 0.068,
+        "p95_s": 0.4,
+        "latencies_s": [
+          0.4,
+          0.011,
+          0.01,
+          0.201,
+          0.068,
+          0.07,
+          0.076,
+          0.065,
+          0.065,
+          0.068
+        ]
+      },
+      {
+        "mode": "rerank",
+        "questions": 10,
+        "startup_rss_mb": 118.0,
+        "latency_scope": "retrieve 15 + CrossEncoder rerank (cached embeddings, no generation)",
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "peak_rss_mb": 534.2,
+        "p50_s": 0.068,
+        "p95_s": 1.358,
+        "latencies_s": [
+          1.358,
+          0.012,
+          0.011,
+          0.279,
+          0.069,
+          0.074,
+          0.082,
+          0.066,
+          0.064,
+          0.066
+        ]
+      },
+      {
+        "mode": "rerank",
+        "questions": 10,
+        "startup_rss_mb": 205.6,
+        "latency_scope": "retrieve 15 + CrossEncoder rerank (cached embeddings, no generation)",
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "peak_rss_mb": 614.8,
+        "p50_s": 0.067,
+        "p95_s": 0.144,
+        "latencies_s": [
+          0.088,
+          0.012,
+          0.011,
+          0.144,
+          0.068,
+          0.07,
+          0.077,
+          0.065,
+          0.064,
+          0.067
+        ]
+      },
+      {
+        "mode": "rerank",
+        "questions": 10,
+        "startup_rss_mb": 574.4,
+        "latency_scope": "retrieve 15 + CrossEncoder rerank (cached embeddings, no generation)",
+        "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "peak_rss_mb": 691.7,
+        "p50_s": 0.067,
+        "p95_s": 0.144,
+        "latencies_s": [
+          0.077,
+          0.01,
+          0.008,
+          0.144,
+          0.073,
+          0.069,
+          0.077,
+          0.065,
+          0.064,
+          0.065
+        ]
+      }
+    ]
+  }
+}

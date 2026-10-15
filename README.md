@@ -1,82 +1,156 @@
-<div align="center">
-  <h1>QuantRAG</h1>
-  <p><strong>A production-grade, full-stack AI application designed to intelligently analyze corporate earnings calls and predict quantitative bankruptcy risks.</strong></p>
-  
-  [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](#)
-  [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](#)
-  [![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)](#)
-  [![Gemini](https://img.shields.io/badge/Google_Gemini-Powered-8E75B2?logo=google&logoColor=white)](#)
-</div>
+# QuantRAG
+
+**An earnings-call analyst that cites every claim and checks every number.**
+
+[![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain)
+![status](https://img.shields.io/badge/status-v2.0--alpha-orange)
+![python](https://img.shields.io/badge/python-3.11-blue)
+
+> **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
+> small corpus (4 transcripts). There's no web app or hosted demo yet. Every number below comes from a file in
+> [`eval/results/`](eval/results/) and can be re-run.
+>
+> *Research and educational project. Not investment advice.*
 
 ---
 
-> **Live Demo:** (https://quant-rag.onrender.com)
+## The problem
 
-![App Screenshot](./assets/asset.png)
+Earnings calls are where Indian companies explain their quarter: margins, deal wins, guidance, credit quality. Asking
+an LLM about them has two failure modes that matter to an analyst: it **cites nothing** (so you can't check it), and it
+**gets numbers subtly wrong** (₹ crore vs lakh, % vs bps, the wrong quarter). QuantRAG answers only from the transcripts,
+attaches a citation to every claim, and checks every number in its own answer against the passage it cites.
 
----
+## What works today
 
-## 🌟 Key Features
-
-1. **Lightning-Fast Cloud RAG Pipeline**
-   - Built with a serverless **Google Gemini** architecture (`gemini-flash-latest` & `gemini-embedding-2`) to entirely offload heavy machine learning processes from the local server.
-   - Utilizes `ChromaDB` for ultra-fast semantic retrieval.
-   - Guaranteed **Zero-RAM bottlenecks**, easily deployable on restricted free-tier cloud platforms.
-
-2. **Live Quantitative Risk Engine**
-   - Integrates a pre-trained **XGBoost** model initially developed for predicting Taiwanese bankruptcy.
-   - Fetches live financial ratios directly via the `yfinance` API.
-   - Computes real-time dynamic risk tiers based on live market data, mathematically combining it with historical baseline clustering.
-
-3. **Premium UI/UX Architecture**
-   - **Frontend:** Built with Streamlit and heavily customized with vanilla CSS, featuring glassmorphism, dynamic gradient meshes, and Plotly interactive gauges.
-   - **Backend:** A scalable `FastAPI` REST architecture cleanly separating the AI logic from the presentation layer.
-
----
-
-## 🛠 Tech Stack
-- **AI/LLM:** Google Gemini (`gemini-flash-latest`)
-- **Embeddings:** Google Gemini Embeddings
-- **Vector Database:** ChromaDB
-- **Machine Learning:** XGBoost, Scikit-learn, Pandas
-- **Backend/API:** FastAPI, Uvicorn, Python 3.11
-- **Frontend:** Streamlit, Plotly, Custom CSS
-
----
-
-## 🚀 Getting Started Locally
-
-### 1. Prerequisites
-- Docker & Docker Compose
-- A free [Google Gemini API Key](https://aistudio.google.com/app/apikey)
-
-### 2. Installation
 ```bash
-git clone https://github.com/YOUR_USERNAME/earnings-call-analyst.git
-cd earnings-call-analyst
+python -m quantrag.ask "Compare TCS and Infosys on large deal wins"
 ```
 
-Create a `.env` file in the root directory:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
+![A real run of the CLI demo](docs/img/demo.png)
+<sub>Output of a real run on 2026-10-15 against the Supabase database (`gemini-3.1-flash-lite`), rendered as an image.</sub>
+
+| Step | What it does | Code |
+|---|---|---|
+| Corpus | 12 Indian companies × 8 quarters planned; a manifest with source links and SHA-256 per PDF; a checker with completion gates | `data/`, `scripts/check_manifest.py` |
+| Ingest | PDF → speaker turns (management / analyst / moderator, prepared remarks vs Q&A) → one-speaker chunks → `bge-small` embeddings (ONNX) → Postgres + pgvector. Idempotent: re-running adds nothing | `backend/ingest/` |
+| Retrieve | vector search + Postgres keyword search, fused with RRF, re-ranked by a small cross-encoder; per-company retrieval for comparisons | `backend/retrieve/` |
+| Route | rule-based: companies by alias, quarters ("Q1 FY27", "last two quarters"), intent (single / comparison / risk / out of scope) | `backend/generate/router.py` |
+| Answer | Gemini with structured output; every sentence cites `[cN]`; citations validated in code; refuses when the transcripts don't say, and lists what *is* available | `backend/generate/answer.py` |
+| Number check | every number in the answer is looked up in the passage its sentence cites: ✅ verified · 🟡 derived / found elsewhere · 🔴 unverified | `backend/numcheck/` |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Ingest["Ingest (offline, idempotent)"]
+        PDF["Transcript PDFs<br/>+ manifest (sha256, source URL)"] --> P["Parse speakers<br/>& sections"]
+        P --> C["One-speaker chunks<br/>≤ 450 tokens"]
+        C --> E["bge-small-en-v1.5<br/>(ONNX, 384-d)"]
+        C --> N["Number extractor<br/>(₹/$, crore/lakh, %, bps)"]
+    end
+    E --> DB[("Postgres + pgvector<br/>Supabase · schema quantrag")]
+    N --> DB
+    Q["Question"] --> R["Router<br/>(rules)"]
+    R --> RET["Retrieve: vector + keyword<br/>→ RRF → cross-encoder rerank"]
+    DB --> RET
+    RET --> G["Gemini<br/>cited, structured answer"]
+    G --> V["Citation validation"]
+    V --> NC["Number checker"]
+    DB --> NC
+    NC --> OUT["Answer + citations<br/>+ ✅ 🟡 🔴 per number"]
 ```
 
-### 3. Run the System
+## Measured so far
+
+Small samples on a 4-transcript corpus. Read them as engineering checks, not benchmark scores. Each figure links to
+the file it comes from.
+
+| What | Result | Notes | Source |
+|---|---|---|---|
+| Corpus in the database | **4** transcripts · **287** chunks · avg **133.2** tokens/chunk · **368** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Database size | `quantrag` schema **2.16 MB**; whole database **12.8 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Retrieval recall@5, **dev set** | hybrid **19/20** · hybrid + rerank **18/20** (router off) → **19/20** (router on) | 20 hand-written questions written while building, not a benchmark; one label widened after seeing results (D21) | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
+| Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
+| Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
+| v1 for comparison, **macOS** | peak **171.8 MB** without reranker; **511.7–691.7 MB** with its PyTorch reranker (5 runs) | v1 effectively indexed one real transcript | [`v1_baseline.json`](eval/results/v1_baseline.json) |
+| Router accuracy | **17/20** fully correct (companies 18/20, periods 19/20, intent 18/20) | 20 hand-labelled queries incl. known gaps | [`router_report.json`](eval/results/router_report.json) |
+| Answers with valid citations | **10/10** answerable · **3/3** unanswerable refused · **1/1** out of scope refused | automated checks; faithfulness not judged yet | [`phase4_check.json`](eval/results/phase4_check.json) |
+| CI | [![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) | Test counts and coverage are reported by GitHub Actions | [Latest Actions run on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) |
+| Number checker precision / recall | **TBD**: 120 numbers are waiting for blind human labels | | (`eval/results/numcheck_*.json` once labelled) |
+
+## Known limitations
+
+- **Tiny corpus.** 4 of 96 planned transcripts (TCS, HDFC Bank, HUL Q1 FY27; Infosys Q2 FY25). Comparisons across
+  quarters mostly can't be answered yet.
+- **The dev set is not a benchmark.** It has 20 questions written during development, and one label was widened after
+  seeing results. The human-verified 60-question gold set is Phase 6.
+- **The number checker matches values, not meaning.** "Infosys's margin was 24%" passes if 24% is in the cited
+  passage, even when the passage is about TCS. Deliberate "context swap" tests are expected to slip through (D34);
+  catching them is the Phase 6 faithfulness judge's job.
+- **Known failures, kept for the eval report:** the comparison above labels TCS's *total* TCV as "Large Deal TCV"
+  (the number itself is right); "What was TCS's cash conversion as a share of net income?" is refused although the
+  transcript says 93%; a long multi-topic CFO turn is never retrieved for palm-oil questions (D24).
+- **Router gaps:** sector questions ("which bank…") and "this quarter" aren't understood (D30).
+- **Memory figures are from macOS** and vary by up to ~140 MB between identical runs. Cloud Run (Linux) needs its own measurement.
+- **No API, web app or deployment yet**, and no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
+  still in the repo pending removal.
+
+## Roadmap
+
+| Step | What | Status |
+|---|---|---|
+| Phase 5 eval | blind-label 120 numbers; publish checker precision/recall per corruption type | labelling page ready |
+| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 4/96 |
+| Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | next |
+| Phase 7 | FastAPI with streaming answers (SSE), rate limits, health | planned |
+| Phase 8 | Next.js web app: chat with citation drawer, number badges, "how this was answered" panel, public eval page | planned |
+| Phase 9 | Cloud Run + Vercel deployment; weekly GitHub Actions ingest | planned |
+| Phase 10 | risk route backed by the separate distress early-warning (EWS) API | planned |
+| Phase 11 | README, demo GIF, architecture write-up | planned |
+| Promise tracker | spec in `docs/01b` (not yet in this repo) | planned |
+| Telegram bot | spec in `docs/01b` (not yet in this repo) | planned |
+
+Progress and the exact next steps: [`PROGRESS.md`](PROGRESS.md). Every design decision and its trade-off:
+[`docs/DECISIONS.md`](docs/DECISIONS.md). How a request flows through the code: [`docs/FLOW.md`](docs/FLOW.md).
+Plain-English notes: [`docs/LEARNING.md`](docs/LEARNING.md).
+
+## Run locally
+
+Requirements: Python 3.11, Docker (for a local Postgres), a Gemini API key.
+
 ```bash
-docker-compose up --build
+git clone https://github.com/aaranarc/earnings-call-analyst && cd earnings-call-analyst
+python3.11 -m venv .venv && .venv/bin/pip install -e "backend[dev]"
+cp .env.example .env            # fill in GEMINI_API_KEY, GEMINI_MODEL, SUPABASE_DB_URL (or a local URL)
+
+# local Postgres with pgvector (or use a Supabase project's connection string)
+docker run -d --name qr-pg -e POSTGRES_PASSWORD=pg -p 127.0.0.1:5433:5432 pgvector/pgvector:pg17
+#   SUPABASE_DB_URL=postgresql://postgres:pg@localhost:5433/postgres
+
+# transcripts: PDFs are not in the repo. Download them yourself from company IR pages or exchange filings,
+# save as data/raw/{SYMBOL}_Q{n}FY{yy}.pdf, fill data/manifest.csv, then:
+.venv/bin/python scripts/check_manifest.py --fill-sha --gate phase2
+
+cd backend
+../.venv/bin/python -m ingest.run                       # idempotent; prints chunks, tokens, DB size
+../.venv/bin/python -m quantrag.ask "What did TCS say about AI revenue?"
+
+# tests (use a separate database: the DB tests drop the quantrag schema)
+docker exec qr-pg psql -U postgres -c "create database quantrag_test"
+TEST_DATABASE_URL=postgresql://postgres:pg@localhost:5433/quantrag_test ../.venv/bin/python -m pytest tests ../scripts
 ```
-- **Streamlit Frontend:** `http://localhost:8501`
-- **FastAPI Backend:** `http://localhost:8000`
 
----
+**Before you push:** this repo blocks pushes that contain secrets. Install the hook once per clone:
 
-## ☁️ Cloud Deployment (Render.com)
+```bash
+brew install gitleaks && git config core.hooksPath .githooks
+```
 
-This project is fully containerized and production-ready for Render's free tier.
-1. Connect this GitHub repo to [Render.com](https://render.com/).
-2. Deploy via the included **Blueprint** (`render.yaml`).
-3. Add your `GEMINI_API_KEY` to the `aarana-fastapi-backend` environment variables in the Render dashboard.
+It scans only the commits being pushed and fails closed if gitleaks is missing.
 
----
+## Disclaimer
 
-*Designed and engineered as a comprehensive demonstration of applied AI in finance.*
+Research and educational project. **Not investment advice.** Answers are generated from earnings-call transcripts by a
+language model and can be wrong even when cited. Check figures against the source documents. Transcripts belong to the
+companies that published them; this repo stores only links and hashes, not the PDFs.
