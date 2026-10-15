@@ -16,10 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-import check_manifest as cm
 import psycopg
 from pgvector.psycopg import register_vector
 
+import check_manifest as cm
 from generate.answer import answer
 from retrieve.search import Models
 

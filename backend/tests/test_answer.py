@@ -1,9 +1,9 @@
 """Generation logic with a fake LLM and fake retrieval: no API calls, no database."""
 from pathlib import Path
 
-import check_manifest as cm
 import pytest
 
+import check_manifest as cm
 import generate.answer as ga
 from generate.answer import LLMAnswer, validate
 from retrieve.search import Hit

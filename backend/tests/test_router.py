@@ -1,8 +1,8 @@
 from pathlib import Path
 
-import check_manifest as cm
 import pytest
 
+import check_manifest as cm
 from generate.router import route
 
 COMPANIES, _ = cm.load_companies(Path(cm.ROOT) / "data/companies.yaml")

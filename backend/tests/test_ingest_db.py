@@ -29,9 +29,9 @@ class FakeEmbedder:
 
 @pytest.fixture
 def setup(tmp_path, monkeypatch):
-    import check_manifest as cm
     import psycopg
 
+    import check_manifest as cm
     from ingest import run
     from ingest.parse import Turn
 

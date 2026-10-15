@@ -2,10 +2,10 @@
 import argparse
 import os
 
-import check_manifest as cm
 import psycopg
 from pgvector.psycopg import register_vector
 
+import check_manifest as cm
 from generate.answer import answer
 from retrieve.search import Models
 

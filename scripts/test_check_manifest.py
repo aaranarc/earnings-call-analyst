@@ -1,7 +1,8 @@
 from datetime import date
 
-import check_manifest as cm
 import pytest
+
+import check_manifest as cm
 
 PDF = b"%PDF-1.4 fake transcript"
 COMPANIES = """
