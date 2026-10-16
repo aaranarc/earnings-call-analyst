@@ -49,6 +49,7 @@ jobs:
           python scripts/build_growth_payoff.py --check
           python scripts/export_public_data.py --check
           python scripts/save_example_answers.py --check
+          python scripts/export_development_results.py --check
 
       - name: Test with coverage
         working-directory: backend

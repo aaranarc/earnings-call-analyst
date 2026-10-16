@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Shell from "./shell";
 import savedAnswers from "@/lib/saved-answers.json";
+import { answerBlocks } from "@/lib/answer-blocks";
 import Dialog from "./dialog";
 import { questions } from "./landing";
 import type { Answer, Hit, Thesis } from "@/lib/types";
@@ -177,17 +178,17 @@ export default function Ask() {
       ),
     );
   }
-  function content(raw: string, where: string) {
+  function content(raw: string, where: string, offset = 0) {
     const chars = Array.from(raw),
       nodes: React.ReactNode[] = [];
     let start = 0;
     const nums = (answer?.numbers || [])
-      .filter((n) => n.where === where && n.end <= chars.length)
+      .filter((n) => n.where === where && n.start >= offset && n.end <= offset + chars.length)
       .sort((a, b) => a.end - b.end);
     nums.forEach((n, i) => {
       nodes.push(
         <span key={`t-${i}`}>
-          {text(chars.slice(start, n.end).join(""), `n-${i}`)}
+          {text(chars.slice(start, n.end - offset).join(""), `n-${i}`)}
         </span>,
       );
       const matched = n.source?.raw;
@@ -215,7 +216,7 @@ export default function Ask() {
               : "~"}
         </button>,
       );
-      start = n.end;
+      start = n.end - offset;
     });
     nodes.push(
       <span key="rest">{text(chars.slice(start).join(""), "rest")}</span>,
@@ -317,9 +318,7 @@ export default function Ask() {
                     })}
                   </small>
                   <h3>{example.question}</h3>
-                  <p>
-                    {example.answer_markdown.replace(/\[c(\d+)\]/g, "[$1]")}
-                  </p>
+                  <div>{answerBlocks(example.answer_markdown).map((block, i) => block.kind === "p" ? <p key={i}>{block.items.map(item => item.text.replace(/\[c(\d+)\]/g, "[$1]")).join(" ")}</p> : <ul key={i}>{block.items.map((item, j) => <li key={j}>{item.text.replace(/\[c(\d+)\]/g, "[$1]")}</li>)}</ul>)}</div>
                   <details className="disclosure">
                     <summary>View cited evidence</summary>
                     {example.sources.map((source) => (
@@ -438,7 +437,10 @@ export default function Ask() {
                   </span>
                 </div>
                 <div className="answer-prose">
-                  {content(answer.answer_markdown, "answer")}
+                  {answerBlocks(answer.answer_markdown).map((block, i) => {
+                    const items = block.items.map((item, j) => <span key={j}>{content(item.text, "answer", item.start)}{j < block.items.length - 1 ? " " : ""}</span>);
+                    return block.kind === "p" ? <p key={i}>{items}</p> : block.kind === "ul" ? <ul key={i}>{block.items.map((item, j) => <li key={j}>{content(item.text, "answer", item.start)}</li>)}</ul> : <ol key={i}>{block.items.map((item, j) => <li key={j}>{content(item.text, "answer", item.start)}</li>)}</ol>;
+                  })}
                 </div>
                 {answer.comparison_table?.length ? (
                   <div className="table-scroll">

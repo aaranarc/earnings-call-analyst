@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 test("pages and evidence dialog meet automated WCAG AA checks", async ({
   page,
 }) => {
-  for (const path of ["/", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
+  for (const path of ["/", "/growth-payoff", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
     await page.goto(path);
     await expect(page.locator("h1")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
@@ -34,4 +34,18 @@ test("pages and evidence dialog meet automated WCAG AA checks", async ({
       nodes: v.nodes.map((n) => n.failureSummary),
     })),
   ).toEqual([]);
+});
+
+test('loaded development results and scenario chart meet AA at desktop and mobile', async ({page}) => {
+  for (const width of [1280,375]) {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/eval');
+    await expect(page.getByRole('region',{name:'Development measurements'})).toBeVisible();
+    let result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).exclude('nextjs-portal').analyze();
+    expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.failureSummary)}))).toEqual([]);
+    await page.goto('/growth-payoff');
+    await page.getByRole('button',{name:'Build a scenario',exact:true}).click();
+    result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).exclude('nextjs-portal').analyze();
+    expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.failureSummary)}))).toEqual([]);
+  }
 });

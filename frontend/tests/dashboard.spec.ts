@@ -58,6 +58,8 @@ test("all pages fit a 375px viewport", async ({ page }) => {
     expect(layout.scroll,`${path}: ${JSON.stringify(layout)}`).toBeLessThanOrEqual(layout.width);
   }
   await page.goto("/research");
+  await expect(page.getByRole("heading", {name:"What are you watching for?"})).toBeVisible();
+  await page.getByRole("button", {name:"Load example workspace"}).click();
   await page
     .getByRole("button")
     .filter({
@@ -80,7 +82,7 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
 }) => {
   const data = {
     question: "How was revenue?",
-    answer_markdown: "Revenue was 10% higher. [c1]",
+    answer_markdown: "- Revenue was 10% higher. [c1]",
     refused: false,
     refusal_reason: null,
     route: { kind: "single", companies: ["TEST"], periods: ["Q1 FY27"] },
@@ -105,8 +107,8 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
       {
         where: "answer",
         raw: "10%",
-        start: 12,
-        end: 15,
+        start: 14,
+        end: 17,
         status: "verified",
         source: { raw: "10%", chunk_id: 1 },
       },
@@ -124,6 +126,8 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
   await expect(
     page.getByText("Revenue was 10%", { exact: false }).first(),
   ).toBeVisible();
+  await expect(page.locator(".answer-prose ul li")).toContainText("Revenue was 10%");
+  await expect(page.locator(".answer-prose")).not.toContainText("- Revenue");
   await expect(page.getByRole("button", { name: "10%: Value matched — not claim verified" })).toBeVisible();
   await page.getByRole("button", { name: "Open citation 1" }).click();
   await expect(page.getByRole("dialog").getByText("Test CFO")).toBeVisible();
@@ -163,7 +167,7 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
     page.getByRole("alert").filter({ hasText: "analyst is busy" }),
   ).toBeVisible();
 });
-test("unpublished eval shows no numeric KPI cards", async ({ page }) => {
+test("unpublished eval shows development results separately from final metrics", async ({ page }) => {
   await page.route("**/api/eval/latest", (route) =>
     route.fulfill({
       json: {
@@ -180,7 +184,8 @@ test("unpublished eval shows no numeric KPI cards", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "The benchmark is still being built." }),
   ).toBeVisible();
-  await expect(page.locator(".metric-value")).toHaveCount(0);
+  await expect(page.getByRole("region", {name:"Development measurements"})).toContainText("Development set, not a final benchmark");
+  await expect(page.locator(".method-grid .metric-value")).toHaveCount(0);
 });
 
 test("coverage map links only available quarters and chart filters theses", async ({ page }) => {
@@ -197,6 +202,7 @@ test("coverage map links only available quarters and chart filters theses", asyn
   await expect(map.getByRole("link")).toHaveCount(2);
   await expect(map.getByLabel("No transcript")).toHaveCount(2);
   await expect(map.getByRole("link", {name: "Ask about TCS Q1 FY27"})).toHaveAttribute("href", /Q1%20FY27/);
+  await page.getByRole("button", {name: "Load example workspace"}).click();
   await page.getByRole("button", {name: "Filter Challenges thesis"}).click();
   await expect(page.locator(".thesis-card")).toHaveCount(1);
   await expect(page.locator(".thesis-card")).toContainText("Margins recover");

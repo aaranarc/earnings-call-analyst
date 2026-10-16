@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  ArrowUpRight,
+  ArrowRight,
   AudioLines,
   Bookmark,
   ChartNoAxesCombined,
@@ -57,7 +57,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <strong>Follow changes. Keep evidence.</strong>
           <p>Trace each finding to its source.</p>
           <Link href="/how-it-works">
-            See the research process <ArrowUpRight size={14} />
+            See the research process <ArrowRight size={14} />
           </Link>
         </div>
         <div className="side-bottom">
@@ -73,7 +73,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             <b>{links.find((x) => x[0] === path)?.[1] || "Overview"}</b>
           </span>
           <Link href="/ask" className="text-link">
-            <Sparkles size={15} /> Ask a question <ArrowUpRight size={14} />
+            <Sparkles size={15} /> Ask a question <ArrowRight size={14} />
           </Link>
         </header>
         <main id="main-content">{children}</main>

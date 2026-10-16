@@ -36,7 +36,7 @@ const statusIcon = {
 export default function Dashboard() {
   const [own, setOwn] = useState<Thesis[]>([]),
     [samples, setSamples] = useState(sampleTheses),
-    [demo, setDemo] = useState(true),
+    [demo, setDemo] = useState(false),
     [ready, setReady] = useState(false),
     [error, setError] = useState("");
   const [query, setQuery] = useState(""),
@@ -128,7 +128,7 @@ export default function Dashboard() {
             setFilter("All signals");
           }}
         >
-          {demo ? "Open my workspace" : "Explore example"}
+          {demo ? "Open my workspace" : "Load example workspace"}
           <ArrowRight size={15} />
         </button>
       </div>
@@ -323,7 +323,7 @@ export default function Dashboard() {
             <div className="brief-glyph" aria-hidden="true"><FileText size={44}/><span>Q / R</span></div>
             <h3>Your thinking.<br/>On one page.</h3>
             <p>Theses, evidence and next steps.</p>
-            <button className="button secondary" onClick={() => setBrief(true)}>Open research brief <ArrowUpRight size={15}/></button>
+            <button className="button secondary" onClick={() => setBrief(true)}>Open research brief <ArrowRight size={15}/></button>
           </div>
           <Link href="/ask" className="rail-card research-shortcut"><Search size={20}/><span>Find the next piece of evidence</span><ArrowRight size={17}/></Link>
         </aside>

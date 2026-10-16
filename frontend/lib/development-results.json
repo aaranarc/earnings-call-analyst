@@ -1,0 +1,64 @@
+{
+  "source": "eval/results/smoke_retrieval.json",
+  "sha256": "d2a26329f193b2f8941dfcbe4d4382145b2a4165cd51cc6532db9895e6d0f48e",
+  "machine": "Darwin arm64",
+  "source_commit": "a218a5c",
+  "runs": 3,
+  "retrieval": [
+    {
+      "name": "dense",
+      "hits_min": 14,
+      "hits_max": 14,
+      "of": 20,
+      "p50_min_ms": 5.1000000000000005,
+      "p50_max_ms": 5.7
+    },
+    {
+      "name": "fts",
+      "hits_min": 15,
+      "hits_max": 15,
+      "of": 20,
+      "p50_min_ms": 1.7,
+      "p50_max_ms": 1.7
+    },
+    {
+      "name": "hybrid",
+      "hits_min": 19,
+      "hits_max": 19,
+      "of": 20,
+      "p50_min_ms": 7.4,
+      "p50_max_ms": 7.7
+    },
+    {
+      "name": "dense + rerank",
+      "hits_min": 15,
+      "hits_max": 15,
+      "of": 20,
+      "p50_min_ms": 337.8,
+      "p50_max_ms": 355.7
+    },
+    {
+      "name": "fts + rerank",
+      "hits_min": 17,
+      "hits_max": 17,
+      "of": 20,
+      "p50_min_ms": 424.59999999999997,
+      "p50_max_ms": 446.40000000000003
+    },
+    {
+      "name": "hybrid + rerank",
+      "hits_min": 18,
+      "hits_max": 18,
+      "of": 20,
+      "p50_min_ms": 428.8,
+      "p50_max_ms": 463.4
+    }
+  ],
+  "memory": {
+    "retained_min_mb": 386.1,
+    "retained_max_mb": 418.6,
+    "untuned_min_mb": 1116.0,
+    "untuned_max_mb": 1190.6,
+    "retained_runs": 6
+  }
+}

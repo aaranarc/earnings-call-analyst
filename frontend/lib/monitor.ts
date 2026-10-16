@@ -22,7 +22,7 @@ function validFavourites(value:unknown):string[] {
 export function readFavourites():string[] {const value=localStorage.getItem(SLOT);return value===null?[]:validFavourites(JSON.parse(value));}
 export function saveFavourites(symbols:string[]) {readFavourites();localStorage.setItem(SLOT,JSON.stringify(validFavourites(symbols)));}
 export function quarterIndex(label:string) {const m=label.match(/^Q([1-4]) FY(\d{2})$/);return m?Number(m[2])*4+Number(m[1])-1:0;}
-export function chartPeriods(facts:MetricFact[]) {
+export function chartPeriods(facts:Pick<MetricFact,"period">[]) {
   if(!facts.length)return [];
   const first=quarterIndex(facts[0].period),last=quarterIndex(facts[facts.length-1].period);
   // Keep a bounded view; a blank slot is missing coverage, never an interpolated observation.
