@@ -293,3 +293,10 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Verified 8 documents, 581 chunks, 847 numbers and complete 384-dimensional embeddings. Original document IDs/hashes/counts preserved. Repeating every import added zero documents/chunks/numbers. Provenance: eval/results/coverage_expansion.json.
 - TCS now has Q2 FY26 through Q1 FY27; Infosys has Q2 FY25 and Q2 FY26. Same-quarter TCS/Infosys Q2 FY26 comparison and four-quarter TCS research are now possible. Latest-four gate is only 7/48; total coverage is 8/96, so neither full coverage gate is claimed complete.
 - Refreshed API and bundled web coverage snapshots. Historical four-transcript development metrics remain labeled historical; public human-reviewed benchmark metrics remain pending.
+
+## Company-first quarterly change dashboard
+- Added favourite company tiles, a clickable operating-margin chart with missing-quarter slots and explicit one-off exclusions, latest company-reported movement cards, and a management commentary timeline. Quotes retain speaker, physical PDF page, official URL and PDF hash.
+- Deterministic extraction uses management prepared remarks, rejects conflicting/annual/guidance values, and never computes a quarter-on-quarter comparison across missing periods. Arithmetic agreement is separate from accounting-basis review.
+- Signals save idempotently to the existing local research store as unresolved evidence. Existing notes/import/export remain available at `/research`; `/watchlist` is the new company dashboard. Corrupt local storage is preserved rather than overwritten.
+- Monitor snapshots build after verified PDF ingestion and ship with the frontend so viewing them does not wake the API. CI checks manifest provenance and bundled snapshot parity.
+- This slice does not classify missed commitments or prove that commentary caused results. Broader metrics, India/US coverage, longitudinal commitment matching and validated business-performance scenarios remain future work. Human-reviewed evaluation and the owner's deferred labels/Nestlé count remain outstanding.

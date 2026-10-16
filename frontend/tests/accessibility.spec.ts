@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 test("pages and evidence dialog meet automated WCAG AA checks", async ({
   page,
 }) => {
-  for (const path of ["/", "/watchlist", "/ask", "/eval", "/how-it-works"]) {
+  for (const path of ["/", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
     await page.goto(path);
     await expect(page.locator("h1")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
@@ -22,7 +22,7 @@ test("pages and evidence dialog meet automated WCAG AA checks", async ({
       path,
     ).toEqual([]);
   }
-  await page.goto("/watchlist");
+  await page.goto("/research");
   await page.getByRole("button", { name: "New thesis" }).click();
   const result = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])

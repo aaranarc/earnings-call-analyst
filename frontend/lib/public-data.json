@@ -203,5 +203,266 @@
     "failure_cases": [],
     "agreement": null,
     "last_run": null
+  },
+  "monitor": {
+    "version": 1,
+    "as_of": "2026-10-16",
+    "corpus_hash": "7dd377b583609b968b07cbb0b7eb964c29cd89c042c01ec60505434e51928aef",
+    "method": "Rule-based extraction from management prepared remarks; source matches are not semantic verification.",
+    "update_policy": "Snapshot rebuilt after transcript ingestion; no continuous monitoring or price feed.",
+    "companies": [
+      {
+        "symbol": "TCS",
+        "name": "Tata Consultancy Services",
+        "sector": "it_services",
+        "market": "India",
+        "call_count": 4,
+        "latest_period": "Q1 FY27",
+        "facts": [
+          {
+            "value": 25.2,
+            "raw": "25.2%",
+            "quote": "Our Q2 operating margin stood at 25.2%, reflecting a sequential improvement of 70 basis points. This is excluding one-time severance provided this quarter.",
+            "speaker": "Samir Seksaria",
+            "role": "management",
+            "page": 7,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
+            "source_sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34",
+            "period": "Q2 FY26",
+            "period_end": "2025-09-30",
+            "basis": "Excludes one-off items",
+            "id": "ade65ba98bcd60b9",
+            "reported_change_bps": 70.0
+          },
+          {
+            "value": 25.2,
+            "raw": "25.2%",
+            "quote": "Our Q3 operating margins stood at 25.2%, remaining stable sequentially. This excludes one-offs.",
+            "speaker": "K Krithivasan",
+            "role": "management",
+            "page": 3,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+            "source_sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441",
+            "period": "Q3 FY26",
+            "period_end": "2025-12-31",
+            "basis": "Excludes one-off items",
+            "id": "02efb02bee3a628f",
+            "reported_change_bps": null
+          },
+          {
+            "value": 25.3,
+            "raw": "25.3%",
+            "quote": "Our Q4 operating margin stood at 25.3%, a sequential increase of 10 basis points.",
+            "speaker": "Samir Seksaria",
+            "role": "management",
+            "page": 6,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+            "source_sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
+            "basis": "As stated in call",
+            "id": "23ddfad93adbc0a2",
+            "reported_change_bps": 10.0
+          },
+          {
+            "value": 24.0,
+            "raw": "24%",
+            "quote": "Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes.",
+            "speaker": "K Krithivasan",
+            "role": "management",
+            "page": 3,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+            "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "As stated in call",
+            "id": "94ffe77ec5febabb",
+            "reported_change_bps": -130.0
+          }
+        ],
+        "commentary": [
+          {
+            "period": "Q2 FY26",
+            "quote": "We have prioritized wage hikes, building future-ready capabilities and establishing new ecosystem partnerships. Currency helped support margins by 80 basis points.",
+            "speaker": "Samir Seksaria",
+            "page": 7,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
+            "source_sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34"
+          },
+          {
+            "period": "Q3 FY26",
+            "quote": "Full quarter impact of the wage increases announced last quarter had a negative impact of 50 basis points. Investments in brand building and partnerships had an impact of 50 basis points.",
+            "speaker": "Samir Seksaria",
+            "page": 4,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+            "source_sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441"
+          },
+          {
+            "period": "Q4 FY26",
+            "quote": "Also, the ingoing impact of the India wage code is included. Together these two accounted for an impact of 40 basis points.",
+            "speaker": "Samir Seksaria",
+            "page": 6,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+            "source_sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b"
+          },
+          {
+            "period": "Q1 FY27",
+            "quote": "Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes. Finally, we continue to advance our Infrastructure to Intelligence strategy through unique partnerships with frontier AI companies and new launches: - We announced a global premier partnership with Anthropic, which gives us early access to Claude family of models, 50,000 licenses, a joint GTM campaign, co-creation of industry solutions, and TCS iON as a training and certification partner.",
+            "speaker": "K Krithivasan",
+            "page": 3,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+            "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b"
+          }
+        ],
+        "signals": [
+          {
+            "id": "94ffe77ec5febabb-movement",
+            "kind": "reported_movement",
+            "direction": "down",
+            "title": "Margin down",
+            "change_bps": -130.0,
+            "period": "Q1 FY27",
+            "current": {
+              "value": 24.0,
+              "raw": "24%",
+              "quote": "Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes.",
+              "speaker": "K Krithivasan",
+              "role": "management",
+              "page": 3,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+              "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+              "period": "Q1 FY27",
+              "period_end": "2026-06-30",
+              "basis": "As stated in call",
+              "id": "94ffe77ec5febabb",
+              "reported_change_bps": -130.0
+            },
+            "previous": {
+              "value": 25.3,
+              "raw": "25.3%",
+              "quote": "Our Q4 operating margin stood at 25.3%, a sequential increase of 10 basis points.",
+              "speaker": "Samir Seksaria",
+              "role": "management",
+              "page": 6,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+              "source_sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b",
+              "period": "Q4 FY26",
+              "period_end": "2026-03-31",
+              "basis": "As stated in call",
+              "id": "23ddfad93adbc0a2",
+              "reported_change_bps": 10.0
+            },
+            "attribution": "Management-reported quarter-on-quarter change",
+            "arithmetic_matches": true
+          }
+        ],
+        "gap_before": []
+      },
+      {
+        "symbol": "INFY",
+        "name": "Infosys",
+        "sector": "it_services",
+        "market": "India",
+        "call_count": 2,
+        "latest_period": "Q2 FY26",
+        "facts": [
+          {
+            "value": 21.1,
+            "raw": "21.1%",
+            "quote": "Our operating margin for Q2 was at 21.1%.",
+            "speaker": "Salil Parekh",
+            "role": "management",
+            "page": 4,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf",
+            "source_sha256": "0c28ccd21308f114b0b6f14e7ce72af192e3f9fcbc5b0706b10071d62ce14a00",
+            "period": "Q2 FY25",
+            "period_end": "2024-09-30",
+            "basis": "As stated in call",
+            "id": "d0109627468be747",
+            "reported_change_bps": null
+          },
+          {
+            "value": 21.0,
+            "raw": "21%",
+            "quote": "Operating margin expanded by 20 bps sequentially to 21%.",
+            "speaker": "Jayesh Sanghrajka",
+            "role": "management",
+            "page": 4,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
+            "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+            "period": "Q2 FY26",
+            "period_end": "2025-09-30",
+            "basis": "As stated in call",
+            "id": "ac39e48db0b41f33",
+            "reported_change_bps": 20.0
+          }
+        ],
+        "commentary": [
+          {
+            "period": "Q2 FY26",
+            "quote": "H1 gross margin remained resilient at 30.8%, flat year-on-year after absorbing compensation headwinds, reflecting the progress of Project Maximus. 7.",
+            "speaker": "Jayesh Sanghrajka",
+            "page": 4,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
+            "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece"
+          }
+        ],
+        "signals": [
+          {
+            "id": "ac39e48db0b41f33-movement",
+            "kind": "reported_movement",
+            "direction": "up",
+            "title": "Margin up",
+            "change_bps": 20.0,
+            "period": "Q2 FY26",
+            "current": {
+              "value": 21.0,
+              "raw": "21%",
+              "quote": "Operating margin expanded by 20 bps sequentially to 21%.",
+              "speaker": "Jayesh Sanghrajka",
+              "role": "management",
+              "page": 4,
+              "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
+              "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+              "period": "Q2 FY26",
+              "period_end": "2025-09-30",
+              "basis": "As stated in call",
+              "id": "ac39e48db0b41f33",
+              "reported_change_bps": 20.0
+            },
+            "previous": null,
+            "attribution": "Management-reported quarter-on-quarter change",
+            "arithmetic_matches": false
+          }
+        ],
+        "gap_before": [
+          "Q2 FY26"
+        ]
+      },
+      {
+        "symbol": "HDFCBANK",
+        "name": "HDFC Bank",
+        "sector": "private_bank",
+        "market": "India",
+        "call_count": 1,
+        "latest_period": "Q1 FY27",
+        "facts": [],
+        "commentary": [],
+        "signals": [],
+        "gap_before": []
+      },
+      {
+        "symbol": "HINDUNILVR",
+        "name": "Hindustan Unilever",
+        "sector": "consumer",
+        "market": "India",
+        "call_count": 1,
+        "latest_period": "Q1 FY27",
+        "facts": [],
+        "commentary": [],
+        "signals": [],
+        "gap_before": []
+      }
+    ]
   }
 }

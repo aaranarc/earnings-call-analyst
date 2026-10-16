@@ -23,6 +23,18 @@ attaches a citation to every claim, and checks every number in its own answer ag
 
 ## What works today
 
+The [company watchlist](https://quantrag.vercel.app/watchlist) puts sourced quarterly changes first:
+star companies, inspect operating-margin bars, open management quotes and save a change to your evidence pile.
+Existing notes and thesis tools remain in [Saved research](https://quantrag.vercel.app/research).
+Favourites and saved research stay in the browser; export your research to back it up.
+
+The monitor currently extracts a narrow operating-margin vocabulary from prepared management remarks.
+Its change cards quote management's stated sequential movement; gaps and excluded one-off items remain visible.
+It does not infer a missed commitment, establish causality, rate a company or forecast five-year performance.
+Bank/HUL calls without an unambiguous matching figure show no margin series. Snapshots refresh on ingestion,
+not on a background schedule. To refresh after adding verified PDFs, run
+`python scripts/build_company_monitor.py` then `python scripts/export_public_data.py` before deploying.
+
 ```bash
 python -m quantrag.ask "Compare TCS and Infosys on large deal wins"
 ```

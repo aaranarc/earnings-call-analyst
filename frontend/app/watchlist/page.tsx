@@ -1,4 +1,2 @@
-import Dashboard from "@/components/dashboard";
-export default function Page() {
-  return <Dashboard />;
-}
+import CompanyWatchlist from '@/components/company-watchlist';
+export default function Page() {return <CompanyWatchlist/>;}
