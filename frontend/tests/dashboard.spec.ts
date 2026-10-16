@@ -58,6 +58,8 @@ test("all pages fit a 375px viewport", async ({ page }) => {
     expect(layout.scroll,`${path}: ${JSON.stringify(layout)}`).toBeLessThanOrEqual(layout.width);
   }
   await page.goto("/research");
+  await expect(page.getByRole("heading", {name:"What are you watching for?"})).toBeVisible();
+  await page.getByRole("button", {name:"Load example workspace"}).click();
   await page
     .getByRole("button")
     .filter({
@@ -198,6 +200,7 @@ test("coverage map links only available quarters and chart filters theses", asyn
   await expect(map.getByRole("link")).toHaveCount(2);
   await expect(map.getByLabel("No transcript")).toHaveCount(2);
   await expect(map.getByRole("link", {name: "Ask about TCS Q1 FY27"})).toHaveAttribute("href", /Q1%20FY27/);
+  await page.getByRole("button", {name: "Load example workspace"}).click();
   await page.getByRole("button", {name: "Filter Challenges thesis"}).click();
   await expect(page.locator(".thesis-card")).toHaveCount(1);
   await expect(page.locator(".thesis-card")).toContainText("Margins recover");

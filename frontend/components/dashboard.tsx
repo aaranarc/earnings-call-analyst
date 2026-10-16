@@ -36,7 +36,7 @@ const statusIcon = {
 export default function Dashboard() {
   const [own, setOwn] = useState<Thesis[]>([]),
     [samples, setSamples] = useState(sampleTheses),
-    [demo, setDemo] = useState(true),
+    [demo, setDemo] = useState(false),
     [ready, setReady] = useState(false),
     [error, setError] = useState("");
   const [query, setQuery] = useState(""),
@@ -128,7 +128,7 @@ export default function Dashboard() {
             setFilter("All signals");
           }}
         >
-          {demo ? "Open my workspace" : "Explore example"}
+          {demo ? "Open my workspace" : "Load example workspace"}
           <ArrowRight size={15} />
         </button>
       </div>
