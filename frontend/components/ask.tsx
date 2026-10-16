@@ -13,6 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import Shell from "./shell";
+import savedAnswers from "@/lib/saved-answers.json";
 import Dialog from "./dialog";
 import { questions } from "./landing";
 import type { Answer, Hit, Thesis } from "@/lib/types";
@@ -29,6 +30,17 @@ export default function Ask() {
     ),
     [pins, setPins] = useState<{ question: string; answer: string }[]>([]),
     [message, setMessage] = useState("");
+  const [elapsed, setElapsed] = useState(0);
+  const [showExamples, setShowExamples] = useState(false);
+  useEffect(() => {
+    if (!busy) return;
+    const start = Date.now();
+    const timer = setInterval(
+      () => setElapsed(Math.floor((Date.now() - start) / 1000)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [busy]);
   const [linkEvidence, setLinkEvidence] = useState(false),
     [theses, setTheses] = useState<Thesis[]>([]);
   const started = useRef(false),
@@ -65,6 +77,8 @@ export default function Ask() {
     setQ(question);
     setBusy(true);
     setError("");
+    setShowExamples(false);
+    setElapsed(0);
     setAnswer(null);
     setStatus("Connecting to the analyst…");
     try {
@@ -101,7 +115,13 @@ export default function Ask() {
           if (!data) continue;
           const parsed = JSON.parse(data);
           if (type === "status") setStatus(parsed);
-          if (type === "error") throw Error(parsed);
+          if (type === "error") {
+            setShowExamples(
+              parsed ===
+                "The AI provider is busy or temporarily unavailable. Please try again shortly.",
+            );
+            throw Error(parsed);
+          }
           if (type === "answer") {
             setAnswer(parsed);
             received = true;
@@ -175,8 +195,8 @@ export default function Ask() {
         <button
           key={`b-${i}`}
           className={`number-badge ${n.status}`}
-          title={`${(n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " "))}${matched ? `: matched “${matched}”` : ": no matching source number"}`}
-          aria-label={`${n.raw}: ${(n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " "))}`}
+          title={`${n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " ")}${matched ? `: matched “${matched}”` : ": no matching source number"}`}
+          aria-label={`${n.raw}: ${n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " ")}`}
           onClick={() => {
             const h = answer?.hits.find(
               (h) => h.chunk_id === n.source?.chunk_id,
@@ -184,7 +204,7 @@ export default function Ask() {
             if (h) setSource({ hit: h, highlight: matched });
             else
               setMessage(
-                `${n.raw}: ${(n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " "))}. No matching passage is available in this answer.`,
+                `${n.raw}: ${n.status === "verified" ? "Value matched — not claim verified" : n.status.replaceAll("_", " ")}. No matching passage is available in this answer.`,
               );
           }}
         >
@@ -253,9 +273,12 @@ export default function Ask() {
         {busy && (
           <div className="loading" role="status">
             <LoaderCircle size={19} className="spinner" />
-            {status}
+            {status === "Connecting to the analyst…"
+              ? "Waking the analyst…"
+              : status}
             <span className="muted">
-              The answer appears after verification.
+              {elapsed}s elapsed · Free hosting may need a moment to wake. The
+              answer appears after verification.
             </span>
           </div>
         )}
@@ -268,6 +291,59 @@ export default function Ask() {
               </button>
             </div>
           </div>
+        )}
+        {error && showExamples && (
+          <section
+            className="saved-examples"
+            aria-label="Saved example answers"
+          >
+            <div className="section-head">
+              <h2>Explore saved answers</h2>
+            </div>
+            <p className="muted">
+              Previously generated from our transcript database. These are
+              examples, not a live response to your question.
+            </p>
+            <div className="saved-example-grid">
+              {savedAnswers.map((example) => (
+                <article className="answer-card" key={example.id}>
+                  <small className="signal">
+                    Example answer, saved{" "}
+                    {new Date(example.saved_at).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                      timeZone: "Asia/Kolkata",
+                    })}
+                  </small>
+                  <h3>{example.question}</h3>
+                  <p>
+                    {example.answer_markdown.replace(/\[c(\d+)\]/g, "[$1]")}
+                  </p>
+                  <details className="disclosure">
+                    <summary>View cited evidence</summary>
+                    {example.sources.map((source) => (
+                      <div key={source.n}>
+                        <p className="muted">
+                          [{source.n}] {source.symbol} · {source.period} ·{" "}
+                          {source.speaker} · Page {source.page}
+                        </p>
+                        <blockquote>{source.quote}</blockquote>
+                        <a
+                          className="text-link"
+                          href={`${source.source_url}#page=${source.page}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open source PDF ↗
+                        </a>
+                      </div>
+                    ))}
+                  </details>
+                </article>
+              ))}
+            </div>
+          </section>
         )}
         {answer && (
           <article className="answer-card">
@@ -325,11 +401,41 @@ export default function Ask() {
               </div>
             ) : (
               <>
-                {answer.route.kind === "comparison" && new Set(answer.citations.map(c => answer.hits.find(h => h.chunk_id === c.chunk_id)?.fiscal_label).filter(Boolean)).size > 1 && <div className="notice">This comparison uses different fiscal periods. It is not a same-quarter peer comparison.</div>}
-                <div className="answer-summary" aria-label="Answer evidence summary">
-                  <span><b>{answer.citations.length}</b> citations</span>
-                  <span><b>{answer.numbers.filter(n => n.status === "verified").length}/{answer.numbers.length}</b> numbers matched</span>
-                  <span>{answer.route.periods.join(" · ") || "Period not specified"}</span>
+                {answer.route.kind === "comparison" &&
+                  new Set(
+                    answer.citations
+                      .map(
+                        (c) =>
+                          answer.hits.find((h) => h.chunk_id === c.chunk_id)
+                            ?.fiscal_label,
+                      )
+                      .filter(Boolean),
+                  ).size > 1 && (
+                    <div className="notice">
+                      This comparison uses different fiscal periods. It is not a
+                      same-quarter peer comparison.
+                    </div>
+                  )}
+                <div
+                  className="answer-summary"
+                  aria-label="Answer evidence summary"
+                >
+                  <span>
+                    <b>{answer.citations.length}</b> citations
+                  </span>
+                  <span>
+                    <b>
+                      {
+                        answer.numbers.filter((n) => n.status === "verified")
+                          .length
+                      }
+                      /{answer.numbers.length}
+                    </b>{" "}
+                    numbers matched
+                  </span>
+                  <span>
+                    {answer.route.periods.join(" · ") || "Period not specified"}
+                  </span>
                 </div>
                 <div className="answer-prose">
                   {content(answer.answer_markdown, "answer")}
@@ -517,9 +623,23 @@ export default function Ask() {
               const form = new FormData(e.currentTarget);
               const id = String(form.get("thesis"));
               let current: Thesis[];
-              try { current = readWorkspace(); } catch { setMessage("Saved research could not be loaded. Evidence was not saved."); setLinkEvidence(false); return; }
+              try {
+                current = readWorkspace();
+              } catch {
+                setMessage(
+                  "Saved research could not be loaded. Evidence was not saved.",
+                );
+                setLinkEvidence(false);
+                return;
+              }
               const selected = current.find((t) => t.id === id);
-              if (id !== "new" && !selected) { setMessage("This thesis no longer exists. Reopen the save dialog."); setLinkEvidence(false); return; }
+              if (id !== "new" && !selected) {
+                setMessage(
+                  "This thesis no longer exists. Reopen the save dialog.",
+                );
+                setLinkEvidence(false);
+                return;
+              }
               const evidence =
                 answer.answer_markdown +
                 "\n\nSources: " +
@@ -545,7 +665,16 @@ export default function Ask() {
               const updated: Thesis = selected
                 ? {
                     ...selected,
-                    evidence: [...selected.evidence, { id: crypto.randomUUID(), text: evidence, quarter: period, addedAt: new Date().toISOString(), kind: "answer" }],
+                    evidence: [
+                      ...selected.evidence,
+                      {
+                        id: crypto.randomUUID(),
+                        text: evidence,
+                        quarter: period,
+                        addedAt: new Date().toISOString(),
+                        kind: "answer",
+                      },
+                    ],
                     status: "Unresolved",
                     reviewed: false,
                   }
@@ -556,7 +685,15 @@ export default function Ask() {
                     title: String(form.get("title") || answer.question).trim(),
                     description:
                       "Evidence saved from a cited analyst answer. Review the source before making an assessment.",
-                    evidence: [{id: crypto.randomUUID(), text: evidence, quarter: period, addedAt: new Date().toISOString(), kind: "answer"}],
+                    evidence: [
+                      {
+                        id: crypto.randomUUID(),
+                        text: evidence,
+                        quarter: period,
+                        addedAt: new Date().toISOString(),
+                        kind: "answer",
+                      },
+                    ],
                     before: "",
                     beforeQuarter: period,
                     after: "",
@@ -608,7 +745,8 @@ export default function Ask() {
               />
             </label>
             <div className="notice">
-              Each answer adds a new timeline entry. Your earlier evidence stays intact.
+              Each answer adds a new timeline entry. Your earlier evidence stays
+              intact.
             </div>
             <button className="button primary" type="submit">
               Save evidence <ArrowRight size={15} />
@@ -626,7 +764,13 @@ export default function Ask() {
             <div className="source-meta">
               <span>{source.hit.speaker}</span>
               <span>{source.hit.role}</span>
-              <span>{source.hit.section === "qa" ? "Q&A" : source.hit.section === "prepared" ? "Prepared remarks" : "Section unavailable"}</span>
+              <span>
+                {source.hit.section === "qa"
+                  ? "Q&A"
+                  : source.hit.section === "prepared"
+                    ? "Prepared remarks"
+                    : "Section unavailable"}
+              </span>
               <span>Page {source.hit.page}</span>
             </div>
             <div className="source-text">
@@ -639,16 +783,35 @@ export default function Ask() {
                   ))
                 : source.hit.text}
             </div>
-            {!!source.hit.context?.length && <details className="disclosure">
-              <summary>Read surrounding excerpts</summary>
-              <div><p className="section-copy">Adjacent transcript chunks. These were not necessarily used to generate the answer.</p>
-                {source.hit.context.map(entry => <article className="context-excerpt" key={entry.chunk_id}>
-                  <strong>{entry.position === "before" ? "Before" : "After"} · {entry.speaker}</strong>
-                  <small>{entry.role} · {entry.section === "qa" ? "Q&A" : entry.section === "prepared" ? "Prepared remarks" : "Section unavailable"} · Page {entry.page}</small>
-                  <p>{entry.text}</p>
-                </article>)}
-              </div>
-            </details>}
+            {!!source.hit.context?.length && (
+              <details className="disclosure">
+                <summary>Read surrounding excerpts</summary>
+                <div>
+                  <p className="section-copy">
+                    Adjacent transcript chunks. These were not necessarily used
+                    to generate the answer.
+                  </p>
+                  {source.hit.context.map((entry) => (
+                    <article className="context-excerpt" key={entry.chunk_id}>
+                      <strong>
+                        {entry.position === "before" ? "Before" : "After"} ·{" "}
+                        {entry.speaker}
+                      </strong>
+                      <small>
+                        {entry.role} ·{" "}
+                        {entry.section === "qa"
+                          ? "Q&A"
+                          : entry.section === "prepared"
+                            ? "Prepared remarks"
+                            : "Section unavailable"}{" "}
+                        · Page {entry.page}
+                      </small>
+                      <p>{entry.text}</p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            )}
             {source.hit.source_url?.startsWith("https://") ? (
               <a
                 className="button secondary"
