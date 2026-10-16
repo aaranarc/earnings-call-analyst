@@ -286,3 +286,10 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Added this/latest/most-recent quarter wording, resolved from ingested periods rather than today's calendar. Explicit fiscal periods take precedence over relative wording. Ranking words such as best/highest/strongest select comparison intent.
 - New regression checks cover routing and the generation coverage boundary. The original 20 inspected development queries pass; this is a regression check, not a new held-out accuracy result. The original router report is preserved as historical evidence.
 - Coverage expansion and human-reviewed evaluation remain pending; the deferred 120 labels and Nestlé count were not touched.
+
+## Eight-transcript corpus expansion (supersedes the four PDF download blockers)
+- Owner supplied official TCS Q2/Q3/Q4 FY26 and Infosys Q2 FY26 PDFs. Verified company, period, call date, page structure and SHA-256; recorded source URLs and hashes in the manifest. Original downloads preserved; raw PDFs remain ignored by Git.
+- Parsing retains management/analyst roles and prepared/Q&A sections; new chunks stay within 450 tokens. Ingested the four documents into the approved Supabase project using the authenticated connector after the local PostgreSQL network connection timed out. Each document uses one atomic statement.
+- Verified 8 documents, 581 chunks, 847 numbers and complete 384-dimensional embeddings. Original document IDs/hashes/counts preserved. Repeating every import added zero documents/chunks/numbers. Provenance: eval/results/coverage_expansion.json.
+- TCS now has Q2 FY26 through Q1 FY27; Infosys has Q2 FY25 and Q2 FY26. Same-quarter TCS/Infosys Q2 FY26 comparison and four-quarter TCS research are now possible. Latest-four gate is only 7/48; total coverage is 8/96, so neither full coverage gate is claimed complete.
+- Refreshed API and bundled web coverage snapshots. Historical four-transcript development metrics remain labeled historical; public human-reviewed benchmark metrics remain pending.

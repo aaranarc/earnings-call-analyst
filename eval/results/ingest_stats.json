@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-15",
+  "date": "2026-10-16",
   "database": "supabase",
   "documents": [
     {
@@ -21,6 +21,30 @@
       "numbers": 99
     },
     {
+      "symbol": "INFY",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 60,
+      "numbers": 134
+    },
+    {
+      "symbol": "TCS",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 95,
+      "numbers": 101
+    },
+    {
+      "symbol": "TCS",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 63,
+      "numbers": 124
+    },
+    {
+      "symbol": "TCS",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 76,
+      "numbers": 120
+    },
+    {
       "symbol": "TCS",
       "fiscal_label": "Q1 FY27",
       "chunks": 69,
@@ -28,14 +52,14 @@
     }
   ],
   "totals": {
-    "documents": 4,
-    "chunks": 287,
-    "numbers": 368,
-    "avg_tokens_per_chunk": 133.2,
-    "median_tokens_per_chunk": 99,
-    "max_tokens_per_chunk": 446,
-    "quantrag_schema_mb": 2.16,
-    "database_mb": 12.8,
+    "documents": 8,
+    "chunks": 581,
+    "numbers": 847,
+    "avg_tokens_per_chunk": 132.6,
+    "median_tokens_per_chunk": 92,
+    "max_tokens_per_chunk": 450,
+    "quantrag_schema_mb": 3.67,
+    "database_mb": 14.38,
     "supabase_free_tier_mb": 500
   },
   "manifest_target": {
