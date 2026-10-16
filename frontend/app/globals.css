@@ -2045,3 +2045,13 @@ td {
 .saved-example-grid h3 { font-size: 17px; line-height: 1.5; margin: 14px 0; }
 .saved-example-grid p, .saved-example-grid blockquote { font-size: 14px; line-height: 1.65; white-space: pre-wrap; }
 @media (max-width: 900px) { .saved-example-grid { grid-template-columns: 1fr; } }
+
+.margin-line-chart { min-width:0; }
+.margin-line-chart svg { display:block; width:100%; height:auto; min-height:180px; }
+.margin-line-chart text { fill:var(--muted); font:11px var(--font-mono); }
+.margin-point-labels { display:grid; gap:5px; text-align:center; }
+.margin-point-labels>div { min-width:0; font-size:10px; color:var(--muted); }
+.margin-point { display:flex; flex-direction:column; gap:4px; align-items:center; background:none; border:0; color:var(--text); width:100%; padding:7px 2px; font:11px var(--font-mono); }
+.margin-point small { font:9px var(--font-sans); color:var(--muted); }
+.margin-period { display:block; padding-top:6px; }
+.margin-line-chart + .monitor-chart-note { margin-top:20px; }
