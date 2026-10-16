@@ -14,6 +14,8 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
 
+from generate.provider import BUSY_MESSAGE, ProviderUnavailable
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 @asynccontextmanager
@@ -148,6 +150,8 @@ async def ask(body: Question):
             yield f"event: status\ndata: {json.dumps(message)}\n\n"
             result = await run_in_threadpool(run_answer, body.question)
             yield f"event: answer\ndata: {json.dumps(result)}\n\n"
+        except ProviderUnavailable:
+            yield f'event: error\ndata: {json.dumps(BUSY_MESSAGE)}\n\n'
         except Exception:  # noqa: BLE001 -- API boundary must redact provider/driver error details
             # Driver/provider exceptions can include connection details. Keep them out of responses.
             yield 'event: error\ndata: "The analyst could not finish. Check the connection and try again."\n\n'
@@ -224,6 +228,8 @@ async def thesis_check(body: ThesisQuestion):
     async with lock:
         try:
             return await run_in_threadpool(run_thesis, body)
+        except ProviderUnavailable:
+            raise HTTPException(503, BUSY_MESSAGE, headers={"Retry-After": "30"}) from None
         except ValueError as exc:
             raise HTTPException(422, "Requested transcript coverage is unavailable.") from exc
         except Exception as exc:

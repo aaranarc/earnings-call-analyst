@@ -65,7 +65,13 @@ Render-generated API token; do not put any token in a `NEXT_PUBLIC_` variable.
 - Next allows only known API routes/methods and bounded request bodies; rejects explicit cross-origin POSTs;
   forwards only a server-configured credential. Its configured API origin is never user-controlled.
 - `DAILY_REQUEST_LIMIT` defaults to 100 request units in UTC. Each thesis period consumes one unit. A reservation
-  is counted even if a provider call fails. This caps attempts, not dollars; provider token billing is separate.
+  is counted even if a provider call fails. Each generation makes at most two provider attempts, including any
+  fallback. This caps request units, not dollars; provider token billing is separate.
+- Temporary provider errors (429, selected 5xx, network failures/timeouts) retry once after a short jittered delay.
+  Each attempt has a 25-second timeout and SDK retries are disabled. Exhaustion shows a provider-busy message;
+  invalid requests, credentials and parsing errors are not retried. Logs record only exception category and attempt.
+  `GEMINI_FALLBACK_MODEL` optionally selects a second Gemini model for the final attempt. It is off by default;
+  verify its pricing and evaluate citation/number quality before enabling it. No fallback is automatically chosen.
 - One in-flight model request per API process returns 429 while busy. Model output is bounded and provider
   timeouts are configured. An API instance runs one worker to bound memory and avoid duplicate model loads.
 - SQLite budget updates are transactional across processes sharing the same file. `USAGE_DB_PATH` must point
