@@ -35,12 +35,8 @@ Excerpts:
 
 
 def make_judge():
-    import os
-
-    from langchain_google_genai import ChatGoogleGenerativeAI
-    return ChatGoogleGenerativeAI(model=os.environ["GEMINI_MODEL"], temperature=0,
-                                 api_key=os.environ["GEMINI_API_KEY"], max_retries=1,
-                                 timeout=60).with_structured_output(Assessment)
+    from generate.provider import make_model
+    return make_model(Assessment)
 
 
 def assess(thesis, hits, period, llm):

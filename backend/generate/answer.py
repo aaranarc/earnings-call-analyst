@@ -61,12 +61,8 @@ class LLMAnswer(BaseModel):
 
 
 def make_llm():
-    from langchain_google_genai import ChatGoogleGenerativeAI
-    model = os.environ.get("GEMINI_MODEL")
-    if not model:
-        raise RuntimeError("GEMINI_MODEL is not set (model IDs come from the environment, never the code)")
-    llm = ChatGoogleGenerativeAI(model=model, temperature=0, api_key=os.environ["GEMINI_API_KEY"], max_retries=1, timeout=60, max_output_tokens=4096)
-    return llm.with_structured_output(LLMAnswer)
+    from generate.provider import make_model
+    return make_model(LLMAnswer)
 
 
 def format_context(hits):
