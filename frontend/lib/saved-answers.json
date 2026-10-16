@@ -1,0 +1,98 @@
+[
+  {
+    "id": "da54dbf49e2a436f",
+    "model": "gemini-3.5-flash-lite",
+    "sources": [
+      {
+        "n": 1,
+        "page": 24,
+        "quote": "Thank you, operator. • In Q1, our Revenue grew by 0.4% QoQ in constant currency, with an operating margin of 24% and a net margin of 19.2%. • Annualized AI services revenue crossed US$2.6 billion. • We had a very strong TCV of US$9.5 billion in Q1. We remain confident that TCS is well positioned to convert demand into stronger growth as client spending normalizes and AI adoption scales across the enterprise. This concludes our call today. Thank you all for joining us.",
+        "period": "Q1 FY27",
+        "sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+        "symbol": "TCS",
+        "speaker": "K Krithivasan",
+        "chunk_id": 69,
+        "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf"
+      },
+      {
+        "n": 2,
+        "page": 2,
+        "quote": "Thank you, Nehal. Good day everyone and thank you for joining us. I would like to begin by calling out the key takeaways from our Q1 FY27 performance. First, Q1 FY27 reflects continued growth momentum and the strength of our strategic positioning despite the geopolitical and macroeconomic headwinds. Our Q1 revenue stood at ₹72,275 crore, growing 2.2% sequentially and 13.9% year-on-year. This is the fourth consecutive quarter of growth. Growth was led by BFSI, Technology, software and services, regional markets, and products and platforms. Second, strong order book closure and large deal momentum continued. We delivered a TCV of $9.5 billion, including net new AI-led business transformation deals such as, • US$ 800 million mega deal with SKF; 6th mega deal win in the last 5 quarters • Multi-million $ strategic partnership agreement with ServiceNow • Multi-million $ deal with Europe-based Fortune Global 50 firm The third key takeaway is our AI services revenue continues to accelerate. At the end of Q1 FY27, it stands at $2.6 billion in annualized revenue, which is up 13.6% QoQ. Fourth, client priorities are increasingly aligned with our focus areas of AIled transformation, modernization, cybersecurity, sovereign cloud, platform rationalization, and vendor consolidation. We maintained healthy client additions across $10 million+, $5 million+, and $1 million+ revenue bands on a sequential basis. Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes. Finally, we continue to advance our Infrastructure to Intelligence strategy through unique partnerships with frontier AI companies and new launches: - We announced a global premier partnership with Anthropic, which gives us early access to Claude family of models, 50,000 licenses, a joint GTM campaign, co-creation of industry solutions, and TCS iON as a training and certification partner. - TCS also became the first GSI partner for Mistral AI.",
+        "period": "Q1 FY27",
+        "sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+        "symbol": "TCS",
+        "speaker": "K Krithivasan",
+        "chunk_id": 6,
+        "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf"
+      },
+      {
+        "n": 5,
+        "page": 4,
+        "quote": "Thank you, Krithi. Good day everyone. Our quarterly revenue was ₹72,275 crores, a growth of 2.2% QoQ  and 13.9% YoY in rupee terms. In dollar terms, revenue was $7,624 million, which was flat growth sequentially and 2.7% YoY. In constant currency terms, our growth was 40 bps sequentially and 3.2% YoY. This quarter, we have undertaken a refinement of cost categories to address the previously elevated ‘other expenses’ to provide a clearer view of the underlying cost drivers. This change has no impact on overall expenses or operating margins, and prior periods have been aligned for comparability. Prior four-quarter comparative details are available on our quarterly fact sheet. Operating margin for the quarter was 24%, declining 130 bps sequentially. In Q1, we rolled out annual increments for our global workforce, which impacted margins by 170 bps . We strengthened our partnership ecosystem and made targeted investments, which we were able to partly offset with 40 bps of currency benefit and operational efficiencies. Our strong profitability allows us the ability to make significant investments which are aligned with our aspirations. We are investing in AI capabilities, talent transformation, partner ecosystems, platforms, domain solutions, and go-to-market capacity. These investments are necessary as client demand increasingly requires integrated o fferings across the Infrastructure to Intelligence AI stack. At the same time, we continue to drive operational rigor through pyramid optimization, productivity improvement, better resource fulfillment, automation, and disciplined cost management. As we have demonstrated in the past, our approach is to not optimize margins in isolation, but to invest in capabilities that strengthen our longterm competitiveness while continuing to deliver industry-leading profitability and return ratios. Net margin for the quarter was 19.2%. DSO stood at 74 days in $ terms and constant sequentially. Our cash conversion remained strong at 93% of net income. Invested funds at the end of the period stood at $5.3 billion.",
+        "period": "Q1 FY27",
+        "sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+        "symbol": "TCS",
+        "speaker": "Samir Seksaria",
+        "chunk_id": 8,
+        "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf"
+      }
+    ],
+    "question": "What was TCS operating margin in Q1 FY27?",
+    "reviewed_by": "Codex source inspection; not independent human evaluation",
+    "answer_markdown": "- According to TCS management (K Krithivasan and Samir Seksaria), the operating margin for Q1 FY27 was 24%, which was down 130 bps sequentially primarily due to wage hikes [c1][c2][c5].",
+    "saved_at": "2026-10-16T15:59:44.567712+00:00"
+  },
+  {
+    "id": "ef4d5d13c45f52d2",
+    "model": "gemini-3.5-flash-lite",
+    "sources": [
+      {
+        "n": 2,
+        "page": 3,
+        "quote": "Thank you, Salil. Good morning, good evening everyone, and thank you for joining the call today. I am pleased to report that we had another quarter of robust all-around performance despite an uncertain environment. We continued our strong growth momentum for the second consecutive quarters, accompanied by higher margins, led by focus on client relevance and rigor on execution. We are making necessary investment in technology, people and in sales engine to future proof our business. Let me cover key aspects of our results: 1. Quarterly revenues crossed $5 bn in Q2 '26 and $10 bn for the half year. Revenue grew 2.2% sequentially in Q2, including 20 bps from acquisitions in constant currency terms. 2. Growth in Q2 was on back of the 2.6% sequential growth in Q1. H1 revenues, therefore, grew at 3.3%. 3. Volumes continue to remain soft with bulk of the revenue growth driven by realization increase. 4. Amongst large verticals, Financial Services and Manufacturing grew above 5% year-on-year in constant currency, both in Q2 and H1. 5. Europe also grew greater than 5% year-on-year in constant currency terms. 6. H1 gross margin remained resilient at 30.8%, flat year-on-year after absorbing compensation headwinds, reflecting the progress of Project Maximus. 7. Operating margin expanded by 20 bps sequentially to 21%. H1 margins were 20.9% versus 21.1% in H1 '25. We continue to invest in sales and marketing, which is reflected in 12.8% growth in S&M cost, H1 over H1. 8. Utilization, excluding trainees, remained stable at 85%, which is within our comfort range. 9. Onsite mix reduced by 40 basis points for the quarter and 60 basis points for the half year. 10. We continue to invest in talent and have hired over 12,000 freshers in the last 6 months. Total employee headcount was at 332,000, an increase of over 8,000 in Q2. Attrition remains low at 14.3%. 11.",
+        "period": "Q2 FY26",
+        "sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+        "symbol": "INFY",
+        "speaker": "Jayesh Sanghrajka",
+        "chunk_id": 525,
+        "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf"
+      },
+      {
+        "n": 5,
+        "page": 4,
+        "quote": "11. DSO is down 2 days to 71 days and DSO including net unbilled is down by 5 days to 87 on a year-on-year basis. 12. Cash flow generation remained strong. Free cash flow stood at $1.1 bn, which is 131% of the net profit and is well above 100% for the 6th consecutive quarter, bolstered by tax refunds. H1 free cash flow conversion is at 120%. 13. Large deal TCV for Q2 was at $3.1 bn, which is with 67% net new. H1 deal wins at $6.9 bn with net new at 60% plus. This does not include the mega deal announcement this week with NHS. 14. Q2 EPS in rupee terms grew by 13% year-on-year to Rs. 17.6. Operating margin for Q2 was at 21%, increase of 20 basis points sequentially. The major components of sequential margin change for the quarter were: Tailwinds of ➢ 60 basis points from currency movement ➢ 30 basis points from Project Maximus emanating from RPP increase from value-based selling and lean in automation partly offset by increase in subcon and lower onsite utilization Offset by ➢ 70 basis points of impact from higher post-sale customer support on a sequential basis and other expenses. Consolidated cash and investments were at $6.2 bn at the end of quarter. Yield on cash balance was at 6.98% and ROE stood at 29.1%. We have taken several strategic steps in the past few years to reduce our dependence on work visa, especially H-1Bs in the U.S. This includes reduction in onsite mix, increased focus on near-shoring, increased local hiring, university partnerships, and creation of local hubs. We currently have several delivery centers across the U.S. to serve clients and leverage local talent. These hubs focus on emerging technologies, such as artificial intelligence, machine learning, cloud computing, big data, and user experience design. In line with our capital allocation policy, during the quarter, we announced Rs. 18,000 crores buyback through tender route at Rs.",
+        "period": "Q2 FY26",
+        "sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+        "symbol": "INFY",
+        "speaker": "Jayesh Sanghrajka",
+        "chunk_id": 526,
+        "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf"
+      }
+    ],
+    "question": "What was Infosys operating margin in Q2 FY26?",
+    "reviewed_by": "Codex source inspection; not independent human evaluation",
+    "answer_markdown": "In Q2 FY26, Infosys management reported an operating margin of 21%, which represented an expansion of 20 basis points sequentially [c2][c5].",
+    "saved_at": "2026-10-16T15:59:44.567712+00:00"
+  },
+  {
+    "id": "26329ce76d5a73f5",
+    "model": "gemini-3.5-flash-lite",
+    "sources": [
+      {
+        "n": 1,
+        "page": 14,
+        "quote": "The year-on-year moderation in other incomes primarily reflects reduced cash reserves post-special dividend payout in November and Minimalist acquisition in April, alongside softer interest rate trends. Exceptional items saw an increase on account of restructuring expenses incurred to optimize supply chain network and drive net productivity. Tax expense is lower this quarter as the company has reassessed risk of potential disallowance of expenses and resulting tax exposure pursuant to an outcome under Income Tax Dispute Resolution mechanism. Accordingly, we have reestimated tax provision pertaining to prior years. Consequently, our PAT grew 6% while PAT (bei) declined 5%. Effective tax rate for the quarter was 16.2% after taking into consideration the tax adjustment for the quarter. Excluding this, the effective tax rate for the quarter was 26.4%. Next, let me share an update on Ice Cream demerger and acquisition of Minimalist. We have received a “no objection” letter from the stock exchanges regarding the proposed demerger of our ice cream business. The Honorable National Company Law Tribunal has directed that the meeting of HUL shareholders be convened to consider and approve the demerger scheme on 12th August 2025. The voting will begin on 7th August. To recap, a mirror demerger is being proposed. That is, for every one share held in HUL, shareholders will receive one share in Kwality Walls India Limited. This will unlock value for all the shareholders of HUL and give them the flexibility to stay invested in the growth journey of Ice Cream business. Comprehensive details of the scheme, including all requisite annexures, have already been issued and are available on our website for reference. We are on track to complete the demerger process by Q4 of Financial Year'26 subject to necessary approvals. Moving on to Minimalist, we successfully concluded the acquisition of 90.5% stake with a total payout of Rs. 2,706 crores. HUL along with the founders are now working closely to chart the future course of the brand's growth trajectory.",
+        "period": "Q1 FY26",
+        "sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2",
+        "symbol": "HINDUNILVR",
+        "speaker": "Ritesh Tiwari",
+        "chunk_id": 2341,
+        "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf"
+      }
+    ],
+    "question": "What stake in Minimalist did HUL acquire and what was the reported payout in Q1 FY26?",
+    "reviewed_by": "Codex source inspection; not independent human evaluation",
+    "answer_markdown": "Hindustan Unilever successfully concluded the acquisition of a 90.5% stake in Minimalist with a total payout of Rs. 2,706 crores, as stated by management (Ritesh Tiwari) in the Q1 FY26 earnings call [c1].",
+    "saved_at": "2026-10-16T15:59:44.567712+00:00"
+  }
+]

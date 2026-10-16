@@ -111,3 +111,13 @@ and SHA-256, register them in the manifest, run the manifest checker, dry-run pa
 
 Phase 6 tools are documented in [EVALUATION.md](EVALUATION.md). Human review is a real dependency, not a flag the
 agent can truthfully set for itself. The deferred Phase 5 blind labels and Nestlé count remain owner tasks.
+
+## Saved outage examples and fallback
+
+The deployed API uses `GEMINI_FALLBACK_MODEL=gemini-3.5-flash-lite` (stable, non-preview; Google model documentation checked on 2026-10-16). The primary remains unchanged. Both models retain citation and numeric validation. This is not a model-quality benchmark.
+
+When both provider attempts fail, Ask displays three explicitly dated example answers, separate from the current question. Examples were generated against the actual transcript database, source-inspected, and saved in `quantrag.saved_example_answers` with database timestamps and row-level security enabled. A public read-only export in `frontend/lib/saved-answers.json` keeps this feature available during API outages. No arbitrary user questions are automatically published.
+
+To replace the curated examples, supply the database environment and run `python scripts/save_example_answers.py --answers <three-or-four-real-result-files> --model <generator-id> --reviewed-by <reviewer>`. The script checks each cited passage against the database before saving. `--check` validates the bundled dates, citations and manifest provenance offline; CI runs it. Do not invent answers or saved dates.
+
+The initial Ask loading state explains free-hosting wake-up and shows elapsed seconds. API readiness, embedding/reranker startup and answer-generation latency are different measurements; do not present warm-request timings as an idle Render wake-up.
