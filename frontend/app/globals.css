@@ -3,7 +3,7 @@
   --surface: #1d1d20;
   --border: #343437;
   --text: #f2f2ef;
-  --muted: #aaaab0;
+  --muted: #b8b8c0;
   --primary: #dce99a;
   --accent: #b6c5e0;
   --ok: #22c55e;
@@ -2055,3 +2055,11 @@ td {
 .margin-point small { font:9px var(--font-sans); color:var(--muted); }
 .margin-period { display:block; padding-top:6px; }
 .margin-line-chart + .monitor-chart-note { margin-top:20px; }
+
+/* Muted copy retains AA contrast on the darkest and raised surfaces. */
+.sidebar-foot { opacity:1; }
+.answer-prose { white-space:normal; }
+.answer-prose p { margin:0 0 14px; }
+.answer-prose ul,.answer-prose ol { margin:0 0 14px; padding-left:24px; }
+.answer-prose li { padding-left:4px; margin-bottom:9px; }
+.hero-actions { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:18px; }

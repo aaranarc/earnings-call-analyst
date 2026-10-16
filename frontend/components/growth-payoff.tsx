@@ -3,7 +3,6 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
   BookmarkPlus,
   Check,
   CircleHelp,
@@ -173,7 +172,7 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
               >
                 <span>
                   {p.symbol}
-                  <ArrowUpRight size={15} />
+                  <ArrowRight size={15} />
                 </span>
                 <strong>{p.name}</strong>
                 <small>{p.category}</small>
@@ -233,7 +232,7 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
                 </strong>
                 <small>
                   {project.amount_source?.period || "No amount assumed"}{" "}
-                  {project.amount_source && <ArrowUpRight size={13} />}
+                  {project.amount_source && <ArrowRight size={13} />}
                 </small>
               </button>
               <div className="gp-payoff-status">
@@ -254,7 +253,7 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
                   <span>{m.stage}</span>
                   <strong>{m.label}</strong>
                   <small className="text-link">
-                    Source · p. {m.page} <ArrowUpRight size={12} />
+                    Source · p. {m.page} <ArrowRight size={12} />
                   </small>
                 </button>
               ))}
@@ -302,7 +301,7 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
                     <small>{operating.after_label}</small>
                   </span>
                 </div>
-                <ArrowUpRight size={16} />
+                <ArrowRight size={16} />
               </button>
             )}
             <div className="gp-evidence-footer">
@@ -397,7 +396,7 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
                       strokeDasharray="4 6"
                     />
                     <text x="48" y={y(tick) + 4} textAnchor="end">
-                      {enabled ? money(tick) : "—"}
+                      {enabled ? new Intl.NumberFormat("en-IN", {maximumFractionDigits: Math.max(0, 1 - Math.floor(Math.log10(scale.ticks[1] - scale.ticks[0])))}).format(tick) : "—"}
                     </text>
                   </g>
                 ))}

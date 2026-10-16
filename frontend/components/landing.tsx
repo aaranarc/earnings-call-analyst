@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  ArrowUpRight,
   BookOpen,
   MessageSquare,
   Sparkles,
@@ -38,7 +37,7 @@ export default function Landing() {
           <Link href="/how-it-works">How it works</Link>
           <Link href="/eval">Evaluation</Link>
           <Link href="/watchlist" className="button secondary">
-            Open workspace <ArrowUpRight size={14} />
+            Open workspace <ArrowRight size={14} />
           </Link>
         </nav>
       </header>
@@ -90,7 +89,7 @@ export default function Landing() {
                     "Test a refusal",
                   ][i]
                 }{" "}
-                <ArrowUpRight size={10} style={{ display: "inline" }} />
+                <ArrowRight size={10} style={{ display: "inline" }} />
               </Link>
             ))}
           </div>

@@ -323,7 +323,7 @@ export default function Dashboard() {
             <div className="brief-glyph" aria-hidden="true"><FileText size={44}/><span>Q / R</span></div>
             <h3>Your thinking.<br/>On one page.</h3>
             <p>Theses, evidence and next steps.</p>
-            <button className="button secondary" onClick={() => setBrief(true)}>Open research brief <ArrowUpRight size={15}/></button>
+            <button className="button secondary" onClick={() => setBrief(true)}>Open research brief <ArrowRight size={15}/></button>
           </div>
           <Link href="/ask" className="rail-card research-shortcut"><Search size={20}/><span>Find the next piece of evidence</span><ArrowRight size={17}/></Link>
         </aside>

@@ -82,7 +82,7 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
 }) => {
   const data = {
     question: "How was revenue?",
-    answer_markdown: "Revenue was 10% higher. [c1]",
+    answer_markdown: "- Revenue was 10% higher. [c1]",
     refused: false,
     refusal_reason: null,
     route: { kind: "single", companies: ["TEST"], periods: ["Q1 FY27"] },
@@ -107,8 +107,8 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
       {
         where: "answer",
         raw: "10%",
-        start: 12,
-        end: 15,
+        start: 14,
+        end: 17,
         status: "verified",
         source: { raw: "10%", chunk_id: 1 },
       },
@@ -126,6 +126,8 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
   await expect(
     page.getByText("Revenue was 10%", { exact: false }).first(),
   ).toBeVisible();
+  await expect(page.locator(".answer-prose ul li")).toContainText("Revenue was 10%");
+  await expect(page.locator(".answer-prose")).not.toContainText("- Revenue");
   await expect(page.getByRole("button", { name: "10%: Value matched — not claim verified" })).toBeVisible();
   await page.getByRole("button", { name: "Open citation 1" }).click();
   await expect(page.getByRole("dialog").getByText("Test CFO")).toBeVisible();

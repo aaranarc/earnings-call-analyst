@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
+  ArrowRight,
   FlaskConical,
   LoaderCircle,
   RotateCcw,
@@ -83,7 +84,7 @@ export default function Evaluation() {
             questions, judge runs and human calibration are still pending.
           </p>
           <Link className="button secondary" href="/how-it-works">
-            Explore the pipeline <ArrowUpRight size={15} />
+            Explore the pipeline <ArrowRight size={15} />
           </Link>
         </div>
       ) : (
