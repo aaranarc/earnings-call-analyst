@@ -55,7 +55,7 @@ export default function Landing() {
           <p>
             Follow company announcements into later earnings calls. Compare the statements, inspect the numbers, keep the evidence.
           </p>
-          <Link className="button primary follow-hero" href="/growth-payoff">Explore Growth Payoff <ArrowRight size={16}/></Link>
+          <div className="hero-actions"><Link className="button primary follow-hero" href="/ask">Ask the analyst <ArrowRight size={16}/></Link> <Link className="text-link" href="/growth-payoff">Explore Growth Payoff <ArrowRight size={16}/></Link></div>
           <form
             className="prompt-box"
             onSubmit={(e) => {
@@ -118,8 +118,8 @@ export default function Landing() {
             ],
             [
               BookOpen,
-              "Measured, not assumed.",
-              "Published scores, methodology and known gaps.",
+              "Development results. Open limitations.",
+              "Explore development retrieval and memory measurements. The human-reviewed benchmark is still pending.",
               "See the evaluation",
               "/eval",
             ],
