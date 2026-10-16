@@ -163,7 +163,7 @@ test("ask handles checked evidence, source drawer, pin, and request failure", as
     page.getByRole("alert").filter({ hasText: "analyst is busy" }),
   ).toBeVisible();
 });
-test("unpublished eval shows no numeric KPI cards", async ({ page }) => {
+test("unpublished eval shows development results separately from final metrics", async ({ page }) => {
   await page.route("**/api/eval/latest", (route) =>
     route.fulfill({
       json: {
@@ -180,7 +180,8 @@ test("unpublished eval shows no numeric KPI cards", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "The benchmark is still being built." }),
   ).toBeVisible();
-  await expect(page.locator(".metric-value")).toHaveCount(0);
+  await expect(page.getByRole("region", {name:"Development measurements"})).toContainText("Development set, not a final benchmark");
+  await expect(page.locator(".method-grid .metric-value")).toHaveCount(0);
 });
 
 test("coverage map links only available quarters and chart filters theses", async ({ page }) => {

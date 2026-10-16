@@ -8,6 +8,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import Shell from "./shell";
+import development from "@/lib/development-results.json";
 import type { EvalReport } from "@/lib/types";
 export default function Evaluation() {
   const [report, setReport] = useState<EvalReport | null>(null),
@@ -43,6 +44,19 @@ export default function Evaluation() {
           Live CI <ArrowUpRight size={15} />
         </a>
       </div>
+      <section className="visual-panel" aria-label="Development measurements">
+        <span className="signal">Development set, not a final benchmark</span>
+        <h2>Recorded retrieval results</h2>
+        <p className="section-copy">Historical development questions on the original small corpus, used during tuning. These are not held-out results for the expanded corpus. One evidence label was revised during development.</p>
+        <div className="table-scroll"><table><thead><tr><th>Configuration</th><th>Evidence found @ 5</th><th>Median latency range</th></tr></thead><tbody>
+          {development.retrieval.map(row => <tr key={row.name}><td>{row.name}</td><td>{row.hits_min === row.hits_max ? row.hits_min : `${row.hits_min}–${row.hits_max}`} / {row.of}</td><td>{row.p50_min_ms.toFixed(1)}–{row.p50_max_ms.toFixed(1)} ms</td></tr>)}
+        </tbody></table></div>
+        <p className="section-copy">{development.runs} recorded runs · {development.machine} · source commit {development.source_commit}. Timing excludes model startup.</p>
+        <h2>Reranker peak memory</h2>
+        <p className="metric-value">{development.memory.retained_min_mb}–{development.memory.retained_max_mb} MB</p>
+        <p className="section-copy">Retained configuration across {development.memory.retained_runs} local runs, compared with {development.memory.untuned_min_mb}–{development.memory.untuned_max_mb} MB untuned. Process peak RSS on macOS; not a production memory guarantee.</p>
+        <a className="text-link" href={`https://github.com/aaranarc/earnings-call-analyst/blob/main/${development.source}`} target="_blank" rel="noreferrer">Recorded measurements and provenance <ArrowUpRight size={14}/></a>
+      </section>
       {error ? (
         <div className="notice" role="alert">
           Could not load evaluation results.{" "}
