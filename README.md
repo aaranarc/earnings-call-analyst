@@ -23,7 +23,7 @@ attaches a citation to every claim, and checks every number in its own answer ag
 
 ## What works today
 
-The [company watchlist](https://quantrag.vercel.app/watchlist) puts sourced quarterly changes first:
+[QuarterLens](https://quantrag.vercel.app/watchlist) puts sourced quarterly changes first:
 star companies, inspect operating-margin bars, open management quotes and save a change to your evidence pile.
 Existing notes and thesis tools remain in [Saved research](https://quantrag.vercel.app/research).
 Favourites and saved research stay in the browser; export your research to back it up.

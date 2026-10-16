@@ -25,7 +25,7 @@ export function Brand() {
 export default function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const links = [
-    ["/watchlist", "Company watchlist", LayoutGrid],
+    ["/watchlist", "QuarterLens", LayoutGrid],
     ["/research", "Saved research", Bookmark],
     ["/ask", "Ask the analyst", MessageSquare],
     ["/eval", "Evaluation", ChartNoAxesCombined],

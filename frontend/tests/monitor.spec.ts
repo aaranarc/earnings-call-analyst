@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 test('company watchlist preserves favourites and opens literal evidence',async({page})=>{
  await page.goto('/watchlist');
- await expect(page.getByRole('heading',{name:'Company watchlist',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'QuarterLens',exact:true})).toBeVisible();
  const tcs=page.getByRole('button',{name:'Follow Tata Consultancy Services',exact:true});await tcs.click();
  await page.reload();await expect(page.getByRole('button',{name:'Unfollow Tata Consultancy Services'})).toHaveAttribute('aria-pressed','true');
  await page.getByRole('button',{name:'Favourites 1',exact:true}).click();
@@ -16,7 +16,7 @@ test('company watchlist preserves favourites and opens literal evidence',async({
  await page.locator('.monitor-signal').click();await page.getByRole('button',{name:'Save evidence',exact:true}).click();
  await expect(page.getByRole('button',{name:'Saved to research'})).toBeDisabled();
  await page.getByRole('link',{name:'Open saved research',exact:true}).click();
- await expect(page.locator('.thesis-card')).toContainText('Margin down');
+ await expect(page.locator('.thesis-card').filter({hasText:'Margin down'})).toBeVisible();
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('quantrag.theses.v2')!)[0].status)).toBe('Unresolved');
 });
 test('missing quarters stay blank, single-call companies have no fabricated metric',async({page})=>{
