@@ -32,6 +32,7 @@ export default function CompanyWatchlist() {
   function saveTrail(){if(!detail?.trail)return;try{keepTrail(detail.company,detail.trail);setSaved([...saved,detail.trail.id]);setSaveError('');}catch{setSaveError('Evidence could not be saved. Existing research is unchanged.');}}
   function save(){if(!detail?.signal)return;try{keepSignal(detail.company,detail.signal);setSaved([...saved,detail.signal.id]);setSaveError('');}catch{setSaveError('Evidence could not be saved. Existing research is unchanged.');}}
   return <Shell><div className="monitor-heading"><div><h1>QuarterLens</h1><p>Announcements, results, and the sources between them.</p></div><Link href="/research" className="button secondary">Saved research <ArrowRight size={15}/></Link></div>
+    <Link className="gp-entry" href="/growth-payoff"><span><strong>Growth Payoff</strong> Follow investments from announcement to execution.</span><ArrowRight size={18}/></Link>
     <div className="monitor-summary"><span><b>{following}</b> following</span><span><b>{companies.reduce((n,c)=>n+c.call_count,0)}</b> calls covered</span><span className="monitor-snapshot">Snapshot {report?.as_of||'loading'}</span></div>
     {storageError&&<p className="notice" role="alert">{storageError}</p>}
     {loadError?<div className="notice" role="alert">{loadError} <button className="text-link" onClick={()=>setRetry(retry+1)}>Retry</button></div>:!report?<p className="section-copy" role="status">Loading company updates…</p>:<>

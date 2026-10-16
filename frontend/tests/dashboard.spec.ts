@@ -51,14 +51,11 @@ test("workspace persists an idea and its evidence, without mixing examples", asy
 });
 test("all pages fit a 375px viewport", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  for (const path of ["/", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
+  for (const path of ["/", "/growth-payoff", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
     await page.goto(path);
     await expect(page.locator("h1")).toBeVisible();
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= window.innerWidth,
-      ),
-    ).toBeTruthy();
+    const layout=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
+    expect(layout.scroll,`${path}: ${JSON.stringify(layout)}`).toBeLessThanOrEqual(layout.width);
   }
   await page.goto("/research");
   await page

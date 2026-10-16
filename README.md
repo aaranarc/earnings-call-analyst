@@ -23,6 +23,20 @@ attaches a citation to every claim, and checks every number in its own answer ag
 
 ## What works today
 
+**Growth Payoff** (`/growth-payoff`) follows four reviewed investment projects across HUL, HCLTech
+and Wipro through nine literal, source-linked milestones. It distinguishes planned spending, investment
+ceilings and reported payouts; each milestone opens the original management statement and PDF page.
+Project evidence can be saved to existing research as unresolved. This is a reviewed pilot, not automatic
+discovery of every investment. Completion, distribution growth and revenue contribution do not establish ROI.
+
+The interactive three-/five-year explorer calculates **annual incremental operating profit under explicit
+assumptions**, including capital deployed, operating return (including losses), first operating year and ramp
+duration. It assumes full capital deployment at the start, no reinvestment and a linear ramp. Defaults are
+illustrative, not estimates fitted to company data. It does not calculate whole-company growth, cash flow,
+share prices, investment recommendations or calibrated probabilities. Whole-company forecasts are withheld
+until sufficient comparable financial history and historical validation exist. Rebuild the source snapshot
+with `python scripts/build_growth_payoff.py`; `--check` verifies its provenance and reviewed definitions.
+
 [QuarterLens](https://quantrag.vercel.app/watchlist) puts sourced quarterly changes first:
 star companies, inspect operating-margin bars, open management quotes and save a change to your evidence pile.
 Existing notes and thesis tools remain in [Saved research](https://quantrag.vercel.app/research).
@@ -131,8 +145,9 @@ Each figure links to the file it comes from.
 | Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
 | Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |
 | Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | [deployed on Vercel + free Render](https://quantrag.vercel.app); automated ingest pending |
-| Phase 10 | risk route backed by the separate distress early-warning (EWS) API | planned |
-| Phase 11 | README, demo GIF, architecture write-up | planned |
+| Bankruptcy/EWS integration | Separate distress-prediction project | outside current scope by owner decision |
+| Release documentation | README, architecture, deployment and evaluation runbooks | implemented; current release verification pending |
+| Growth Payoff | Sourced investment milestones, operational progress and explicit scenario explorer | implemented as a reviewed pilot; validated company forecasts pending |
 | Thesis tracker | source-quoted AI suggestions, multi-period evidence timeline, manual assessment, import/export, printable brief | implemented on demand |
 | Telegram bot | Optional delivery channel | deferred by owner |
 

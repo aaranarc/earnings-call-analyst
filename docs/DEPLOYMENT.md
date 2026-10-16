@@ -79,6 +79,7 @@ Render-generated API token; do not put any token in a `NEXT_PUBLIC_` variable.
 ```bash
 .venv/bin/ruff check backend scripts eval --config backend/pyproject.toml
 .venv/bin/python -m pytest -c backend/pyproject.toml backend/tests scripts -q
+.venv/bin/python scripts/build_growth_payoff.py --check
 npm ci --prefix frontend
 npm run build --prefix frontend
 npm run test:e2e --prefix frontend
@@ -88,6 +89,9 @@ docker build -t quantrag-web:release frontend
 
 Verify `/health`, real cited answers, missing-quarter refusals, and a thesis suggestion before opening a hosted
 release. Public benchmark metrics remain pending until the human gold and judge calibration are complete.
+Growth Payoff must also pass at `/growth-payoff`: open a real source, save project evidence, change the
+scenario horizon and assumptions, clear an invalid input, and check the 375px layout. Scenario outputs are
+illustrative annual operating profits from hypothetical deployment, not validated whole-company forecasts.
 Revert to the previous deployment image/commit for rollback; no user-data schema migration is required by this
 release. Browser v1 data remains as a migration backup. Keep JSON exports before changing browsers or clearing data.
 

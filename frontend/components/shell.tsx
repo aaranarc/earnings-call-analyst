@@ -10,6 +10,7 @@ import {
   LayoutGrid,
   MessageSquare,
   Sparkles,
+  TrendingUp,
 } from "lucide-react";
 export function Brand() {
   return (
@@ -25,6 +26,7 @@ export function Brand() {
 export default function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const links = [
+    ["/growth-payoff", "Growth Payoff", TrendingUp],
     ["/watchlist", "QuarterLens", LayoutGrid],
     ["/research", "Saved research", Bookmark],
     ["/ask", "Ask the analyst", MessageSquare],
