@@ -46,6 +46,7 @@ jobs:
       - name: Check bundled public snapshots
         run: |
           python scripts/build_company_monitor.py --check
+          python scripts/build_growth_payoff.py --check
           python scripts/export_public_data.py --check
 
       - name: Test with coverage

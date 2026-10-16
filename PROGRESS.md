@@ -1,14 +1,14 @@
 # QuantRAG v2: Progress
 
-## Status
-- Phase 0 (audit and setup): **done**.
-- **Phase 1 (corpus): tooling done. Downloads in progress.** Gates (D12): `phase2` **PASS** 3/3 sectors · `A` 3/48 · `B` 3/96. Complete: TCS, HDFCBANK, HINDUNILVR Q1 FY27. INFY Q2 FY25 still has no `source_url` (see open questions).
-- **Phase 2 (DB + ingestion): done for the 4 complete manifest rows** (local Postgres and Supabase, both idempotent). New transcripts are added by re-running `python -m ingest.run`.
-- **Phase 3 (retrieval): done.** Tuned on a 20-question smoke set: keyword OR (D22), reranker batch 4 / 384 tokens / top 10 (D23); peak RSS 386–419 MB with reranking.
-- **Phase 4 (router + generation): done.** 10/10 answerable cited correctly, 3/3 unanswerable refused (`eval/phase4_check.py`).
-- **Pre-Phase 5 tasks: done** (CI green, gitleaks hook, router report, model pinned).
-- **Phase 5 (number checker): built and wired in; evaluation waiting on Aarana's labels** (120 rows, labelling page ready: `python eval/label_server.py`).
-- Branch `v2`. v1 is frozen at tag `v1-final` (commit `80174a8` on `main`).
+## Current release status · 2026-10-16
+- Core ingestion, retrieval, cited answers, number checking, API, dashboard and research storage are implemented.
+- Verified corpus: **40 official transcripts across 7 Indian companies**, plus 2 separately registered HDFC results releases. Latest-four coverage is 25/48; full planned window is 40/96. Remaining coverage is not complete.
+- Growth Payoff release candidate: 4 reviewed investment projects, 9 sourced milestones, operational progress chart and a 3/5-year assumption explorer. It does not claim a validated company forecast or automatic coverage of all projects.
+- QuarterLens and Follow-through retain source quotes, reporting bases, missing-period handling and unresolved evidence saving.
+- Phase 6 evaluation tooling is implemented. Human-reviewed gold questions, blind number labels, judge calibration and published benchmark scores remain pending. The owner deferred the 120 labels and Nestlé count.
+- Free Vercel + Render hosting exists. Growth Payoff publication is pending the current release; hosted versions must be verified after deployment.
+- Bankruptcy/EWS integration and Telegram are outside the current release scope. No new paid hosting is authorized.
+- The chronological phase notes below are historical development records, not the current completion checklist.
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
 v1's data folder held 9 PDFs, but **only 6 were real transcripts** (JPMorgan, HDFC and Infosys, two quarters each). The other 3 (Apple, Microsoft, Reliance) were one-line placeholders. The shipped index held just **one** real transcript (JPMorgan Q2 2024, 88 chunks). So v1's memory and latency figures describe a system answering over roughly one transcript, and v2's quality numbers have **no v1 equivalent** to compare against. Any "v1 → v2" claim must say this. Only the reranker memory story (peak RAM with and without the PyTorch reranker) is a like-for-like comparison.
@@ -314,3 +314,18 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Added a separate registry for two HDFC earnings releases; their total-assets NIM figures are not mixed with interest-earning-assets NIM. Consumer consolidated/standalone and adjusted/reported figures remain distinct. Reported ranges retain both bounds without a synthetic midpoint.
 - Change cards label calculations from adjacent as-reported figures separately from management-reported movements. Missing periods and incompatible/adjusted bases do not create automatic comparisons. Follow-through stays a reviewable salary-topic pilot, with no company rating or causal verdict.
 - The dashboard is a sourced margin overview with linked calls/results, not a complete income-statement database. Remaining transcripts, US coverage, broader financial metrics and independently evaluated commitment matching remain further work; human gold/calibration and the owner's deferred labels/Nestlé count remain pending.
+# Growth Payoff pilot · 2026-10-16
+
+- Added `/growth-payoff`, linked from main navigation, landing CTA and QuarterLens. Charcoal/lime cards,
+  clickable investment timelines, source drawer and a dashed scenario chart with adjustable 3/5-year horizon.
+- Four reviewed projects: HUL Minimalist and premium-format capacity, HCLTech AI infrastructure, Wipro HARMAN DTS.
+  Nine source milestones retain PDF hashes, physical pages, speakers and fiscal periods. Minimalist uses the
+  reported ₹2,706 crore payout, not the earlier enterprise valuation. Planned capex and ceilings stay explicit.
+- Source snapshot rebuild checks PDF hashes and unique prepared-management matches; CI validates registered
+  provenance and reviewed project definitions. These are reviewed selectors, not general investment extraction.
+- Scenario model calculates annual incremental operating profit from capital, assumed return, start delay and
+  linear ramp. Negative returns and zero returns supported. No whole-company forecast, compounding, cash flow,
+  stock target or accuracy claim. Entire capital assumed deployed at start; not a capital expenditure schedule.
+- Saved project evidence uses existing unresolved research storage; scenarios do not become sourced facts.
+- Remaining for company projections: comparable multi-year statements, project-attribution evidence, a
+  sector-specific operating model, time-separated historical validation and calibrated uncertainty.

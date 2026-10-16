@@ -55,7 +55,7 @@ export default function Landing() {
           <p>
             Follow company announcements into later earnings calls. Compare the statements, inspect the numbers, keep the evidence.
           </p>
-          <Link className="button primary follow-hero" href="/watchlist">Try Follow-through <ArrowRight size={16}/></Link>
+          <Link className="button primary follow-hero" href="/growth-payoff">Explore Growth Payoff <ArrowRight size={16}/></Link>
           <form
             className="prompt-box"
             onSubmit={(e) => {

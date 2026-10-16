@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "as_of": "2026-10-16",
+  "source_hash": "b6507d639398aa6732e2126dd406b1b7a0df57df50c5339f1bbf746cddd2a3af",
+  "methodology": "Reviewed project selectors; literal management statements. No inferred return or forecast.",
+  "projects": [
+    {
+      "id": "hul-minimalist",
+      "symbol": "HINDUNILVR",
+      "name": "Minimalist",
+      "category": "Acquisition",
+      "amount": 2706,
+      "amount_label": "Reported payout",
+      "outcome": "Distribution expanded",
+      "missing": "Project-level profit and cash returns are not disclosed in these excerpts.",
+      "milestones": [
+        {
+          "stage": "Announced",
+          "label": "Definitive agreement",
+          "value_text": null,
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "quote": "In alignment with our intent of doubling down on our Beauty & Wellbeing portfolio, we have entered into a definitive agreement to acquire a stake in premium beauty brand, Minimalist.",
+          "speaker": "Ritesh Tiwari",
+          "page": 11,
+          "source_url": "https://www.hul.co.in/files/dq24-earnings-call-transcript.pdf",
+          "source_sha256": "e5aa8143d2ac7a227339d6f8289591e76dd8e4a53a194dfedcce6e92c5b54f0a"
+        },
+        {
+          "stage": "Completed",
+          "label": "90.5% stake acquired",
+          "value_text": null,
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "quote": "Moving on to Minimalist, we successfully concluded the acquisition of 90.5% stake with a total payout of Rs. 2,706 crores.",
+          "speaker": "Ritesh Tiwari",
+          "page": 15,
+          "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+          "source_sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2"
+        },
+        {
+          "stage": "Operating progress",
+          "label": "25,000+ stores",
+          "value_text": "25,000",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "quote": "For instance, we already expanded the brand into 25,000-plus offline stores from 3,000 since acquisition.",
+          "speaker": "Niranjan Gupta",
+          "page": 11,
+          "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+          "source_sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d"
+        },
+        {
+          "stage": "Trading update",
+          "label": "Double-digit growth reported",
+          "value_text": null,
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "quote": "We continued to build our Masstige portfolio in Beauty and Wellbeing with Minimalist delivering strong double-digit growth and Simple scaling to an annual revenue run rate of more than Rs. 160 crores.",
+          "speaker": "Niranjan Gupta",
+          "page": 10,
+          "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+          "source_sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818"
+        }
+      ],
+      "amount_source": {
+        "period": "Q1 FY26",
+        "period_end": "2025-06-30",
+        "quote": "Moving on to Minimalist, we successfully concluded the acquisition of 90.5% stake with a total payout of Rs. 2,706 crores.",
+        "speaker": "Ritesh Tiwari",
+        "page": 15,
+        "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+        "source_sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2"
+      },
+      "operating_metric": {
+        "label": "Distribution reach",
+        "unit": "stores",
+        "before": 3000,
+        "after": 25000,
+        "after_is_lower_bound": true,
+        "before_label": "At acquisition",
+        "after_label": "Q3 FY26",
+        "source": {
+          "stage": "Operating progress",
+          "label": "25,000+ stores",
+          "value_text": "25,000",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "quote": "For instance, we already expanded the brand into 25,000-plus offline stores from 3,000 since acquisition.",
+          "speaker": "Niranjan Gupta",
+          "page": 11,
+          "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+          "source_sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d"
+        }
+      },
+      "payoff_status": "Not established"
+    },
+    {
+      "id": "hul-premium",
+      "symbol": "HINDUNILVR",
+      "name": "Premium-format capacity",
+      "category": "Capacity expansion",
+      "amount": 2000,
+      "amount_label": "Planned capex",
+      "outcome": "Investment announced",
+      "missing": "Completion date, utilisation and project returns are not available in this snapshot.",
+      "milestones": [
+        {
+          "stage": "Planned",
+          "label": "\u20b92,000 cr capacity plan",
+          "value_text": "2,000",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "quote": "In parallel, we have also signed off a Rs. 2,000 crores planned capex investment to expand capacity in the premium formats.",
+          "speaker": "Niranjan Gupta",
+          "page": 12,
+          "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+          "source_sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818"
+        }
+      ],
+      "amount_source": {
+        "period": "Q4 FY26",
+        "period_end": "2026-03-31",
+        "quote": "In parallel, we have also signed off a Rs. 2,000 crores planned capex investment to expand capacity in the premium formats.",
+        "speaker": "Niranjan Gupta",
+        "page": 12,
+        "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+        "source_sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818"
+      },
+      "operating_metric": null,
+      "payoff_status": "Not established"
+    },
+    {
+      "id": "hcl-ai",
+      "symbol": "HCLTECH",
+      "name": "AI infrastructure",
+      "category": "Capacity expansion",
+      "amount": 3500,
+      "amount_label": "Planned ceiling \u00b7 up to",
+      "outcome": "Investment announced",
+      "missing": "50 MW is potential capacity, not commissioned capacity. Project returns are not disclosed.",
+      "milestones": [
+        {
+          "stage": "Planned",
+          "label": "Up to \u20b93,500 cr \u00b7 potential 50 MW",
+          "value_text": "3,500",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "quote": "In this regard, we will make a strategic investment of up to INR3,500 crores and with the potential to scale to 50 megawatts of capacity.",
+          "speaker": "C. Vijayakumar",
+          "page": 12,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+          "source_sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a"
+        }
+      ],
+      "amount_source": {
+        "period": "Q1 FY27",
+        "period_end": "2026-06-30",
+        "quote": "In this regard, we will make a strategic investment of up to INR3,500 crores and with the potential to scale to 50 megawatts of capacity.",
+        "speaker": "C. Vijayakumar",
+        "page": 12,
+        "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+        "source_sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a"
+      },
+      "operating_metric": null,
+      "payoff_status": "Not established"
+    },
+    {
+      "id": "wipro-harman",
+      "symbol": "WIPRO",
+      "name": "HARMAN DTS",
+      "category": "Acquisition",
+      "amount": null,
+      "amount_label": "Payout not extracted",
+      "outcome": "Revenue contribution reported",
+      "missing": "Revenue contribution is not profit, cash return or acquisition ROI.",
+      "milestones": [
+        {
+          "stage": "Announced",
+          "label": "Closing expected next quarter",
+          "value_text": null,
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "quote": "The Harman Digital Transformation Solutions acquisition that we announced in Q2 is expected to close through the course of the quarter.",
+          "speaker": "Aparna Iyer",
+          "page": 6,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q2fy26/q2fy26-earnings-transcript.pdf",
+          "source_sha256": "8f7be59ebd5db24cbf7bcd5e821da36a00ed573a39c2eba6b3034668169f9dea"
+        },
+        {
+          "stage": "Completed",
+          "label": "Integration underway",
+          "value_text": null,
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "quote": "With the acquisition now complete, we have added engineering and AI capabilities that truly complement what we do.",
+          "speaker": "Srini Pallia",
+          "page": 4,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+          "source_sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282"
+        },
+        {
+          "stage": "Contribution",
+          "label": "0.8% growth contribution",
+          "value_text": "0.8%",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "quote": "Our constant currency revenue growth numbers included 0.8% as contribution from the HARMAN DTS acquisition that was closed in Quarter 3, '26.",
+          "speaker": "Aparna Iyer",
+          "page": 5,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+          "source_sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282"
+        }
+      ],
+      "amount_source": null,
+      "operating_metric": null,
+      "payoff_status": "Not established"
+    }
+  ]
+}
