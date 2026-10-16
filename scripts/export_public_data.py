@@ -23,8 +23,12 @@ def snapshot(root):
     report = root / "eval/results/public_eval.json"
     evaluation = json.loads(report.read_text()) if report.exists() else {
         "status": "pending", "metrics": [], "ablations": [], "failure_cases": [], "agreement": None, "last_run": None}
+    from build_company_monitor import validate
+    monitor = json.loads((root / "eval/results/company_monitor.json").read_text())
+    with (root / "data/manifest.csv").open() as f:
+        validate(monitor, list(csv.DictReader(f)))
     return {"coverage": {"companies": entries, "as_of": stats["date"], "source": "committed ingest snapshot"},
-            "evaluation": evaluation}
+            "evaluation": evaluation, "monitor": monitor}
 
 
 def main():

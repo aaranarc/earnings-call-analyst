@@ -44,13 +44,15 @@ jobs:
         run: ruff check backend scripts eval --config backend/pyproject.toml
 
       - name: Check bundled public snapshots
-        run: python scripts/export_public_data.py --check
+        run: |
+          python scripts/build_company_monitor.py --check
+          python scripts/export_public_data.py --check
 
       - name: Test with coverage
         working-directory: backend
         run: |
           pytest tests ../scripts -q \
-            --cov=ingest --cov=numcheck --cov=retrieve --cov=generate --cov=quantrag --cov=check_manifest \
+            --cov=ingest --cov=numcheck --cov=retrieve --cov=generate --cov=quantrag --cov=monitor --cov=check_manifest \
             --cov-report=term | tee pytest.txt
           {
             echo "### Tests"

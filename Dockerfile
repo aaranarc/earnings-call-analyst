@@ -12,7 +12,7 @@ COPY --from=build /install /usr/local
 COPY backend/ backend/
 COPY scripts/check_manifest.py scripts/check_manifest.py
 COPY data/companies.yaml data/manifest.csv data/
-COPY eval/results/ingest_stats.json eval/results/ingest_stats.json
+COPY eval/results/ingest_stats.json eval/results/company_monitor.json eval/results/
 # Ship models with the image so a cold request never downloads them.
 RUN PYTHONPATH=backend python -c 'from retrieve.search import Models; Models(rerank=True)' && chown -R analyst:analyst /app
 ENV HF_HUB_OFFLINE=1

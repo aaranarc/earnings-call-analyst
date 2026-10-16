@@ -25,7 +25,8 @@ export function Brand() {
 export default function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const links = [
-    ["/watchlist", "Thesis workspace", LayoutGrid],
+    ["/watchlist", "Company watchlist", LayoutGrid],
+    ["/research", "Saved research", Bookmark],
     ["/ask", "Ask the analyst", MessageSquare],
     ["/eval", "Evaluation", ChartNoAxesCombined],
     ["/how-it-works", "How it works", GitBranch],
@@ -51,8 +52,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </nav>
         <div className="side-note">
           <Bookmark size={20} />
-          <strong>Your thesis. The evidence.</strong>
-          <p>Keep track of what would change your mind.</p>
+          <strong>Follow changes. Keep evidence.</strong>
+          <p>Trace each finding to its source.</p>
           <Link href="/how-it-works">
             See the research process <ArrowUpRight size={14} />
           </Link>

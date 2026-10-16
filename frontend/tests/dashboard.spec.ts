@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 test("workspace persists an idea and its evidence, without mixing examples", async ({
   page,
 }) => {
-  await page.goto("/watchlist");
+  await page.goto("/research");
   await page.getByRole("button", { name: "New thesis" }).click();
   await page
     .getByLabel("Your thesis", { exact: true })
@@ -51,7 +51,7 @@ test("workspace persists an idea and its evidence, without mixing examples", asy
 });
 test("all pages fit a 375px viewport", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  for (const path of ["/", "/watchlist", "/ask", "/eval", "/how-it-works"]) {
+  for (const path of ["/", "/watchlist", "/research", "/ask", "/eval", "/how-it-works"]) {
     await page.goto(path);
     await expect(page.locator("h1")).toBeVisible();
     expect(
@@ -60,7 +60,7 @@ test("all pages fit a 375px viewport", async ({ page }) => {
       ),
     ).toBeTruthy();
   }
-  await page.goto("/watchlist");
+  await page.goto("/research");
   await page
     .getByRole("button")
     .filter({
@@ -194,7 +194,7 @@ test("coverage map links only available quarters and chart filters theses", asyn
       {symbol: "EMPTY", name: "Not ingested", documents: []}
     ]
   }}));
-  await page.goto("/watchlist");
+  await page.goto("/research");
   const map = page.getByRole("region", {name: "Transcript coverage map"});
   await expect(map.getByText("2 companies · 2 calls")).toBeVisible();
   await expect(map.getByRole("link")).toHaveCount(2);
@@ -212,7 +212,7 @@ test("research brief preserves evidence and prints only the report", async ({ pa
     beforeQuarter: "Q1 FY26", afterQuarter: "Q2 FY26", note: "Compare the cost basis", reviewed: true,
     status: "Supports thesis", sample: false
   }])));
-  await page.goto("/watchlist");
+  await page.goto("/research");
   await page.getByRole("button", {name: "Open research brief"}).click();
   const brief = page.getByRole("dialog", {name: "Research brief"});
   await expect(brief).toContainText("PERSONAL RESEARCH");
@@ -232,7 +232,7 @@ test("legacy migration preserves both notes and third evidence appends", async (
   await page.addInitScript(() => { if (!localStorage.getItem('quantrag.theses.v1')) localStorage.setItem('quantrag.theses.v1', JSON.stringify([{
     id: 'old', symbol: 'TCS', company: 'TCS', title: 'Existing thesis', description: '', before: 'Original first evidence', after: 'Original second evidence', beforeQuarter: 'Q1 FY26', afterQuarter: 'Q2 FY26', note: '', reviewed: true, status: 'Supports thesis', sample: false
   }])); });
-  await page.goto('/watchlist');
+  await page.goto('/research');
   await page.getByRole('button').filter({has: page.getByRole('heading', {name:'Existing thesis'})}).click();
   await expect(page.getByLabel('Evidence timeline')).toContainText('Original first evidence');
   await expect(page.getByLabel('Evidence timeline')).toContainText('Original second evidence');
@@ -248,7 +248,7 @@ test("legacy migration preserves both notes and third evidence appends", async (
 
 test("workspace imports merge safely, reject invalid data and support export restore", async ({page}) => {
   const row = {id:'import-1',company:'TCS',symbol:'TCS',title:'Restored thesis',description:'',before:'Historic evidence',after:'',beforeQuarter:'Q1 FY26',afterQuarter:'',note:'Preserved note',reviewed:false,status:'Unresolved',sample:false};
-  await page.goto('/watchlist');
+  await page.goto('/research');
   const upload = async (data: unknown) => page.getByLabel('Import workspace JSON').setInputFiles({name:'research.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))});
   await upload({version:1,theses:[row]});
   await page.getByRole('button',{name:'Merge into my workspace'}).click();
@@ -279,7 +279,7 @@ test("thesis suggestions preserve source quotes and require manual assessment", 
   await page.route('**/api/thesis/check', route => route.fulfill({json:{symbol:'TCS',assessment:'Unresolved',automatic_status_change:false,suggestions:[{
     period:'Q1 FY27',relation:'supports',reason:'Wage costs bear on the thesis.',evidence:[{quote:'Margins were 24% after wage increases.',chunk_id:42,symbol:'TCS',period:'Q1 FY27',speaker:'CFO',role:'management',page:3,source_url:'https://example.com/transcript.pdf'}]
   }]}}));
-  await page.goto('/watchlist');
+  await page.goto('/research');
   await page.getByRole('button',{name:'New thesis'}).click();
   await page.getByLabel('Your thesis',{exact:true}).fill('Wage costs affect margins');
   await page.getByRole('button',{name:'Save thesis'}).click();
@@ -306,7 +306,7 @@ test("API proxy restricts methods, paths, origins and body size", async ({reques
 
 test("invalid saved research is never overwritten by creating a new thesis", async ({page}) => {
   await page.addInitScript(() => localStorage.setItem('quantrag.theses.v2','corrupt-but-recoverable-by-owner'));
-  await page.goto('/watchlist');
+  await page.goto('/research');
   await page.getByRole('button',{name:'New thesis'}).click();
   await page.getByLabel('Your thesis',{exact:true}).fill('New idea');
   await page.getByRole('button',{name:'Save thesis'}).click();

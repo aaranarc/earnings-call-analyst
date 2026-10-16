@@ -96,9 +96,9 @@ export default function Dashboard() {
           <div className="eyebrow">
             <span className="tiny-line" /> RESEARCH OVERVIEW
           </div>
-          <h1>Your research desk.</h1>
+          <h1>Saved research</h1>
           <p>
-            Track an idea. Collect evidence. Update your view.
+            Your notes, source evidence and review history.
           </p>
         </div>
         <button

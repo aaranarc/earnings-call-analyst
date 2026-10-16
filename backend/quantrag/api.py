@@ -82,6 +82,14 @@ def evaluation():
     return json.loads(path.read_text())
 
 
+@app.get("/monitor/latest")
+def monitor_report():
+    path = ROOT / "eval/results/company_monitor.json"
+    if not path.exists():
+        return {"status": "pending", "companies": []}
+    return json.loads(path.read_text())
+
+
 def source_neighbors(conn, chunk_id):
     """Adjacent stored chunks from the same document, not inferred conversational turns."""
     rows = conn.execute("""
