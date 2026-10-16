@@ -1,38 +1,43 @@
 {
   "checked_on": "2026-10-16",
-  "status": "not_downloaded_not_ingested",
+  "status": "downloaded_verified_ingested",
   "sources": [
     {
       "symbol": "TCS",
       "fiscal_label": "Q2 FY26",
       "call_date": "2025-10-09",
       "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
-      "download_status": "HTTP 403 from direct download",
-      "expected_filename": "TCS_Q2FY26.pdf"
+      "download_status": "user_downloaded_verified_pdf_ingested",
+      "expected_filename": "TCS_Q2FY26.pdf",
+      "sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34"
     },
     {
       "symbol": "TCS",
       "fiscal_label": "Q3 FY26",
       "call_date": "2026-01-12",
       "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
-      "download_status": "HTTP 403 from direct download",
-      "expected_filename": "TCS_Q3FY26.pdf"
+      "download_status": "user_downloaded_verified_pdf_ingested",
+      "expected_filename": "TCS_Q3FY26.pdf",
+      "sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441"
     },
     {
       "symbol": "TCS",
       "fiscal_label": "Q4 FY26",
       "call_date": "2026-04-09",
       "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
-      "download_status": "HTTP 403 from direct download",
-      "expected_filename": "TCS_Q4FY26.pdf"
+      "download_status": "user_downloaded_verified_pdf_ingested",
+      "expected_filename": "TCS_Q4FY26.pdf",
+      "sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b"
     },
     {
       "symbol": "INFY",
       "fiscal_label": "Q2 FY26",
       "call_date": "2025-10-16",
       "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
-      "download_status": "HTTP 403 from direct download",
-      "expected_filename": "INFY_Q2FY26.pdf"
+      "download_status": "user_downloaded_verified_pdf_ingested",
+      "expected_filename": "INFY_Q2FY26.pdf",
+      "sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece"
     }
-  ]
+  ],
+  "ingested_on": "2026-10-16"
 }

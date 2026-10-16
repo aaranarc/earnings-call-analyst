@@ -13,6 +13,27 @@
         "documents": [
           {
             "symbol": "TCS",
+            "fiscal_label": "Q2 FY26",
+            "chunks": 95,
+            "numbers": 101,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf"
+          },
+          {
+            "symbol": "TCS",
+            "fiscal_label": "Q3 FY26",
+            "chunks": 63,
+            "numbers": 124,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf"
+          },
+          {
+            "symbol": "TCS",
+            "fiscal_label": "Q4 FY26",
+            "chunks": 76,
+            "numbers": 120,
+            "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf"
+          },
+          {
+            "symbol": "TCS",
             "fiscal_label": "Q1 FY27",
             "chunks": 69,
             "numbers": 74,
@@ -35,6 +56,13 @@
             "chunks": 84,
             "numbers": 99,
             "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf"
+          },
+          {
+            "symbol": "INFY",
+            "fiscal_label": "Q2 FY26",
+            "chunks": 60,
+            "numbers": 134,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf"
           }
         ]
       },
@@ -165,7 +193,7 @@
         "documents": []
       }
     ],
-    "as_of": "2026-10-15",
+    "as_of": "2026-10-16",
     "source": "committed ingest snapshot"
   },
   "evaluation": {

@@ -93,8 +93,9 @@ release. Browser v1 data remains as a migration backup. Keep JSON exports before
 
 ## Data and evaluation dependencies
 
-Official source candidates are recorded in `data/source_candidates.json`. Direct PDF downloads returned 403;
-these locations are not counted as ingested coverage. Once PDFs are available, verify identity, quarter, date,
+Official source candidates are recorded in `data/source_candidates.json`. The owner supplied the four PDFs
+after direct downloads returned 403; they were verified and ingested on 2026-10-16. Other missing transcripts
+remain uncounted. For each additional PDF, verify identity, quarter, date,
 and SHA-256, register them in the manifest, run the manifest checker, dry-run parsing, then ingest, refresh
 `eval/results/ingest_stats.json`, and run `python scripts/export_public_data.py` before deploying the web app. Gate A remains all 12 companies × latest 4 quarters.
 

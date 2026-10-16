@@ -12,7 +12,7 @@ def test_health_and_coverage_do_not_need_credentials(monkeypatch):
     assert client.get("/health").json()["configured"] is False
     coverage = client.get("/companies").json()
     assert coverage["source"] == "committed ingest snapshot"
-    assert sum(len(c["documents"]) for c in coverage["companies"]) == 4
+    assert sum(len(c["documents"]) for c in coverage["companies"]) == 8
     assert all(d["source_url"].startswith("https://") for c in coverage["companies"] for d in c["documents"])
 
 
@@ -112,6 +112,7 @@ def test_thesis_check_schema_coverage_and_response(tmp_path, monkeypatch):
     monkeypatch.setattr(api, "run_thesis", lambda body: {"assessment": "Unresolved", "automatic_status_change": False})
     body = {"symbol": "TCS", "thesis": "Margins recover", "periods": ["Q1 FY27"]}
     assert client.post("/thesis/check", json=body).json()["assessment"] == "Unresolved"
-    assert client.post("/thesis/check", json=dict(body, periods=["Q4 FY26"])).status_code == 422
+    assert client.post("/thesis/check", json=dict(body, periods=["Q4 FY26"])).status_code == 200
+    assert client.post("/thesis/check", json=dict(body, periods=["Q1 FY26"])).status_code == 422
     assert client.post("/thesis/check", json=dict(body, periods=["Q1 FY27"] * 2)).status_code == 422
     assert client.post("/thesis/check", json=dict(body, thesis="   ")).status_code == 422

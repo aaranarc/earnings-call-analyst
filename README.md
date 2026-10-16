@@ -7,7 +7,7 @@
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
 > **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
-> small corpus (4 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
+> small corpus (8 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
 > [`eval/results/`](eval/results/) and can be re-run.
 >
 > *Research and educational project. Not investment advice.*
@@ -63,13 +63,14 @@ flowchart LR
 
 ## Measured so far
 
-Small samples on a 4-transcript corpus. Read them as engineering checks, not benchmark scores. Each figure links to
-the file it comes from.
+Coverage reflects the current 8-transcript ingest snapshot. The other development measurements below used the
+original 4-transcript corpus and are historical engineering checks, not benchmarks of the expanded corpus.
+Each figure links to the file it comes from.
 
 | What | Result | Notes | Source |
 |---|---|---|---|
-| Corpus in the database | **4** transcripts · **287** chunks · avg **133.2** tokens/chunk · **368** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
-| Database size | `quantrag` schema **2.16 MB**; whole database **12.8 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Corpus in the database | **8** transcripts · **581** chunks · avg **132.6** tokens/chunk · **847** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Database size | `quantrag` schema **3.67 MB**; whole database **14.38 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
 | Retrieval recall@5, **dev set** | hybrid **19/20** · hybrid + rerank **18/20** (router off) → **19/20** (router on) | 20 hand-written questions written while building, not a benchmark; one label widened after seeing results (D21) | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
@@ -81,8 +82,9 @@ the file it comes from.
 
 ## Known limitations
 
-- **Tiny corpus.** 4 of 96 planned transcripts (TCS, HDFC Bank, HUL Q1 FY27; Infosys Q2 FY25). Comparisons across
-  quarters mostly can't be answered yet.
+- **Small corpus.** 8 of 96 planned transcripts: TCS Q2 FY26–Q1 FY27, Infosys Q2 FY25 and Q2 FY26,
+  and HDFC Bank/HUL Q1 FY27. TCS now supports four consecutive quarters and a same-quarter Q2 FY26
+  comparison with Infosys. Most company/quarter combinations are still missing.
 - **The dev set is not a benchmark.** It has 20 questions written during development, and one label was widened after
   seeing results. The human-verified 60-question gold set is Phase 6.
 - **The number checker matches values, not meaning.** "Infosys's margin was 24%" passes if 24% is in the cited
@@ -103,7 +105,7 @@ the file it comes from.
 | Step | What | Status |
 |---|---|---|
 | Phase 5 eval | blind-label 120 numbers; publish checker precision/recall per corruption type | labelling page ready |
-| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 4/96 |
+| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 8/96; latest-four gate 7/48 |
 | Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | [Retrieval, generation and calibration tooling ready](docs/EVALUATION.md); human-reviewed runs pending |
 | Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
 | Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |
