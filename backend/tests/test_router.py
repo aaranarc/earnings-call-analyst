@@ -21,7 +21,7 @@ def r(q, **kw):
     ("How did HDFC Bank and ICICI Bank do on deposits?", "comparison", ["HDFCBANK", "ICICIBANK"]),
     ("Is HUL better than ITC on volume growth?", "comparison", ["HINDUNILVR", "ITC"]),
     ("Any signs of distress or default risk at Axis Bank?", "risk", ["AXISBANK"]),
-    ("Which company had the strongest margin guidance this quarter?", "single", []),
+    ("Which company had the strongest margin guidance this quarter?", "comparison", []),
     ("What's the weather in Mumbai tomorrow?", "out_of_scope", []),
     ("Write me a poem about cats", "out_of_scope", []),
 ])
@@ -66,4 +66,50 @@ def test_numeric_flag(q, numeric):
 def test_router_disabled_sends_everything_to_single_without_filters(monkeypatch):
     monkeypatch.setenv("ROUTER_ENABLED", "false")
     got = route("Compare TCS and Infosys in Q1 FY27", COMPANIES, LATEST)
+    assert (got.kind, got.companies, got.periods) == ("single", [], [])
+
+
+@pytest.mark.parametrize("wording", ["this quarter", "latest quarter", "most recent quarter"])
+def test_latest_wording_uses_ingested_period_not_today(wording):
+    got = route(f"Infosys margins {wording}", COMPANIES, {"INFY": "Q2 FY25"}, enabled=True)
+    assert got.periods == ["Q2 FY25"]
+    assert "not the calendar quarter" in got.reason
+
+
+@pytest.mark.parametrize("question, periods", [
+    ("TCS Q4 FY26 margins reported this quarter", ["Q4 FY26"]),
+    ("TCS FY26 revenue, latest quarter commentary", ["Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26"]),
+    ("TCS Q4 FY26 margins last quarter", ["Q4 FY26"]),
+])
+def test_explicit_periods_take_precedence(question, periods):
+    assert r(question).periods == periods
+
+
+@pytest.mark.parametrize("question, sector", [
+    ("Which bank had the best CASA ratio?", "private_bank"),
+    ("Compare banks on deposit growth", "private_bank"),
+    ("How is the banking sector doing on credit risk?", "private_bank"),
+    ("How is the IT services sector doing on pricing?", "it_services"),
+    ("Which IT company has the highest margin?", "it_services"),
+    ("Compare IT companies on revenue", "it_services"),
+    ("Compare FMCG demand", "consumer"),
+    ("Consumer goods revenue outlook", "consumer"),
+])
+def test_sector_questions_stay_inside_sector(question, sector):
+    got = r(question)
+    assert got.companies == [s for s, c in COMPANIES.items() if c["sector"] == sector]
+    assert got.kind == ("risk" if "risk" in question else "comparison")
+
+
+def test_explicit_company_not_expanded_by_sector_word():
+    assert r("HDFC Bank versus the banking sector on deposits").companies == ["HDFCBANK"]
+    assert r("How is TCS doing in IT services pricing?").companies == ["TCS"]
+
+
+def test_incidental_it_or_consumer_word_does_not_select_sector():
+    assert r("Is it a good quarter for consumer demand?").companies == []
+
+
+def test_router_ablation_also_disables_sector_and_latest_filters():
+    got = route("Which bank did best this quarter?", COMPANIES, LATEST, enabled=False)
     assert (got.kind, got.companies, got.periods) == ("single", [], [])

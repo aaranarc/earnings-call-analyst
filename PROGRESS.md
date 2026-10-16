@@ -279,3 +279,10 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Coverage/eval snapshots ship with the web deployment so browsing stays available while the API sleeps. Live model requests wake the API.
 - Vercel was deployed using source files; GitHub integration and automatic redeploys are not configured. Render also uses explicit deployments. See docs/DEPLOYMENT.md.
 - Corpus expansion, human-reviewed gold/calibration, the deferred number labels and Nestlé count remain data/review work; public benchmark scores remain pending.
+
+## Router follow-up: sectors and latest available quarter
+- Rechecked the four official PDF candidates: direct downloads still return HTTP 403. The old local HDFC PDFs are FY24, outside the frozen Q2 FY25–Q1 FY27 corpus window. No coverage or public snapshot was inflated.
+- Router recognizes bank/banking, IT-services/company and FMCG/consumer sector queries when no company is named; all configured peers remain required by the coverage guard. Partial sector data cannot silently produce a market-wide winner.
+- Added this/latest/most-recent quarter wording, resolved from ingested periods rather than today's calendar. Explicit fiscal periods take precedence over relative wording. Ranking words such as best/highest/strongest select comparison intent.
+- New regression checks cover routing and the generation coverage boundary. The original 20 inspected development queries pass; this is a regression check, not a new held-out accuracy result. The original router report is preserved as historical evidence.
+- Coverage expansion and human-reviewed evaluation remain pending; the deferred 120 labels and Nestlé count were not touched.
