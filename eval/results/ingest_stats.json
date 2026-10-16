@@ -3,6 +3,60 @@
   "database": "supabase",
   "documents": [
     {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 58,
+      "numbers": 119
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 69,
+      "numbers": 136
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q4 FY25",
+      "chunks": 66,
+      "numbers": 137
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q1 FY26",
+      "chunks": 58,
+      "numbers": 136
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 58,
+      "numbers": 149
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 52,
+      "numbers": 170
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 44,
+      "numbers": 199
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 50,
+      "numbers": 147
+    },
+    {
+      "symbol": "HDFCBANK",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 61,
+      "numbers": 183
+    },
+    {
       "symbol": "HDFCBANK",
       "fiscal_label": "Q1 FY27",
       "chunks": 62,
@@ -10,9 +64,81 @@
     },
     {
       "symbol": "HINDUNILVR",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 88,
+      "numbers": 188
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 86,
+      "numbers": 184
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q4 FY25",
+      "chunks": 74,
+      "numbers": 188
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q1 FY26",
+      "chunks": 94,
+      "numbers": 149
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 92,
+      "numbers": 159
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 97,
+      "numbers": 118
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 92,
+      "numbers": 108
+    },
+    {
+      "symbol": "HINDUNILVR",
       "fiscal_label": "Q1 FY27",
       "chunks": 72,
       "numbers": 72
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 56,
+      "numbers": 256
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 54,
+      "numbers": 237
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 62,
+      "numbers": 210
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 73,
+      "numbers": 217
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 59,
+      "numbers": 205
     },
     {
       "symbol": "INFY",
@@ -25,6 +151,24 @@
       "fiscal_label": "Q2 FY26",
       "chunks": 60,
       "numbers": 134
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 64,
+      "numbers": 117
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 62,
+      "numbers": 155
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 65,
+      "numbers": 155
     },
     {
       "symbol": "TCS",
@@ -49,17 +193,65 @@
       "fiscal_label": "Q1 FY27",
       "chunks": 69,
       "numbers": 74
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 70,
+      "numbers": 97
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 46,
+      "numbers": 101
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q4 FY25",
+      "chunks": 58,
+      "numbers": 123
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q1 FY26",
+      "chunks": 77,
+      "numbers": 118
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 62,
+      "numbers": 102
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 62,
+      "numbers": 95
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 58,
+      "numbers": 104
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 52,
+      "numbers": 67
     }
   ],
   "totals": {
-    "documents": 8,
-    "chunks": 581,
-    "numbers": 847,
-    "avg_tokens_per_chunk": 132.6,
-    "median_tokens_per_chunk": 92,
+    "documents": 40,
+    "chunks": 2700,
+    "numbers": 5676,
+    "avg_tokens_per_chunk": 155.1,
+    "median_tokens_per_chunk": 106.0,
     "max_tokens_per_chunk": 450,
-    "quantrag_schema_mb": 3.67,
-    "database_mb": 14.38,
+    "quantrag_schema_mb": 15.46,
+    "database_mb": 26.23,
     "supabase_free_tier_mb": 500
   },
   "manifest_target": {

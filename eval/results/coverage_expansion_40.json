@@ -1,0 +1,858 @@
+{
+  "date": "2026-10-16",
+  "project_ref": "cjttcgxtmgcpvzqtzzkg",
+  "new_documents": 32,
+  "totals": {
+    "documents": 40,
+    "chunks": 2700,
+    "numbers": 5676,
+    "avg_tokens_per_chunk": 155.1,
+    "median_tokens_per_chunk": 106.0,
+    "max_tokens_per_chunk": 450,
+    "quantrag_schema_mb": 15.46,
+    "database_mb": 26.23,
+    "supabase_free_tier_mb": 500
+  },
+  "original_eight_preserved": true,
+  "all_stored_chunk_text_hashes_match": true,
+  "all_embeddings_384d_nonnull": true,
+  "replay_test": {
+    "documents": [
+      "INFY Q3 FY26",
+      "ICICIBANK Q1 FY27",
+      "HINDUNILVR Q4 FY26"
+    ],
+    "before": {
+      "documents": 40,
+      "chunks": 2700,
+      "numbers": 5676
+    },
+    "after": {
+      "documents": 40,
+      "chunks": 2700,
+      "numbers": 5676
+    }
+  },
+  "source_verification": [
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-30",
+      "pages": 35,
+      "sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818",
+      "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 4,
+        "('analyst', 'qa')": 39,
+        "('management', 'qa')": 39
+      },
+      "opening": "\u201cMarch Quarter & Financial Year 2026 Earnings call of Hindustan Unilever Limited\u201d April 30th, 2026 Speakers: Ms. Priya Nair - Chief Executive Officer & Managing Director Mr. Niranjan Gupta - CFO, Executive Director, Finance Mr. Yogesh Mulgaonkar - Head of Investor Relations & Head of Finance, Personal Care Page 1 of 35 March Quarter & Financial Year 2026 Earnings call of Hindustan Unilever Limited"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q3 FY26",
+      "call_date": "2026-02-12",
+      "pages": 34,
+      "sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d",
+      "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 4,
+        "('analyst', 'qa')": 33,
+        "('management', 'qa')": 44,
+        "('unknown', 'qa')": 8
+      },
+      "opening": "\u201cDecember Quarter 2025 Earnings call of Hindustan Unilever Limited\u201d February 12th, 2026 Speakers: Ms. Priya Nair - Chief Executive Officer & Managing Director Mr. Niranjan Gupta - CFO, Executive Director, Finance Mr. Yogesh Mulgaonkar - Head of Investor Relations & Head of Finance, Personal Care Page 1 of 34 December Quarter 2025 Earnings call of Hindustan Unilever Limited Moderator: Ladies and ge"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q2 FY26",
+      "call_date": "2025-10-23",
+      "pages": 42,
+      "sha256": "c56c54c8a197ec8ec5196c5f9fc8bde151c9d6f9411c9222f593c2586e43c8ea",
+      "source_url": "https://www.hul.co.in/files/sq25-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 6,
+        "('analyst', 'qa')": 34,
+        "('management', 'qa')": 35,
+        "('unknown', 'qa')": 3
+      },
+      "opening": "\u201cSeptember Quarter 2025 Earnings call of Hindustan Unilever Limited\u201d October 23rd, 2025 Speakers: Ms. Priya Nair - Chief Executive Officer & Managing Director Mr. Ritesh Tiwari - CFO, Executive Director, Finance & IT Mr. Niranjan Gupta - CFO Designate Mr. Yogesh Mulgaonkar - Head of Investor Relations & Head of Finance, Personal Care Page 1 of 42 September Quarter 2025 Earnings call of Hindustan U"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q1 FY26",
+      "call_date": "2025-07-31",
+      "pages": 45,
+      "sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2",
+      "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 6,
+        "('analyst', 'qa')": 33,
+        "('management', 'qa')": 37,
+        "('unknown', 'qa')": 1
+      },
+      "opening": "\u201cJune Quarter 2025 Earnings call of Hindustan Unilever Limited\u201d July 31, 2025 Speakers: Mr. Rohit Jawa - Chief Executive Officer & Managing Director Ms. Priya Nair - Incoming Chief Executive Officer & Managing Director Mr. Ritesh Tiwari - CFO, Executive Director, Finance & IT Mr. Yogesh Mulgaonkar - Head of Investor Relations & Head of Finance, Personal Care Page 1 of 45 June Quarter 2025 Earnings"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q4 FY25",
+      "call_date": "2025-04-24",
+      "pages": 40,
+      "sha256": "26805403986d801260e9535b00d85531c04f5860e25f2f33af92edd8c127a8a3",
+      "source_url": "https://www.hul.co.in/files/mq25-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 4,
+        "('analyst', 'qa')": 20,
+        "('management', 'qa')": 28
+      },
+      "opening": "\u201cMarch Quarter and Financial Year 2025 Earnings call of Hindustan Unilever Limited\u201d April 24, 2025 Speakers: Mr. Rohit Jawa, Chief Executive Officer and Managing Director Mr. Ritesh Tiwari, CFO, Executive Director, Finance and IT Ms. Shilpa Kedia, Group Financial Controller & Head Investor Relations Page 1 of 40 March Quarter and Financial Year 2025 Earnings call of Hindustan Unilever Limited Mode"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q3 FY25",
+      "call_date": "2025-01-22",
+      "pages": 39,
+      "sha256": "e5aa8143d2ac7a227339d6f8289591e76dd8e4a53a194dfedcce6e92c5b54f0a",
+      "source_url": "https://www.hul.co.in/files/dq24-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 4,
+        "('analyst', 'qa')": 30,
+        "('management', 'qa')": 32
+      },
+      "opening": "\u201cDecember Quarter 2024 Earnings Call of Hindustan Unilever Limited\u201d January 22, 2025 Speakers: Mr. Rohit Jawa, Chief Executive Officer and Managing Director Mr. Ritesh Tiwari, Chief Financial Officer, Executive Director, Finance and IT Ms. Shilpa Kedia, Group Financial Controller and Head Investor Relations Page 1 of 39 December Quarter 2024 Earnings call of Hindustan Unilever Limited Moderator: L"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "fiscal_label": "Q2 FY25",
+      "call_date": "2024-10-23",
+      "pages": 42,
+      "sha256": "062f95b007b2d6e969e198294879f9dac4c4b687ed37a87293637c077c759907",
+      "source_url": "https://www.hul.co.in/files/sq24-earnings-call-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 4,
+        "('analyst', 'qa')": 32,
+        "('management', 'qa')": 33
+      },
+      "opening": "\u201cSeptember Quarter 2024 Earnings Call of Hindustan Unilever Limited\u201d October 23, 2024 Speakers: Mr. Rohit Jawa, Chief Executive Officer and Managing Director Mr. Ritesh Tiwari, CFO, Executive Director, Finance and IT Mr. Shilpa Kedia, Group Financial Controller & Head Investor Relations Page 1 of 42 September Quarter 2024 Earnings call of Hindustan Unilever Limited Moderator: Ladies and gentlemen,"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-18",
+      "pages": 29,
+      "sha256": "d81107decd1358c6cf89aa383cfe07566036dc0ad50436aa90c3d6b8a8562b68",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-for-earnings-call-held-on-april-18-2026.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 2,
+        "('analyst', 'qa')": 35,
+        "('unknown', 'qa')": 28
+      },
+      "opening": "ICICI Bank Limited Earnings conference call - Quarter ended March 31, 2026 (Q4-2026) April 18, 2026 Certain definitions in this release relating to a future period of time (including inter alia concerning our future business plans or growth prospects) are forward-looking statements intended to qualify for the 'safe harbor' under applicable securities laws including the US Private Securities Litiga"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q3 FY26",
+      "call_date": "2026-01-17",
+      "pages": 26,
+      "sha256": "35254653ec3034782f0b7c1338da088bb2788b6b5f580d3dafd5f2a0b604e024",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-earnings-call-jan2026.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 2,
+        "('analyst', 'qa')": 29,
+        "('unknown', 'qa')": 22
+      },
+      "opening": "ICICI Bank Limited Earnings conference call - Quarter ended December 31, 2025 (Q3-2026) January 17, 2026 Certain definitions in this release relating to a future period of time (including inter alia concerning our future business plans or growth prospects) are forward-looking statements intended to qualify for the 'safe harbor' under applicable securities laws including the US Private Securities L"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-16",
+      "pages": 13,
+      "sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 28,
+        "('management', 'qa')": 24
+      },
+      "opening": "\u201cWipro Limited Q4 FY '26 Earnings Conference Call\u201d April 16, 2026 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER AND MANAGING DIRECTOR \u2013 WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER \u2013 WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER \u2013 WIPRO LIMITED MR. HARI SHETTY \u2013 CHIEF STRATEGIST AND TECHNOLOGY OFFICER \u2013 WIPRO LIMITED MR. ABHISHEK JAIN \u2013 VICE PRESIDENT, CORPORA"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q1 FY27",
+      "call_date": "2026-07-16",
+      "pages": 15,
+      "sha256": "210ab9bb949be932fcb5f6b26a2978f0c72ea30bcaa8899a89e6271036245ec8",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 22,
+        "('management', 'qa')": 19
+      },
+      "opening": "\u201cWipro Limited Q1 FY '27 Earnings Conference Call\u201d July 16, 2026 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER AND MANAGING DIRECTOR \u2013 WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER \u2013 WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER \u2013 WIPRO LIMITED MR. HARI SHETTY \u2013 CHIEF STRATEGIST AND TECHNOLOGY OFFICER \u2013 WIPRO LIMITED MR. ABHISHEK JAIN \u2013 VICE PRESIDENT, CORPORAT"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q3 FY26",
+      "call_date": "2026-01-16",
+      "pages": 15,
+      "sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 28,
+        "('management', 'qa')": 27
+      },
+      "opening": "\u201cWipro Limited Q3 FY'26 Earnings Conference Call\u201d January 16, 2026 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. HARI SHETTY \u2013 CHIEF STRATEGIST AND TECHNOLOGY OFFICER, WIPRO LIMITED MR. ABHISHEK JAIN \u2013 VICE PRESIDENT (CORPORATE TR"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q2 FY26",
+      "call_date": "2025-10-16",
+      "pages": 18,
+      "sha256": "8f7be59ebd5db24cbf7bcd5e821da36a00ed573a39c2eba6b3034668169f9dea",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q2fy26/q2fy26-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 30,
+        "('management', 'qa')": 25,
+        "('unknown', 'qa')": 1
+      },
+      "opening": "\u201cWipro Limited Q2 FY'26 Earnings Conference Call\u201d October 16, 2025 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. HARI SHETTY \u2013 CHIEF STRATEGIST AND TECHNOLOGY OFFICER, WIPRO LIMITED MR. ABHISHEK JAIN \u2013 VICE PRESIDENT (CORPORATE TR"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q1 FY26",
+      "call_date": "2025-07-17",
+      "pages": 19,
+      "sha256": "e8a7bd9125bec621e531d8c0fcabfc18b602e6579681387e51389d264ff64c10",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q1fy26/q1fy26-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 38,
+        "('management', 'qa')": 31
+      },
+      "opening": "\u201cWipro Limited Q1 FY'26 Earnings Conference Call\u201d July 17, 2025 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. DIPAK BOHRA \u2013 SENIOR VICE PRESIDENT (CORPORATE TREASURER & INVESTOR RELATIONS), WIPRO LIMITED Public Wipro Limited July "
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q4 FY25",
+      "call_date": "2025-04-16",
+      "pages": 19,
+      "sha256": "7aec97f06177699a9136fe3a9f4d0e67c68d40c0b1952bee18beb426b18bad29",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q4fy25/q4fy25-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 27,
+        "('unknown', 'qa')": 4,
+        "('management', 'qa')": 21
+      },
+      "opening": "\u201cWipro Limited Q4 FY'25 Earnings Conference Call\u201d April 16, 2025 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. DIPAK BOHRA \u2013 SENIOR VICE PRESIDENT (CORPORATE TREASURER & INVESTOR RELATIONS), WIPRO LIMITED Wipro Limited April 16, 2"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q3 FY25",
+      "call_date": "2025-01-17",
+      "pages": 13,
+      "sha256": "0080318c1b6f3da4bfaeab1e900c89919438cc75c92e8cfc3cb67bf86e070231",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q3fy25/q3fy25-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('unknown', 'qa')": 9,
+        "('management', 'qa')": 18,
+        "('analyst', 'qa')": 14
+      },
+      "opening": "\u201cWipro Limited Q3 FY'25 Earnings Conference Call\u201d January 17, 2025 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. DIPAK BOHRA \u2013 SENIOR VICE PRESIDENT, CORPORATE TREASURER & INVESTOR RELATIONS, WIPRO LIMITED Public Wipro Limited Jan"
+    },
+    {
+      "symbol": "WIPRO",
+      "fiscal_label": "Q2 FY25",
+      "call_date": "2024-10-17",
+      "pages": 18,
+      "sha256": "eb0b4d980eac345313b6bec7e1009cecf99f2736b4538857345b812a3f662ffd",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q2fy25/q2fy25-earnings-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 30,
+        "('management', 'qa')": 32
+      },
+      "opening": "\u201cWipro Limited Q2 FY'25 Earnings Conference Call\u201d October 17, 2024 MANAGEMENT: MR. SRINI PALLIA \u2013 CHIEF EXECUTIVE OFFICER & MANAGING DIRECTOR, WIPRO LIMITED MS. APARNA IYER \u2013 CHIEF FINANCIAL OFFICER, WIPRO LIMITED MR. SAURABH GOVIL \u2013 CHIEF HUMAN RESOURCES OFFICER, WIPRO LIMITED MR. DIPAK BOHRA \u2013 SENIOR VICE PRESIDENT, CORPORATE TREASURER & INVESTOR RELATIONS, WIPRO LIMITED Wipro Limited October 17"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q1 FY27",
+      "call_date": "2026-07-18",
+      "pages": 24,
+      "sha256": "60c104428aff18c78b697c82a173b7c8ac04b6c1b5e117feb828875041f74513",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2027/transcript-for-earnings-call-held-on-july-18-2026.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 2,
+        "('analyst', 'qa')": 26,
+        "('unknown', 'qa')": 25
+      },
+      "opening": "ICICI Bank Limited Earnings conference call - Quarter ended June 30, 2026 (Q1-2027) July 18, 2026 Certain definitions in this release relating to a future period of time (including inter alia concerning our future business plans or growth prospects) are forward-looking statements intended to qualify for the 'safe harbor' under applicable securities laws including the US Private Securities Litigati"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q3 FY25",
+      "call_date": "2025-01-25",
+      "pages": 25,
+      "sha256": "20af1073da46bfe0ef97dc193b1ac1707243d39444519de6443c330f272bf511",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2025/2025-01-q3-2025-transcript-for-earnings-call-held-on-january-25-2025.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 2,
+        "('analyst', 'qa')": 21,
+        "('unknown', 'qa')": 22
+      },
+      "opening": "ICICI Bank Limited Earnings conference call - Quarter ended December 31, 2024 (Q3-2025) January 25, 2025 Certain definitions in this release relating to a future period of time (including inter alia concerning our future business plans or growth prospects) are forward-looking statements intended to qualify for the 'safe harbor' under applicable securities laws including the US Private Securities L"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "fiscal_label": "Q2 FY25",
+      "call_date": "2024-10-26",
+      "pages": 26,
+      "sha256": "389e4820fb8c2534642aa87aaf26f73bd786f4508ce81bd33b8b2da8ca599f2c",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2024/transcript-for-analyst-call-held-on-october-26-2024.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 2,
+        "('analyst', 'qa')": 22,
+        "('unknown', 'qa')": 22
+      },
+      "opening": "Analyst call on October 26, 2024: Opening Remarks Certain definitions in this release relating to a future period of time (including inter alia concerning our future business plans or growth prospects) are forward-looking statements intended to qualify for the 'safe harbor' under applicable securities laws including the US Private Securities Litigation Reform Act of 1995. Such forward-looking stat"
+    },
+    {
+      "symbol": "HDFCBANK",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-18",
+      "pages": 15,
+      "sha256": "f2a0b862e5cc9a7af11fd0ac32d3048cce16861519a6f5fcb8b0d568934c11c6",
+      "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/HDFCBank-Analyst-Apr18-2026-vF.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 23,
+        "('management', 'qa')": 27
+      },
+      "opening": "Classification - Internal \u201cHDFC Bank Limited Q4 & Full Year FY 2026 Earnings Conference Call\u201d April 18, 2026 MANAGEMENT: MR. KEKI MISTRY \u2013 INTERIM PART-TIME CHAIRMAN \u2013 HDFC BANK LIMITED MR. SASHIDHAR JAGDISHAN \u2013 MANAGING DIRECTOR AND CHIEF EXECUTIVE OFFICER \u2013 HDFC BANK LIMITED MR. KAIZAD BHARUCHA \u2013 DEPUTY MANAGING DIRECTOR \u2013 HDFC BANK LIMITED MR. SRINIVASAN VAIDYANATHAN \u2013 CHIEF FINANCIAL OFFICER \u2013"
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q1 FY27",
+      "call_date": "2026-07-13",
+      "pages": 28,
+      "sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 21,
+        "('management', 'qa')": 16
+      },
+      "opening": "Classification: Internal \u201cHCL Technologies Limited Q1 FY'27 Earnings Conference Call\u201d July 13, 2026 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations 1 HCL Technologies Limited July 13, 2026 Moderator: Ladies and gentlemen , good day and welcome to HCLTech 's Q1 F"
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-21",
+      "pages": 24,
+      "sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 15,
+        "('management', 'qa')": 14
+      },
+      "opening": "\u201cHCL Technologies Limited Q4 & Annual FY'26 Earnings Conference Call\u201d April 21, 2026 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations 1 HCL Technologies Limited April 21, 2026 Moderator: Ladies and gentlemen, good day and welcome to HCLTech's Q4 and Annual FY'26 "
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q3 FY26",
+      "call_date": "2026-01-12",
+      "pages": 21,
+      "sha256": "12133f41dffa60ce6843b30ffe36764b452dc82defa9a158693ac2e2d920744e",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-01/HCLTech-Earnings-Q3-FY26-Transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 22,
+        "('management', 'qa')": 17
+      },
+      "opening": "\u201cHCLTech\u2019s Q3 FY26 Earnings Conference Call\u201d January 12, 2026 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations HCLTech January 12, 2026 Moderator: Ladies and gentlemen, good day, and welcome to HCLTech's Q3 FY26 Earnings Conference Call. As a reminder, all partic"
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q2 FY26",
+      "call_date": "2025-10-13",
+      "pages": 24,
+      "sha256": "13013ef0fc10f0c88b76308505977a5e72c84fefc0b091b21ff62237c480d0e0",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-11/HCLTech-Earnings-Q2FY26-transcript-updated.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 22,
+        "('management', 'qa')": 22
+      },
+      "opening": "\u201cHCLTech\u2019s Q2 FY26 Earnings Conference Call\u201d October 13, 2025 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Ramachandran Sundararajan \u2013 Chief People Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations HCLTech October 13, 2025 Moderator: Ladies and gentlemen, good day and welcome to HCLTech\u2019s Q2 FY26"
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q1 FY26",
+      "call_date": "2025-07-14",
+      "pages": 25,
+      "sha256": "e103776bf4b01a50b18b4813c778fea9084629051a92057c20c3db3dd9c6e549",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-07/HCLTech-Earnings-Q1FY26-Transcript-18.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 24,
+        "('management', 'qa')": 23,
+        "('unknown', 'qa')": 1
+      },
+      "opening": "\u201cHCLTech\u2019s Q1 FY26 Earnings Conference Call\u201d July 14, 2025 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Ramachandran Sundararajan \u2013 Chief People Officer Mr. Vijay Guntur \u2013 Chief Technology Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations HCLTech July 14, 2025 Moderator: Ladies and gentlemen, goo"
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q4 FY25",
+      "call_date": "2025-04-22",
+      "pages": 25,
+      "sha256": "3bb4f40c458b379aae0bece6779f4811fed9ad1444b802a91192b5050421755c",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-04/HCLTech-Earnings-Q4FY25-Transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 23,
+        "('management', 'qa')": 29,
+        "('unknown', 'qa')": 3
+      },
+      "opening": "\u201cHCLTech's Q4 FY25 Earnings Conference Call\u201d April 22, 2025 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations HCLTech April 22, 2025 Moderator: Ladies and gentlemen, good day and welcome to HCLTech's Q4 and Annual FY25 Earnings Conference Call. As a reminder, all "
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q3 FY25",
+      "call_date": "2025-01-13",
+      "pages": 19,
+      "sha256": "16f553f858939fecca8241351da9bee2ab148503c326f5b84fc41fcb9d97000e",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-01/HCLTech-Earnings-Jan13-2025_1.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 26,
+        "('management', 'qa')": 30,
+        "('unknown', 'qa')": 1
+      },
+      "opening": "\u201cHCL Tech's Q3 FY25 Earnings Conference Call\u201d January 13, 2025 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer & Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Ramachandran Sundararajan - Chief People Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations 1 HCL Technologies Limited January 13, 2025 Moderator: Ladies and Gentlemen, Good Day and Welcome "
+    },
+    {
+      "symbol": "HCLTECH",
+      "fiscal_label": "Q2 FY25",
+      "call_date": "2024-10-14",
+      "pages": 18,
+      "sha256": "71224b7434f74146bdaba507e0b132320d2882dfa13d04360c9dcf6866ca9b21",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2024-10/HCLTech-Earnings-Oct14-2024-Transcript.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 23,
+        "('management', 'qa')": 25,
+        "('unknown', 'qa')": 1
+      },
+      "opening": "HCL Technologies Limited October 14, 2024 \u201cHCL Technologies Limited Q2 FY\u201925 Earnings Conference Call\u201d October 14, 2024 Management: Mr. C. Vijayakumar \u2013 Chief Executive Officer and Managing Director Mr. Shiv Walia \u2013 Chief Financial Officer Mr. Ramachandran Sundararajan \u2013 Chief People Officer Mr. Nitin Mohta \u2013 Senior Vice President & Head - Investor Relations 1 HCL Technologies Limited October 14, "
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q3 FY26",
+      "call_date": "2026-01-14",
+      "pages": 22,
+      "sha256": "9bec5292e3d485b4e5efc64a61af99f37be7c1b8eadac3d2377097882e7ea220",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q3/documents/transcripts/earningscall.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 27,
+        "('management', 'qa')": 28
+      },
+      "opening": "Infosys Limited Q3 FY'26 Earnings Conference Call January 14, 2026 CORPORATE PARTICIPANTS: Salil Parekh Chief Executive Officer and Managing Director Jayesh Sanghrajka Chief Financial Officer Sandeep Mahindroo Financial Controller and Head - Investor Relations ANALYSTS Ankur Rudra JPMorgan Bryan Bergin TD Cowen Ashwin Mehta Ambit Capital Abhishek Pathak Motilal Oswal Jonathan Lee Guggenheim Securi"
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q4 FY26",
+      "call_date": "2026-04-23",
+      "pages": 22,
+      "sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 3,
+        "('analyst', 'qa')": 28,
+        "('management', 'qa')": 26
+      },
+      "opening": "Infosys Limited Q4 FY26 Earnings Conference Call April 23, 2026 CORPORATE PARTICIPANTS: Salil Parekh Chief Executive Officer and Managing Director Jayesh Sanghrajka Chief Financial Officer Sandeep Mahindroo Financial Controller and Head Investor Relations ANALYSTS Yogesh Aggarwal HSBC Securities Ankur Rudra JP Morgan Bryan Bergin TD Cowen Gaurav Rateria Morgan Stanley Sumeet Jain CLSA India Jonath"
+    },
+    {
+      "symbol": "INFY",
+      "fiscal_label": "Q1 FY27",
+      "call_date": "2026-07-23",
+      "pages": 24,
+      "sha256": "a7be1c05b4f54dfa0cde220806c44cf867024f461d9bf20d829bf6d98e7cdf78",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2026-2027/q1/documents/transcripts/earningscall.pdf",
+      "turn_counts": {
+        "('management', 'prepared')": 6,
+        "('analyst', 'qa')": 20,
+        "('management', 'qa')": 32
+      },
+      "opening": "Infosys Limited Q1 FY27 Earnings Conference Call July 23, 2026 CORPORATE PARTICIPANTS: Nandan Nilekani Co-Founder and Chairman of the Board Salil Parekh Chief Executive Officer and Managing Director Jayesh Sanghrajka Chief Financial Officer Sandeep Mahindroo Financial Controller and Head Investor Relations ANALYSTS Kumar Rakesh BNP Paribas Jonathan Lee Guggenheim Partners Gaurav Rateria Morgan Sta"
+    }
+  ],
+  "database_documents": [
+    {
+      "symbol": "HCLTECH",
+      "id": 16,
+      "fiscal_label": "Q2 FY25",
+      "sha256": "71224b7434f74146bdaba507e0b132320d2882dfa13d04360c9dcf6866ca9b21",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2024-10/HCLTech-Earnings-Oct14-2024-Transcript.pdf",
+      "chunks": 58,
+      "numbers": 119
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 17,
+      "fiscal_label": "Q3 FY25",
+      "sha256": "16f553f858939fecca8241351da9bee2ab148503c326f5b84fc41fcb9d97000e",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-01/HCLTech-Earnings-Jan13-2025_1.pdf",
+      "chunks": 69,
+      "numbers": 136
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 18,
+      "fiscal_label": "Q4 FY25",
+      "sha256": "3bb4f40c458b379aae0bece6779f4811fed9ad1444b802a91192b5050421755c",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-04/HCLTech-Earnings-Q4FY25-Transcript.pdf",
+      "chunks": 66,
+      "numbers": 137
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 19,
+      "fiscal_label": "Q1 FY26",
+      "sha256": "e103776bf4b01a50b18b4813c778fea9084629051a92057c20c3db3dd9c6e549",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-07/HCLTech-Earnings-Q1FY26-Transcript-18.pdf",
+      "chunks": 58,
+      "numbers": 136
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 20,
+      "fiscal_label": "Q2 FY26",
+      "sha256": "13013ef0fc10f0c88b76308505977a5e72c84fefc0b091b21ff62237c480d0e0",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-11/HCLTech-Earnings-Q2FY26-transcript-updated.pdf",
+      "chunks": 58,
+      "numbers": 149
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 21,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "12133f41dffa60ce6843b30ffe36764b452dc82defa9a158693ac2e2d920744e",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-01/HCLTech-Earnings-Q3-FY26-Transcript.pdf",
+      "chunks": 52,
+      "numbers": 170
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 22,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+      "chunks": 44,
+      "numbers": 199
+    },
+    {
+      "symbol": "HCLTECH",
+      "id": 23,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a",
+      "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+      "chunks": 50,
+      "numbers": 147
+    },
+    {
+      "symbol": "HDFCBANK",
+      "id": 32,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "f2a0b862e5cc9a7af11fd0ac32d3048cce16861519a6f5fcb8b0d568934c11c6",
+      "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/HDFCBank-Analyst-Apr18-2026-vF.pdf",
+      "chunks": 61,
+      "numbers": 183
+    },
+    {
+      "symbol": "HDFCBANK",
+      "id": 3,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "80be1ce802f42d260337c8620cb43451bdc6b118b7144fdf1d1b60bc4b9d2c04",
+      "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/hdfc-bank-earnings-jul18-2026.pdf",
+      "chunks": 62,
+      "numbers": 123
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 38,
+      "fiscal_label": "Q2 FY25",
+      "sha256": "062f95b007b2d6e969e198294879f9dac4c4b687ed37a87293637c077c759907",
+      "source_url": "https://www.hul.co.in/files/sq24-earnings-call-transcript.pdf",
+      "chunks": 88,
+      "numbers": 188
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 39,
+      "fiscal_label": "Q3 FY25",
+      "sha256": "e5aa8143d2ac7a227339d6f8289591e76dd8e4a53a194dfedcce6e92c5b54f0a",
+      "source_url": "https://www.hul.co.in/files/dq24-earnings-call-transcript.pdf",
+      "chunks": 86,
+      "numbers": 184
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 40,
+      "fiscal_label": "Q4 FY25",
+      "sha256": "26805403986d801260e9535b00d85531c04f5860e25f2f33af92edd8c127a8a3",
+      "source_url": "https://www.hul.co.in/files/mq25-earnings-call-transcript.pdf",
+      "chunks": 74,
+      "numbers": 188
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 41,
+      "fiscal_label": "Q1 FY26",
+      "sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2",
+      "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+      "chunks": 94,
+      "numbers": 149
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 42,
+      "fiscal_label": "Q2 FY26",
+      "sha256": "c56c54c8a197ec8ec5196c5f9fc8bde151c9d6f9411c9222f593c2586e43c8ea",
+      "source_url": "https://www.hul.co.in/files/sq25-earnings-call-transcript.pdf",
+      "chunks": 92,
+      "numbers": 159
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 43,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d",
+      "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+      "chunks": 97,
+      "numbers": 118
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 44,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818",
+      "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+      "chunks": 92,
+      "numbers": 108
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "id": 4,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "a4bf4c1a02598e332f742c62370f3b1de6206accab0570a8c59fdffd249e113b",
+      "source_url": "https://www.hul.co.in/files/jq26-earnings-call-transcript.pdf",
+      "chunks": 72,
+      "numbers": 72
+    },
+    {
+      "symbol": "ICICIBANK",
+      "id": 33,
+      "fiscal_label": "Q2 FY25",
+      "sha256": "389e4820fb8c2534642aa87aaf26f73bd786f4508ce81bd33b8b2da8ca599f2c",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2024/transcript-for-analyst-call-held-on-october-26-2024.pdf",
+      "chunks": 56,
+      "numbers": 256
+    },
+    {
+      "symbol": "ICICIBANK",
+      "id": 34,
+      "fiscal_label": "Q3 FY25",
+      "sha256": "20af1073da46bfe0ef97dc193b1ac1707243d39444519de6443c330f272bf511",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2025/2025-01-q3-2025-transcript-for-earnings-call-held-on-january-25-2025.pdf",
+      "chunks": 54,
+      "numbers": 237
+    },
+    {
+      "symbol": "ICICIBANK",
+      "id": 35,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "35254653ec3034782f0b7c1338da088bb2788b6b5f580d3dafd5f2a0b604e024",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-earnings-call-jan2026.pdf",
+      "chunks": 62,
+      "numbers": 210
+    },
+    {
+      "symbol": "ICICIBANK",
+      "id": 36,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "d81107decd1358c6cf89aa383cfe07566036dc0ad50436aa90c3d6b8a8562b68",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-for-earnings-call-held-on-april-18-2026.pdf",
+      "chunks": 73,
+      "numbers": 217
+    },
+    {
+      "symbol": "ICICIBANK",
+      "id": 37,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "60c104428aff18c78b697c82a173b7c8ac04b6c1b5e117feb828875041f74513",
+      "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2027/transcript-for-earnings-call-held-on-july-18-2026.pdf",
+      "chunks": 59,
+      "numbers": 205
+    },
+    {
+      "symbol": "INFY",
+      "id": 2,
+      "fiscal_label": "Q2 FY25",
+      "sha256": "0c28ccd21308f114b0b6f14e7ce72af192e3f9fcbc5b0706b10071d62ce14a00",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf",
+      "chunks": 84,
+      "numbers": 99
+    },
+    {
+      "symbol": "INFY",
+      "id": 8,
+      "fiscal_label": "Q2 FY26",
+      "sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
+      "chunks": 60,
+      "numbers": 134
+    },
+    {
+      "symbol": "INFY",
+      "id": 13,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "9bec5292e3d485b4e5efc64a61af99f37be7c1b8eadac3d2377097882e7ea220",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q3/documents/transcripts/earningscall.pdf",
+      "chunks": 64,
+      "numbers": 117
+    },
+    {
+      "symbol": "INFY",
+      "id": 14,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+      "chunks": 62,
+      "numbers": 155
+    },
+    {
+      "symbol": "INFY",
+      "id": 15,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "a7be1c05b4f54dfa0cde220806c44cf867024f461d9bf20d829bf6d98e7cdf78",
+      "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2026-2027/q1/documents/transcripts/earningscall.pdf",
+      "chunks": 65,
+      "numbers": 155
+    },
+    {
+      "symbol": "TCS",
+      "id": 5,
+      "fiscal_label": "Q2 FY26",
+      "sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34",
+      "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
+      "chunks": 95,
+      "numbers": 101
+    },
+    {
+      "symbol": "TCS",
+      "id": 6,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441",
+      "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+      "chunks": 63,
+      "numbers": 124
+    },
+    {
+      "symbol": "TCS",
+      "id": 7,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b",
+      "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+      "chunks": 76,
+      "numbers": 120
+    },
+    {
+      "symbol": "TCS",
+      "id": 1,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+      "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+      "chunks": 69,
+      "numbers": 74
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 24,
+      "fiscal_label": "Q2 FY25",
+      "sha256": "eb0b4d980eac345313b6bec7e1009cecf99f2736b4538857345b812a3f662ffd",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q2fy25/q2fy25-earnings-transcript.pdf",
+      "chunks": 70,
+      "numbers": 97
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 25,
+      "fiscal_label": "Q3 FY25",
+      "sha256": "0080318c1b6f3da4bfaeab1e900c89919438cc75c92e8cfc3cb67bf86e070231",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q3fy25/q3fy25-earnings-transcript.pdf",
+      "chunks": 46,
+      "numbers": 101
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 26,
+      "fiscal_label": "Q4 FY25",
+      "sha256": "7aec97f06177699a9136fe3a9f4d0e67c68d40c0b1952bee18beb426b18bad29",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q4fy25/q4fy25-earnings-transcript.pdf",
+      "chunks": 58,
+      "numbers": 123
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 27,
+      "fiscal_label": "Q1 FY26",
+      "sha256": "e8a7bd9125bec621e531d8c0fcabfc18b602e6579681387e51389d264ff64c10",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q1fy26/q1fy26-earnings-transcript.pdf",
+      "chunks": 77,
+      "numbers": 118
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 28,
+      "fiscal_label": "Q2 FY26",
+      "sha256": "8f7be59ebd5db24cbf7bcd5e821da36a00ed573a39c2eba6b3034668169f9dea",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q2fy26/q2fy26-earnings-transcript.pdf",
+      "chunks": 62,
+      "numbers": 102
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 29,
+      "fiscal_label": "Q3 FY26",
+      "sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+      "chunks": 62,
+      "numbers": 95
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 30,
+      "fiscal_label": "Q4 FY26",
+      "sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+      "chunks": 58,
+      "numbers": 104
+    },
+    {
+      "symbol": "WIPRO",
+      "id": 31,
+      "fiscal_label": "Q1 FY27",
+      "sha256": "210ab9bb949be932fcb5f6b26a2978f0c72ea30bcaa8899a89e6271036245ec8",
+      "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf",
+      "chunks": 52,
+      "numbers": 67
+    }
+  ]
+}

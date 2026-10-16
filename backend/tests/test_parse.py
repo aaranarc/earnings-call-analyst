@@ -126,3 +126,15 @@ def test_real_transcript(name, management):
     assert sections[0] == "prepared" and sections[-1] == "qa" and sorted(sections) == sections  # prepared, then qa
     text = " ".join(t.text for t in turns)
     assert not any(bad in text for bad in ("(cid:", "Ư", "ﬁ", "forward-looking", "Page 2 of"))
+def test_opening_remark_headings_split_bank_management_without_inventing_cost_speaker():
+    from ingest.parse import segment
+    turns = segment([(1, 'ICICI Bank Limited earnings call'),
+                     (2, 'Mr. Bakhshi’s opening remarks'),
+                     (2, 'Thank you. Profit grew this quarter.'),
+                     (4, 'Anindya’s opening remarks'),
+                     (4, 'Net interest margin was 4.1% this quarter.'),
+                     (5, 'On Costs: Operating expenses increased.'),
+                     (7, 'Moderator: We will now take the first question.')])
+    prepared = [t for t in turns if t.role == 'management' and t.section == 'prepared']
+    assert [t.speaker for t in prepared] == ['Bakhshi', 'Anindya']
+    assert 'On Costs' in prepared[1].text and prepared[1].page_at(0) == 4
