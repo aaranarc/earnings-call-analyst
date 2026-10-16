@@ -51,7 +51,7 @@ metadata is used only for checking results, never as a retrieval filter.
 
 Unanswerable questions are excluded from the three evidence-metric denominators; these metrics are `null` if
 there are no answerable questions. Retrieving no chunks does not establish correct refusal: the generation
-and refusal evaluation still needs to be built.
+and refusal evaluation uses the separate generation runner described below.
 
 For comparisons, this runner uses a single global ranking across the routed companies. Production answers still
 retrieve separately per company to prevent crowding. These results measure global retrieval, not production

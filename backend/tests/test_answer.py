@@ -140,3 +140,22 @@ def test_incomplete_requested_coverage_refuses_before_retrieval(wired, monkeypat
     assert out["refused"]
     assert "coverage is incomplete" in out["refusal_reason"]
     assert llm.calls == []
+
+
+@pytest.mark.parametrize("question", [
+    "Which bank had the best CASA ratio?", "How is the IT services sector doing on pricing?",
+])
+def test_incomplete_sector_is_not_presented_as_complete_market(wired, monkeypatch, question):
+    monkeypatch.setattr(ga, "retrieve", lambda *a, **k: pytest.fail("incomplete sector must not retrieve"))
+    llm = FakeLLM(None)
+    out = run(question, llm)
+    assert out["refused"] and "coverage is incomplete" in out["refusal_reason"]
+    assert llm.calls == []
+
+
+def test_latest_single_company_uses_available_historical_quarter(wired, monkeypatch):
+    calls = []
+    monkeypatch.setattr(ga, "retrieve", lambda *a, **kw: calls.append(a) or [])
+    out = run("Infosys margins this quarter", FakeLLM(None))
+    assert calls[0][4] == ["Q2 FY25"]
+    assert out["route"]["periods"] == ["Q2 FY25"]

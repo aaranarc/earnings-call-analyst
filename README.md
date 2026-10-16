@@ -74,7 +74,7 @@ the file it comes from.
 | Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | v1 for comparison, **macOS** | peak **171.8 MB** without reranker; **511.7–691.7 MB** with its PyTorch reranker (5 runs) | v1 effectively indexed one real transcript | [`v1_baseline.json`](eval/results/v1_baseline.json) |
-| Router accuracy | **17/20** fully correct (companies 18/20, periods 19/20, intent 18/20) | 20 hand-labelled queries incl. known gaps | [`router_report.json`](eval/results/router_report.json) |
+| Router accuracy, original development run | **17/20** fully correct (companies 18/20, periods 19/20, intent 18/20) | Historical result before sector/latest-quarter fixes; the inspected queries now serve as regressions, not a held-out benchmark | [`router_report.json`](eval/results/router_report.json) |
 | Answers with valid citations | **10/10** answerable · **3/3** unanswerable refused · **1/1** out of scope refused | automated checks; faithfulness not judged yet | [`phase4_check.json`](eval/results/phase4_check.json) |
 | CI | [![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) | Test counts and coverage are reported by GitHub Actions | [Latest Actions run on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) |
 | Number checker precision / recall | **TBD**: 120 numbers are waiting for blind human labels | | (`eval/results/numcheck_*.json` once labelled) |
@@ -91,7 +91,9 @@ the file it comes from.
 - **Known failures, kept for the eval report:** the comparison above labels TCS's *total* TCV as "Large Deal TCV"
   (the number itself is right); "What was TCS's cash conversion as a share of net income?" is refused although the
   transcript says 93%; a long multi-topic CFO turn is never retrieved for palm-oil questions (D24).
-- **Router gaps:** sector questions ("which bank…") and "this quarter" aren't understood (D30).
+- **Sector and relative-period limits:** bank / IT-services / consumer questions now select configured peers;
+  an incomplete sector refuses before retrieval. "This/latest quarter" means the latest ingested quarter,
+  not the current calendar quarter. Explicit fiscal periods take precedence over relative wording.
 - **Memory figures are from macOS** and vary by up to ~140 MB between identical runs. Cloud Run (Linux) needs its own measurement.
 - **[Public dashboard available](https://quantrag.vercel.app)** on free hosting; the API sleeps when idle. There is no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
   still in the repo pending removal.

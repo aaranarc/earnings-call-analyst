@@ -283,3 +283,8 @@ None yet.
 - Accept Render idle sleep. Serve committed coverage/eval snapshots in Next without waiting for the API; warm health silently and show progress/retry for live queries.
 - Keep the same server-only token in Vercel and Render; frontend PUBLIC_ORIGIN is the canonical https://quantrag.vercel.app. No paid service was provisioned.
 - Vercel source-files deployment avoids requiring an unconfigured GitHub integration. Auto-deploy is not claimed; future code releases need an explicit deployment until integration is connected.
+
+## D40 · 2026-10-16 · Conservative sector routing and relative periods
+- Expand rule-based routing for bank/banking, IT-services/company and FMCG/consumer questions only when no known company is explicitly named. Select all configured peers; retain strict coverage refusal before retrieval when any peer lacks the requested transcript. This prevents incomplete coverage from being presented as a sector-wide ranking.
+- Interpret this/latest/most-recent quarter as latest ingested per company, never the current calendar quarter. Explicit fiscal periods take precedence over relative language. Preserve the existing union-of-periods semantics: a comparison with different company latest quarters can still conservatively refuse for incomplete common coverage.
+- Keep original development results immutable. Fixes were informed by the development queries, so passing those queries is regression evidence rather than a held-out benchmark.
