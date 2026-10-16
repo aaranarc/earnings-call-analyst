@@ -112,7 +112,7 @@ export default function Landing() {
               Target,
               "A quarter in context.",
               "Track margin changes. Open the source. Keep the evidence.",
-              "Open the watchlist",
+              "Explore QuarterLens",
               "/watchlist",
             ],
             [
