@@ -3,10 +3,11 @@
 ## Current release status · 2026-10-16
 - Core ingestion, retrieval, cited answers, number checking, API, dashboard and research storage are implemented.
 - Verified corpus: **40 official transcripts across 7 Indian companies**, plus 2 separately registered HDFC results releases. Latest-four coverage is 25/48; full planned window is 40/96. Remaining coverage is not complete.
-- Growth Payoff release candidate: 4 reviewed investment projects, 9 sourced milestones, operational progress chart and a 3/5-year assumption explorer. It does not claim a validated company forecast or automatic coverage of all projects.
+- Growth Payoff is deployed: 4 reviewed investment projects, 9 sourced milestones, operational progress chart and a 3/5-year assumption explorer. It does not claim a validated company forecast or automatic coverage of all projects.
 - QuarterLens and Follow-through retain source quotes, reporting bases, missing-period handling and unresolved evidence saving.
 - Phase 6 evaluation tooling is implemented. Human-reviewed gold questions, blind number labels, judge calibration and published benchmark scores remain pending. The owner deferred the 120 labels and Nestlé count.
-- Free Vercel + Render hosting exists. Growth Payoff publication is pending the current release; hosted versions must be verified after deployment.
+- Published on existing free [Vercel frontend](https://quantrag.vercel.app/growth-payoff) and [Render API](https://quantrag-api.onrender.com/health), from release commit `1dac325`. [Main CI](https://github.com/aaranarc/earnings-call-analyst/actions/runs/38924279612) passed. Verified the live source drawer, scenario controls, 375px layout, expanded corpus snapshot, API health and out-of-scope refusal.
+- Release smoke-test limitation: cited-answer generation reached Gemini but the provider returned HTTP 503 UNAVAILABLE (high demand). A successful live generated answer was not verified in this release check; retry when provider availability recovers. Dashboard evidence and scenarios remain available independently.
 - Bankruptcy/EWS integration and Telegram are outside the current release scope. No new paid hosting is authorized.
 - The chronological phase notes below are historical development records, not the current completion checklist.
 
