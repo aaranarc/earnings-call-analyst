@@ -19,15 +19,30 @@ test('company watchlist preserves favourites and opens literal evidence',async({
  await expect(page.locator('.thesis-card').filter({hasText:'Margin down'})).toBeVisible();
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('quantrag.theses.v2')!)[0].status)).toBe('Unresolved');
 });
-test('missing quarters stay blank, single-call companies have no fabricated metric',async({page})=>{
+test('missing quarters stay blank and bank results keep their denominator',async({page})=>{
  await page.goto('/watchlist');
  await page.locator('.company-select').filter({hasText:'Infosys'}).click();
- await expect(page.getByLabel('Q3 FY25: no observation')).toBeVisible();
+ await expect(page.getByLabel('Q3 FY25: no transcript')).toBeVisible();
  await expect(page.getByText('Quarter gaps in the chart.',{exact:false})).toBeVisible();
  await page.locator('.company-select').filter({hasText:'HDFC Bank'}).click();
- await expect(page.getByRole('heading',{name:'No margin series available'})).toBeVisible();
- await expect(page.locator('.margin-bar')).toHaveCount(0);
- await expect(page.getByText('No quarterly signal',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Net interest margin',exact:true})).toBeVisible();
+ await expect(page.locator('.monitor-metric')).toContainText('3.26%');
+ await expect(page.locator('.monitor-metric')).toContainText('On total assets');
+ await page.getByRole('button',{name:'Open HDFCBANK Q1 FY27 net interest margin 3.26%'}).click();
+ await expect(page.getByRole('dialog')).toContainText('3.40% based on interest earning assets');
+ await expect(page.getByRole('dialog')).toContainText('Original issuer financial result');
+});
+
+test('all covered quarters remain selectable and a reported range has no invented point',async({page})=>{
+ await page.goto('/watchlist');
+ await page.locator('.company-select').filter({hasText:'Wipro'}).click();
+ await expect(page.getByLabel('Result quarter').locator('option')).toHaveCount(8);
+ await page.locator('.company-select').filter({hasText:'Hindustan Unilever'}).click();
+ await page.getByLabel('Result quarter').selectOption('Q3 FY25');
+ await expect(page.locator('.monitor-metric')).toContainText('23–24%');
+ await expect(page.locator('.monitor-metric')).toContainText('no midpoint estimated');
+ await page.getByRole('button',{name:'Open Q3 FY25 reported range 23% to 24%'}).click();
+ await expect(page.getByRole('dialog')).toContainText('healthy range of 23% to 24%');
 });
 test('corrupt favourites never overwrite existing saved data',async({page})=>{
  await page.addInitScript(()=>localStorage.setItem('quantrag.favourites.v1','corrupt-recoverable-data'));
@@ -56,7 +71,7 @@ test('follow-through links sourced statements without declaring a fulfilled prom
  await expect(feature).toContainText('-50 bps');
  await expect(feature).toContainText('not the net margin change');
  await page.locator('.company-select').filter({hasText:'Infosys'}).click();
- await expect(feature).toContainText('No linked announcement and outcome');
+ await expect(page.locator('.follow-unavailable')).toContainText('No linked announcement and outcome');
  await page.getByRole('link',{name:'Saved research',exact:true}).first().click();
  await expect(page.locator('.thesis-card').filter({hasText:'Follow-through: Salary increases'})).toBeVisible();
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('quantrag.theses.v2')!)[0]);

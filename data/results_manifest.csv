@@ -1,0 +1,3 @@
+symbol,fiscal_label,period_end,call_date,source_url,filename,sha256
+HDFCBANK,Q4 FY26,2026-03-31,2026-04-18,https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/press-release-march-2026.pdf,results/HDFCBANK_Q4FY26.pdf,a410875269daf0ce6f9a385dd8fad988c2e131c9375d4724f9c9fbab5dafed3e
+HDFCBANK,Q1 FY27,2026-06-30,2026-07-18,https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/press-release-june-2026.pdf,results/HDFCBANK_Q1FY27.pdf,3f8acd5bf3bfe250a472c6fcdd5d040a62bf002ff19bc9b01d6a900c4d22de23

@@ -6,6 +6,7 @@ import type { FollowThrough, MonitoredCompany } from '@/lib/monitor';
 export default function FollowThroughPanel({company,onOpen}:{company:MonitoredCompany;onOpen:(trail:FollowThrough)=>void}) {
   const trails=company.follow_through||[],[selected,setSelected]=useState('');
   const trail=trails.find(t=>t.id===selected)||trails[trails.length-1];
+  if(!trail)return <details className="follow-unavailable"><summary>Follow-through · No linked evidence</summary><p>No linked announcement and outcome in the covered calls. The current pilot matches salary-increase statements in consecutive quarters.</p></details>;
   return <section className="visual-panel follow-through" aria-label="Follow-through">
     <div className="section-head"><div><span className="follow-label"><GitCompareArrows size={15}/> FOLLOW-THROUGH</span><h2>What followed the announcement?</h2></div><span className="panel-tag">{company.symbol}</span></div>
     {!trail?<div className="follow-empty"><ScanLine size={22}/><p>No linked announcement and outcome in the covered calls.</p><span>Current matching covers salary increases in consecutive quarters.</span></div>:<>

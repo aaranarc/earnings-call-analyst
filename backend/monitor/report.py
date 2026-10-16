@@ -10,11 +10,13 @@ from datetime import date
 from decimal import Decimal
 from itertools import pairwise
 
+from monitor.results import percent_series_fact, quarterly_results
+
 MARGIN = re.compile(r"\b(?:our\s+)?(?:Q[1-4]\s+)?operating margins?\b([^.!?%]{0,100}?)"
                     r"(?P<value>-?\d+(?:\.\d+)?)(?P<spacing>\s*)%", re.IGNORECASE)
 GUIDANCE = re.compile(r"guidance|target|ambition|expect|outlook|aim|range", re.IGNORECASE)
 ANNUAL = re.compile(r"(?:for\s+FY\s*\d{2,4}|for the year|full.year|fiscal year)", re.IGNORECASE)
-QUARTER = re.compile(r"\bQ[1-4]\b|\bquarter\b|sequential", re.IGNORECASE)
+QUARTER = re.compile(r"\bQ[1-4]\b|\bquarter\b|sequential|\bQoQ\b", re.IGNORECASE)
 MOVE = re.compile(r"\b(?P<direction>down|declin\w*|decreas\w*|up|increas\w*|improv\w*|expand\w*)"
                   r"(?:\s+of|\s+by)?\s+(?P<amount>\d+(?:\.\d+)?)\s*(?:bps|basis points)", re.IGNORECASE)
 
@@ -44,14 +46,20 @@ def margin_fact(turns, row):
         if turn.role != 'management' or turn.section != 'prepared':
             continue
         for match in MARGIN.finditer(turn.text):
-            nearby = turn.text[max(0, match.start()-70):match.end()]
             left, quote = excerpt(turn.text, match.start(), match.end())
+            nearby = turn.text[left:match.end()]  # Bind guidance/period checks to this sentence, not the previous one.
             sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z])', quote)
             # Retain a following accounting exclusion, not an unrelated business update.
             if len(sentences) > 1 and not re.search(r'exclud|one.off|severance', sentences[1], re.IGNORECASE):
                 quote = sentences[0]
             bridge = match.group(1)
-            if GUIDANCE.search(nearby) or ANNUAL.search(nearby) or not QUARTER.search(nearby + quote):
+            if re.match(r'\s*(?:expansion|contraction|improvement|decline|increase|decrease)\b', bridge, re.IGNORECASE):
+                continue  # "Operating margin expansion to 0.9%" describes a change, not a margin level.
+            if re.search(r'(?:increas|decreas|declin|expand|improv|contract)\w*\s+by\s*$', bridge, re.IGNORECASE):
+                continue  # "Margins declined by 0.3% to 20.9%": 0.3% is a change, not the level.
+            context = turn.text[max(0, left-300):left]
+            in_quarter = QUARTER.search(nearby + quote) or (QUARTER.search(context) and not ANNUAL.search(context))
+            if GUIDANCE.search(nearby) or ANNUAL.search(nearby) or not in_quarter:
                 continue
             # A percentage attributed to another named quarter is not this document's quarter.
             quarters = re.findall(r'\bQ([1-4])\b', nearby, re.IGNORECASE)
@@ -65,13 +73,17 @@ def margin_fact(turns, row):
                                'speaker': turn.speaker, 'role': turn.role, 'page': page,
                                'source_url': row['source_url'], 'source_sha256': row['sha256'],
                                'period': row['fiscal_label'], 'period_end': row['period_end']})
+    for candidate in candidates:
+        candidate['basis'] = ('Excludes one-off items' if re.search(r'exclud.{0,50}(?:one.off|severance)', candidate['quote'], re.IGNORECASE)
+                              else 'Adjusted as stated' if re.search(r'\badjusted\s+operating', candidate['quote'], re.IGNORECASE) else 'As stated in call')
+    if candidates and len({x['value'] for x in candidates}) > 1:
+        candidates = [c for c in candidates if c['basis'] == 'As stated in call']
     if not candidates or len({x['value'] for x in candidates}) != 1:
         return None  # Ambiguous figures require review, not a guessed choice.
     # Prefer the excerpt retaining explicit exclusions and the reported quarterly movement.
     candidates.sort(key=lambda c: (bool(re.search(r'exclud|one.off', c['quote'], re.IGNORECASE)),
                                    bool(MOVE.search(c['quote']))), reverse=True)
     fact = candidates[0]
-    fact['basis'] = 'Excludes one-off items' if re.search(r'exclud.{0,50}(?:one.off|severance)', fact['quote'], re.IGNORECASE) else 'As stated in call'
     fact['id'] = hashlib.sha256((row['sha256'] + fact['quote']).encode()).hexdigest()[:16]
     # Only movements in the metric's first sentence; do not borrow a currency/wage impact later on.
     first = re.split(r'(?<=[.!?])\s+(?=[A-Z])', fact['quote'])[0]
@@ -143,28 +155,38 @@ def follow_through(records, facts):
     return trails
 
 
-def company_report(company, rows_and_turns):
-    records = sorted(rows_and_turns, key=lambda x: period_key(x[0]['fiscal_label']))
-    facts = [f for row, turns in records if (f := margin_fact(turns, row))]
-    comments = [c for row, turns in records if (c := commentary(turns, row))]
-    latest_label = records[-1][0]['fiscal_label'] if records else None
+def movement_signals(facts, latest_label):
     latest = next((f for f in facts if f['period'] == latest_label), None)
     signals = []
-    if latest and latest['reported_change_bps'] is not None:
-        delta = latest['reported_change_bps']
+    prior = next((f for f in facts if latest_label and period_key(f['period']) == period_key(latest_label)-1), None)
+    reported = latest['reported_change_bps'] if latest else None
+    derived = bool(latest and prior and latest['basis'] == prior['basis'] and latest['basis'] not in ['Excludes one-off items', 'Adjusted as stated'])
+    if latest and (reported is not None or derived):
+        delta = reported if reported is not None else float((Decimal(str(latest['value'])) - Decimal(str(prior['value']))) * 100)
         direction = 'down' if delta < 0 else 'up' if delta > 0 else 'unchanged'
-        prior = next((f for f in facts if period_key(f['period']) == period_key(latest_label)-1), None)
-        signals.append({'id': latest['id'] + '-movement', 'kind': 'reported_movement',
+        signals.append({'id': latest['id'] + '-movement', 'kind': 'reported_movement' if reported is not None else 'observed_change',
                         'direction': direction, 'title': f"Margin {direction}" if delta else 'Margin unchanged',
                         'change_bps': delta, 'period': latest_label, 'current': latest, 'previous': prior,
-                        'attribution': 'Management-reported quarter-on-quarter change',
-                        'arithmetic_matches': bool(prior and prior['basis'] == latest['basis'] == 'As stated in call'
+                        'attribution': 'Management-reported quarter-on-quarter change' if reported is not None else 'Calculated from as-reported figures; review comparability',
+                        'arithmetic_matches': bool(prior and prior['basis'] == latest['basis'] and prior['basis'] not in ['Excludes one-off items', 'Adjusted as stated']
                             and abs((latest['value']-prior['value'])*100-delta) < .01)})
-    gaps = [b['period'] for a, b in pairwise(facts) if period_key(b['period'])-period_key(a['period']) != 1]
+    return signals
+
+
+def company_report(company, rows_and_turns):
+    records = sorted(rows_and_turns, key=lambda x: period_key(x[0]['fiscal_label']))
+    extractor = margin_fact if company['sector'] == 'it_services' else lambda turns, row: percent_series_fact(turns, row, company['sector'])
+    facts = [f for row, turns in records if (f := extractor(turns, row))]
+    comments = [c for row, turns in records if (c := commentary(turns, row))]
+    latest_label = records[-1][0]['fiscal_label'] if records else None
+    signals = movement_signals(facts, latest_label)
+    gaps = [b['fiscal_label'] for (a, _), (b, _) in pairwise(records)
+            if period_key(b['fiscal_label'])-period_key(a['fiscal_label']) != 1]
     return {'symbol': company['symbol'], 'name': company['name'], 'sector': company['sector'],
             'market': 'India', 'call_count': len(records), 'latest_period': latest_label,
             'facts': facts, 'commentary': comments, 'signals': signals, 'gap_before': gaps,
-            'follow_through': follow_through(records, facts)}
+            'follow_through': follow_through(records, facts), 'result_periods': quarterly_results(company, records),
+            'metric_label': {'consumer': 'EBITDA margin', 'private_bank': 'Net interest margin'}.get(company['sector'], 'Operating margin')}
 
 
 def build_report(companies, manifest, load_turns, as_of=None):
@@ -174,6 +196,6 @@ def build_report(companies, manifest, load_turns, as_of=None):
         if rows:
             reports.append(company_report(company, [(r, load_turns(r)) for r in rows]))
     return {'version': 1, 'as_of': as_of or date.today().isoformat(), 'corpus_hash': corpus_hash(manifest),
-            'method': 'Rule-based extraction from management prepared remarks; source matches are not semantic verification.',
+            'method': 'Source-matched quarterly figures; company-reported and calculated movements are distinct. No semantic or causal verification.',
             'update_policy': 'Snapshot rebuilt after transcript ingestion; no continuous monitoring or price feed.',
             'companies': reports}

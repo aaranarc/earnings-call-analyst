@@ -1,8 +1,8 @@
 {
   "version": 1,
   "as_of": "2026-10-16",
-  "corpus_hash": "7dd377b583609b968b07cbb0b7eb964c29cd89c042c01ec60505434e51928aef",
-  "method": "Rule-based extraction from management prepared remarks; source matches are not semantic verification.",
+  "corpus_hash": "c66dd36a3e86931a9b430afa7297d1951c9e4cba3e85490b7c2b55e261275143",
+  "method": "Source-matched quarterly figures; company-reported and calculated movements are distinct. No semantic or causal verification.",
   "update_policy": "Snapshot rebuilt after transcript ingestion; no continuous monitoring or price feed.",
   "companies": [
     {
@@ -246,15 +246,50 @@
           "outcome_label": "Completion reported",
           "verdict": "Needs review"
         }
-      ]
+      ],
+      "result_periods": [
+        {
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "call_date": "2025-10-09",
+          "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
+          "source_sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-01-12",
+          "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+          "source_sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-09",
+          "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+          "source_sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-09",
+          "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+          "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Operating margin"
     },
     {
       "symbol": "INFY",
       "name": "Infosys",
       "sector": "it_services",
       "market": "India",
-      "call_count": 2,
-      "latest_period": "Q2 FY26",
+      "call_count": 5,
+      "latest_period": "Q1 FY27",
       "facts": [
         {
           "value": 21.1,
@@ -285,6 +320,51 @@
           "basis": "As stated in call",
           "id": "ac39e48db0b41f33",
           "reported_change_bps": 20.0
+        },
+        {
+          "value": 18.4,
+          "raw": "18.4%",
+          "quote": "Operating margins including the impact of change in labor codes stands at 18.4%, adjusting for the same, it is at 21.2%.",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 4,
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q3/documents/transcripts/earningscall.pdf",
+          "source_sha256": "9bec5292e3d485b4e5efc64a61af99f37be7c1b8eadac3d2377097882e7ea220",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "basis": "As stated in call",
+          "id": "504ac81ac7af7308",
+          "reported_change_bps": null
+        },
+        {
+          "value": 20.9,
+          "raw": "20.9%",
+          "quote": "Q4 operating margins stood at 20.9%, down 0.3% sequentially, adjusted for the Labor Code impact in Q3. 8.",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 4,
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+          "source_sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "As stated in call",
+          "id": "204fde67c361e594",
+          "reported_change_bps": null
+        },
+        {
+          "value": 21.1,
+          "raw": "21.1%",
+          "quote": "Operating margin improved by 20 bps sequentially to 21.1%.",
+          "speaker": "Jayesh Sanghrajka",
+          "role": "management",
+          "page": 6,
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2026-2027/q1/documents/transcripts/earningscall.pdf",
+          "source_sha256": "a7be1c05b4f54dfa0cde220806c44cf867024f461d9bf20d829bf6d98e7cdf78",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "As stated in call",
+          "id": "d20f532a1e6dc6e4",
+          "reported_change_bps": 20.0
         }
       ],
       "commentary": [
@@ -295,66 +375,1140 @@
           "page": 4,
           "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
           "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece"
+        },
+        {
+          "period": "Q4 FY26",
+          "quote": "Major components of the changes are as below Headwinds of - 50 basis points impact from past acquisition on account of additional amortization of intangibles, - 30 basis points from normalization of last quarter's one-off gain, - 20 basis points from compensation-related costs offset by lower variable pay This is partially offset by tailwinds of - 40 basis points from currency and - 30 basis points from Maximus comprising of value-based selling, lean and automation and critical portfolio Q4 yield on cash and investments balance was at 6.2% and 6.7% for the year. ROE stood at 31.6%.",
+          "speaker": "Jayesh Sanghrajka",
+          "page": 5,
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+          "source_sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781"
         }
       ],
       "signals": [
         {
-          "id": "ac39e48db0b41f33-movement",
+          "id": "d20f532a1e6dc6e4-movement",
           "kind": "reported_movement",
           "direction": "up",
           "title": "Margin up",
           "change_bps": 20.0,
-          "period": "Q2 FY26",
+          "period": "Q1 FY27",
           "current": {
-            "value": 21.0,
-            "raw": "21%",
-            "quote": "Operating margin expanded by 20 bps sequentially to 21%.",
+            "value": 21.1,
+            "raw": "21.1%",
+            "quote": "Operating margin improved by 20 bps sequentially to 21.1%.",
+            "speaker": "Jayesh Sanghrajka",
+            "role": "management",
+            "page": 6,
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2026-2027/q1/documents/transcripts/earningscall.pdf",
+            "source_sha256": "a7be1c05b4f54dfa0cde220806c44cf867024f461d9bf20d829bf6d98e7cdf78",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "As stated in call",
+            "id": "d20f532a1e6dc6e4",
+            "reported_change_bps": 20.0
+          },
+          "previous": {
+            "value": 20.9,
+            "raw": "20.9%",
+            "quote": "Q4 operating margins stood at 20.9%, down 0.3% sequentially, adjusted for the Labor Code impact in Q3. 8.",
             "speaker": "Jayesh Sanghrajka",
             "role": "management",
             "page": 4,
-            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
-            "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
-            "period": "Q2 FY26",
-            "period_end": "2025-09-30",
+            "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+            "source_sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
             "basis": "As stated in call",
-            "id": "ac39e48db0b41f33",
-            "reported_change_bps": 20.0
+            "id": "204fde67c361e594",
+            "reported_change_bps": null
           },
-          "previous": null,
           "attribution": "Management-reported quarter-on-quarter change",
-          "arithmetic_matches": false
+          "arithmetic_matches": true
         }
       ],
       "gap_before": [
         "Q2 FY26"
       ],
-      "follow_through": []
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "call_date": "2024-10-17",
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2024-2025/q2/documents/transcripts/earningscall.pdf",
+          "source_sha256": "0c28ccd21308f114b0b6f14e7ce72af192e3f9fcbc5b0706b10071d62ce14a00",
+          "reported_range": null
+        },
+        {
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "call_date": "2025-10-16",
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q2/documents/transcripts/earningscall.pdf",
+          "source_sha256": "ab1e02772c11829639ab636e9eed8294db740861ff3a4ca002c7ef91b5891ece",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-01-14",
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q3/documents/transcripts/earningscall.pdf",
+          "source_sha256": "9bec5292e3d485b4e5efc64a61af99f37be7c1b8eadac3d2377097882e7ea220",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-23",
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2025-2026/q4/documents/transcripts/earningscall.pdf",
+          "source_sha256": "94a66c0c1fb837fbf7c90cb3c126c72f1598139f62a278bf875a744f1e158781",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-23",
+          "source_url": "https://www.infosys.com/investors/reports-filings/quarterly-results/2026-2027/q1/documents/transcripts/earningscall.pdf",
+          "source_sha256": "a7be1c05b4f54dfa0cde220806c44cf867024f461d9bf20d829bf6d98e7cdf78",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Operating margin"
+    },
+    {
+      "symbol": "HCLTECH",
+      "name": "HCL Technologies",
+      "sector": "it_services",
+      "market": "India",
+      "call_count": 8,
+      "latest_period": "Q1 FY27",
+      "facts": [
+        {
+          "value": 18.6,
+          "raw": "18.6%",
+          "quote": "Our operating margin stood at 18.6%, an increase of 149 basis points compared to the last quarter.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2024-10/HCLTech-Earnings-Oct14-2024-Transcript.pdf",
+          "source_sha256": "71224b7434f74146bdaba507e0b132320d2882dfa13d04360c9dcf6866ca9b21",
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "basis": "As stated in call",
+          "id": "6ee7e8258cd3ddd8",
+          "reported_change_bps": null
+        },
+        {
+          "value": 19.5,
+          "raw": "19.5%",
+          "quote": "Our operating margin stood at 19.5%.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-01/HCLTech-Earnings-Jan13-2025_1.pdf",
+          "source_sha256": "16f553f858939fecca8241351da9bee2ab148503c326f5b84fc41fcb9d97000e",
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "basis": "As stated in call",
+          "id": "ffee36fcaedafc94",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.9,
+          "raw": "17.9%",
+          "quote": "Our operating margin for the quarter stood at 17.9%.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-04/HCLTech-Earnings-Q4FY25-Transcript.pdf",
+          "source_sha256": "3bb4f40c458b379aae0bece6779f4811fed9ad1444b802a91192b5050421755c",
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "basis": "As stated in call",
+          "id": "75da1fd2e8246d94",
+          "reported_change_bps": null
+        },
+        {
+          "value": 16.3,
+          "raw": "16.3%",
+          "quote": "Our operating margin came in at 16.3% and was lower than our plan.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-07/HCLTech-Earnings-Q1FY26-Transcript-18.pdf",
+          "source_sha256": "e103776bf4b01a50b18b4813c778fea9084629051a92057c20c3db3dd9c6e549",
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "basis": "As stated in call",
+          "id": "0db61b81dedb0ba3",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.5,
+          "raw": "17.5%",
+          "quote": "Our operating margins came at 17.5%, an increase of 116 basis points sequentially.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-11/HCLTech-Earnings-Q2FY26-transcript-updated.pdf",
+          "source_sha256": "13013ef0fc10f0c88b76308505977a5e72c84fefc0b091b21ff62237c480d0e0",
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "basis": "As stated in call",
+          "id": "0ffa186a6601dc3f",
+          "reported_change_bps": 116.0
+        },
+        {
+          "value": 18.6,
+          "raw": "18.6%",
+          "quote": "Our operating margin, including restructuring costs, but excluding the onetime impact of new labour code, came at 18.6%, a 111 basis points QoQ and a decrease of 94 basis points YoY. When we exclude restructuring costs, our operating margin in Q3 is down marginally 13 basis points YoY, and we are confident of recovering that as well in the future.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-01/HCLTech-Earnings-Q3-FY26-Transcript.pdf",
+          "source_sha256": "12133f41dffa60ce6843b30ffe36764b452dc82defa9a158693ac2e2d920744e",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "basis": "As stated in call",
+          "id": "314bd35387e01aaf",
+          "reported_change_bps": -94.0
+        },
+        {
+          "value": 16.5,
+          "raw": "16.5%",
+          "quote": "Our operating margin for the quarter came at 16.5%, and it would be 17.7%, excluding restructuring costs.",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+          "source_sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "As stated in call",
+          "id": "9f7ee68deb63d0bd",
+          "reported_change_bps": null
+        },
+        {
+          "value": 16.9,
+          "raw": "16.9%",
+          "quote": "Our operating margins stood at 16.9%, an improvement of 39 basis points QoQ and an increase of 56 basis points YoY .",
+          "speaker": "C. Vijayakumar",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+          "source_sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "As stated in call",
+          "id": "8c67ef87336b7efa",
+          "reported_change_bps": 39.0
+        }
+      ],
+      "commentary": [
+        {
+          "period": "Q3 FY25",
+          "quote": "Our margin improvement plan Project Ascend gave us approximately 100 basis points in this quarter, which majorly offset the wage high impact of 80 basis points, furlough seasonality impact of 14 basis points and CTG acquisition and impact including integration expense of 20 basis points. Forex gave us 80 basis points in this quarter.",
+          "speaker": "Shiv Walia",
+          "page": 9,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-01/HCLTech-Earnings-Jan13-2025_1.pdf",
+          "source_sha256": "16f553f858939fecca8241351da9bee2ab148503c326f5b84fc41fcb9d97000e"
+        },
+        {
+          "period": "Q4 FY25",
+          "quote": "Services margin dropped by 38 basis points quarter-on-quarter due to second cycle of increments in this quarter, which had an impact of 50 basis points and Forex had a positive impact of 46 basis points. A balance drop in margins is contributed by investment in sales and marketing.",
+          "speaker": "Shiv Walia",
+          "page": 11,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-04/HCLTech-Earnings-Q4FY25-Transcript.pdf",
+          "source_sha256": "3bb4f40c458b379aae0bece6779f4811fed9ad1444b802a91192b5050421755c"
+        },
+        {
+          "period": "Q3 FY26",
+          "quote": "Wage hike impact was 80 basis points. Furlough seasonality impact was 45 basis points and forex gain from INR depreciation gave us a positive 40 basis points.",
+          "speaker": "Shiv Walia",
+          "page": 11,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-01/HCLTech-Earnings-Q3-FY26-Transcript.pdf",
+          "source_sha256": "12133f41dffa60ce6843b30ffe36764b452dc82defa9a158693ac2e2d920744e"
+        },
+        {
+          "period": "Q4 FY26",
+          "quote": "Services margins dropped by 27 basis points sequentially due to second cycle of increments in this quarter, which had an impact of 45 basis points. Restructuring expense had an incremental impact of negative 41 basis points.",
+          "speaker": "Shiv Walia",
+          "page": 13,
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+          "source_sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee"
+        }
+      ],
+      "signals": [
+        {
+          "id": "8c67ef87336b7efa-movement",
+          "kind": "reported_movement",
+          "direction": "up",
+          "title": "Margin up",
+          "change_bps": 39.0,
+          "period": "Q1 FY27",
+          "current": {
+            "value": 16.9,
+            "raw": "16.9%",
+            "quote": "Our operating margins stood at 16.9%, an improvement of 39 basis points QoQ and an increase of 56 basis points YoY .",
+            "speaker": "C. Vijayakumar",
+            "role": "management",
+            "page": 3,
+            "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+            "source_sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "As stated in call",
+            "id": "8c67ef87336b7efa",
+            "reported_change_bps": 39.0
+          },
+          "previous": {
+            "value": 16.5,
+            "raw": "16.5%",
+            "quote": "Our operating margin for the quarter came at 16.5%, and it would be 17.7%, excluding restructuring costs.",
+            "speaker": "C. Vijayakumar",
+            "role": "management",
+            "page": 3,
+            "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+            "source_sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
+            "basis": "As stated in call",
+            "id": "9f7ee68deb63d0bd",
+            "reported_change_bps": null
+          },
+          "attribution": "Management-reported quarter-on-quarter change",
+          "arithmetic_matches": false
+        }
+      ],
+      "gap_before": [],
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "call_date": "2024-10-14",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2024-10/HCLTech-Earnings-Oct14-2024-Transcript.pdf",
+          "source_sha256": "71224b7434f74146bdaba507e0b132320d2882dfa13d04360c9dcf6866ca9b21",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "call_date": "2025-01-13",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-01/HCLTech-Earnings-Jan13-2025_1.pdf",
+          "source_sha256": "16f553f858939fecca8241351da9bee2ab148503c326f5b84fc41fcb9d97000e",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "call_date": "2025-04-22",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-04/HCLTech-Earnings-Q4FY25-Transcript.pdf",
+          "source_sha256": "3bb4f40c458b379aae0bece6779f4811fed9ad1444b802a91192b5050421755c",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "call_date": "2025-07-14",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-07/HCLTech-Earnings-Q1FY26-Transcript-18.pdf",
+          "source_sha256": "e103776bf4b01a50b18b4813c778fea9084629051a92057c20c3db3dd9c6e549",
+          "reported_range": null
+        },
+        {
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "call_date": "2025-10-13",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2025-11/HCLTech-Earnings-Q2FY26-transcript-updated.pdf",
+          "source_sha256": "13013ef0fc10f0c88b76308505977a5e72c84fefc0b091b21ff62237c480d0e0",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-01-12",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-01/HCLTech-Earnings-Q3-FY26-Transcript.pdf",
+          "source_sha256": "12133f41dffa60ce6843b30ffe36764b452dc82defa9a158693ac2e2d920744e",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-21",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-04/hcltech-earnings-q4-fy26-transcript.pdf",
+          "source_sha256": "28ba859d63f83c8a62f095a02bc883cd8b0503f83a9f06eb8499ec159c7f2eee",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-13",
+          "source_url": "https://www.hcltech.com/sites/default/files/document/open/call-trans/2026-07/HCLTech-Earnings-Q1-FY27-Transcript.pdf",
+          "source_sha256": "f8f13c583a147b2ea78de60f0a6b3ac408ba7646e677fae4552036d168ca845a",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Operating margin"
+    },
+    {
+      "symbol": "WIPRO",
+      "name": "Wipro",
+      "sector": "it_services",
+      "market": "India",
+      "call_count": 8,
+      "latest_period": "Q1 FY27",
+      "facts": [
+        {
+          "value": 16.8,
+          "raw": "16.8%",
+          "quote": "Operating margins came in at 16.8%, which is an expansion of 35 basis points quarter-on-quarter and 71 basis points year-on-year.",
+          "speaker": "Srini Pallia",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q2fy25/q2fy25-earnings-transcript.pdf",
+          "source_sha256": "eb0b4d980eac345313b6bec7e1009cecf99f2736b4538857345b812a3f662ffd",
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "basis": "As stated in call",
+          "id": "4e30664acab05348",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.5,
+          "raw": "17.5%",
+          "quote": "Our operating margins came in at 17.5%, an expansion of 0.7% quarter-on-quarter and 1.5% year-on-year.",
+          "speaker": "Srini Pallia",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q3fy25/q3fy25-earnings-transcript.pdf",
+          "source_sha256": "0080318c1b6f3da4bfaeab1e900c89919438cc75c92e8cfc3cb67bf86e070231",
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "basis": "As stated in call",
+          "id": "2da80f5d59b97ca0",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.5,
+          "raw": "17.5%",
+          "quote": "Our operating margins came in at 17.5%, which is flat sequentially and 110 basis point expansion on a year-on-year basis.",
+          "speaker": "Srini Pallia",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q4fy25/q4fy25-earnings-transcript.pdf",
+          "source_sha256": "7aec97f06177699a9136fe3a9f4d0e67c68d40c0b1952bee18beb426b18bad29",
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "basis": "As stated in call",
+          "id": "82278e9aba2ca51d",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.3,
+          "raw": "17.3%",
+          "quote": "Our operating margin for Q1 was at 17.3%, an expansion of 80 basis points on a year-on-year basis.",
+          "speaker": "Aparna Iyer",
+          "role": "management",
+          "page": 5,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q1fy26/q1fy26-earnings-transcript.pdf",
+          "source_sha256": "e8a7bd9125bec621e531d8c0fcabfc18b602e6579681387e51389d264ff64c10",
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "basis": "As stated in call",
+          "id": "e0d92798c1eb640e",
+          "reported_change_bps": null
+        },
+        {
+          "value": 16.7,
+          "raw": "16.7%",
+          "quote": "Our operating margins for Q2 at 16.7% contracted 60 basis points quarter-on-quarter and 10 basis points year-on-year. Our operating margins were impacted by a one-off charge taken on account of a client bankruptcy event.",
+          "speaker": "Aparna Iyer",
+          "role": "management",
+          "page": 5,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q2fy26/q2fy26-earnings-transcript.pdf",
+          "source_sha256": "8f7be59ebd5db24cbf7bcd5e821da36a00ed573a39c2eba6b3034668169f9dea",
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "basis": "As stated in call",
+          "id": "8217d2674ad1d5e5",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.6,
+          "raw": "17.6%",
+          "quote": "Our operating margins at 17.6% expanded 0.4% over adjusted Quarter 2 margin, and 0.1% year-on-year.",
+          "speaker": "Srini Pallia",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+          "source_sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "basis": "As stated in call",
+          "id": "bf9be84e72e70cb4",
+          "reported_change_bps": null
+        },
+        {
+          "value": 17.3,
+          "raw": "17.3%",
+          "quote": "Our operating margin came in at 17.3%, a contraction of 30 basis points sequentially.",
+          "speaker": "Srini Pallia",
+          "role": "management",
+          "page": 2,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+          "source_sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "As stated in call",
+          "id": "eed12017b61a89b3",
+          "reported_change_bps": null
+        },
+        {
+          "value": 16.0,
+          "raw": "16%",
+          "quote": "Our operating margins for the quarter was 16%.",
+          "speaker": "Aparna Iyer",
+          "role": "management",
+          "page": 5,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf",
+          "source_sha256": "210ab9bb949be932fcb5f6b26a2978f0c72ea30bcaa8899a89e6271036245ec8",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "As stated in call",
+          "id": "cd2c60a294462e6d",
+          "reported_change_bps": null
+        }
+      ],
+      "commentary": [
+        {
+          "period": "Q2 FY25",
+          "quote": "This expansion in margins was achieved on the back of operational improvements and after absorbing one month of salary increments that we rolled out for our associates effective 1st September. We begin Q3 with headwinds of furlough and the incremental impact of salary increases.",
+          "speaker": "Aparna Iyer",
+          "page": 5,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q2fy25/q2fy25-earnings-transcript.pdf",
+          "source_sha256": "eb0b4d980eac345313b6bec7e1009cecf99f2736b4538857345b812a3f662ffd"
+        },
+        {
+          "period": "Q4 FY26",
+          "quote": "As we move into Q1, we will have the headwinds of two months of salary increase and a few large deals that we've won, and the volatility could be there in our quarterly performance. Having said that, our endeavour would be to maintain these margins in a narrow band in the medium term.",
+          "speaker": "Aparna Iyer",
+          "page": 4,
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+          "source_sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9"
+        }
+      ],
+      "signals": [
+        {
+          "id": "cd2c60a294462e6d-movement",
+          "kind": "observed_change",
+          "direction": "down",
+          "title": "Margin down",
+          "change_bps": -130.0,
+          "period": "Q1 FY27",
+          "current": {
+            "value": 16.0,
+            "raw": "16%",
+            "quote": "Our operating margins for the quarter was 16%.",
+            "speaker": "Aparna Iyer",
+            "role": "management",
+            "page": 5,
+            "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf",
+            "source_sha256": "210ab9bb949be932fcb5f6b26a2978f0c72ea30bcaa8899a89e6271036245ec8",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "As stated in call",
+            "id": "cd2c60a294462e6d",
+            "reported_change_bps": null
+          },
+          "previous": {
+            "value": 17.3,
+            "raw": "17.3%",
+            "quote": "Our operating margin came in at 17.3%, a contraction of 30 basis points sequentially.",
+            "speaker": "Srini Pallia",
+            "role": "management",
+            "page": 2,
+            "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+            "source_sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
+            "basis": "As stated in call",
+            "id": "eed12017b61a89b3",
+            "reported_change_bps": null
+          },
+          "attribution": "Calculated from as-reported figures; review comparability",
+          "arithmetic_matches": true
+        }
+      ],
+      "gap_before": [],
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "call_date": "2024-10-17",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q2fy25/q2fy25-earnings-transcript.pdf",
+          "source_sha256": "eb0b4d980eac345313b6bec7e1009cecf99f2736b4538857345b812a3f662ffd",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "call_date": "2025-01-17",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q3fy25/q3fy25-earnings-transcript.pdf",
+          "source_sha256": "0080318c1b6f3da4bfaeab1e900c89919438cc75c92e8cfc3cb67bf86e070231",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "call_date": "2025-04-16",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2024-2025/q4fy25/q4fy25-earnings-transcript.pdf",
+          "source_sha256": "7aec97f06177699a9136fe3a9f4d0e67c68d40c0b1952bee18beb426b18bad29",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "call_date": "2025-07-17",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q1fy26/q1fy26-earnings-transcript.pdf",
+          "source_sha256": "e8a7bd9125bec621e531d8c0fcabfc18b602e6579681387e51389d264ff64c10",
+          "reported_range": null
+        },
+        {
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "call_date": "2025-10-16",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q2fy26/q2fy26-earnings-transcript.pdf",
+          "source_sha256": "8f7be59ebd5db24cbf7bcd5e821da36a00ed573a39c2eba6b3034668169f9dea",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-01-16",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf",
+          "source_sha256": "e13fc58278da449a78cadb4d1558ec6e65af13385b9a98afdce75a87f7aba282",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-16",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q4fy26/q4fy26-earnings-transcript.pdf",
+          "source_sha256": "dd7f451b402aa5f95caf5b1e45455800b376cdd887004c2203ec30963fc7c8e9",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-16",
+          "source_url": "https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf",
+          "source_sha256": "210ab9bb949be932fcb5f6b26a2978f0c72ea30bcaa8899a89e6271036245ec8",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Operating margin"
     },
     {
       "symbol": "HDFCBANK",
       "name": "HDFC Bank",
       "sector": "private_bank",
       "market": "India",
-      "call_count": 1,
+      "call_count": 2,
       "latest_period": "Q1 FY27",
-      "facts": [],
+      "facts": [
+        {
+          "id": "b34b8d416566edb8",
+          "value": 3.38,
+          "raw": "3.38%",
+          "quote": "Net interest margin was at 3.38% on total assets, and 3.53% based on interest earning assets.",
+          "speaker": "HDFC Bank earnings release",
+          "role": "issuer",
+          "page": 1,
+          "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/press-release-march-2026.pdf",
+          "source_sha256": "a410875269daf0ce6f9a385dd8fad988c2e131c9375d4724f9c9fbab5dafed3e",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "On total assets",
+          "metric_label": "Net interest margin",
+          "source_type": "earnings_release",
+          "reported_change_bps": null
+        },
+        {
+          "id": "822d34a10f553e3c",
+          "value": 3.26,
+          "raw": "3.26%",
+          "quote": "Net interest margin was at 3.26% on total assets, and 3.40% based on interest earning assets.",
+          "speaker": "HDFC Bank earnings release",
+          "role": "issuer",
+          "page": 1,
+          "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/press-release-june-2026.pdf",
+          "source_sha256": "3f8acd5bf3bfe250a472c6fcdd5d040a62bf002ff19bc9b01d6a900c4d22de23",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "On total assets",
+          "metric_label": "Net interest margin",
+          "source_type": "earnings_release",
+          "reported_change_bps": null
+        }
+      ],
       "commentary": [],
-      "signals": [],
+      "signals": [
+        {
+          "id": "822d34a10f553e3c-movement",
+          "kind": "observed_change",
+          "direction": "down",
+          "title": "Margin down",
+          "change_bps": -12.0,
+          "period": "Q1 FY27",
+          "current": {
+            "id": "822d34a10f553e3c",
+            "value": 3.26,
+            "raw": "3.26%",
+            "quote": "Net interest margin was at 3.26% on total assets, and 3.40% based on interest earning assets.",
+            "speaker": "HDFC Bank earnings release",
+            "role": "issuer",
+            "page": 1,
+            "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/press-release-june-2026.pdf",
+            "source_sha256": "3f8acd5bf3bfe250a472c6fcdd5d040a62bf002ff19bc9b01d6a900c4d22de23",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "On total assets",
+            "metric_label": "Net interest margin",
+            "source_type": "earnings_release",
+            "reported_change_bps": null
+          },
+          "previous": {
+            "id": "b34b8d416566edb8",
+            "value": 3.38,
+            "raw": "3.38%",
+            "quote": "Net interest margin was at 3.38% on total assets, and 3.53% based on interest earning assets.",
+            "speaker": "HDFC Bank earnings release",
+            "role": "issuer",
+            "page": 1,
+            "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/press-release-march-2026.pdf",
+            "source_sha256": "a410875269daf0ce6f9a385dd8fad988c2e131c9375d4724f9c9fbab5dafed3e",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
+            "basis": "On total assets",
+            "metric_label": "Net interest margin",
+            "source_type": "earnings_release",
+            "reported_change_bps": null
+          },
+          "attribution": "Calculated from as-reported figures; review comparability",
+          "arithmetic_matches": true
+        }
+      ],
       "gap_before": [],
-      "follow_through": []
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-18",
+          "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2025-2026/quarter-4/HDFCBank-Analyst-Apr18-2026-vF.pdf",
+          "source_sha256": "f2a0b862e5cc9a7af11fd0ac32d3048cce16861519a6f5fcb8b0d568934c11c6",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-18",
+          "source_url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/about-us/financial-results/2026-2027/quarter-1/hdfc-bank-earnings-jul18-2026.pdf",
+          "source_sha256": "80be1ce802f42d260337c8620cb43451bdc6b118b7144fdf1d1b60bc4b9d2c04",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Net interest margin"
+    },
+    {
+      "symbol": "ICICIBANK",
+      "name": "ICICI Bank",
+      "sector": "private_bank",
+      "market": "India",
+      "call_count": 5,
+      "latest_period": "Q1 FY27",
+      "facts": [
+        {
+          "value": 4.27,
+          "raw": "4.27%",
+          "quote": "The net interest margin was 4.27% in this quarter compared to 4.36% in the previous quarter and 4.53% in Q2 of last year.",
+          "speaker": "Anindya",
+          "role": "management",
+          "page": 7,
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2024/transcript-for-analyst-call-held-on-october-26-2024.pdf",
+          "source_sha256": "389e4820fb8c2534642aa87aaf26f73bd786f4508ce81bd33b8b2da8ca599f2c",
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "basis": "As stated in call",
+          "metric_label": "Net interest margin",
+          "reported_change_bps": null,
+          "id": "636661fa8a63bbe9"
+        },
+        {
+          "value": 4.25,
+          "raw": "4.25%",
+          "quote": "The net interest margin was 4.25% in this quarter compared to 4.27% in the previous quarter and 4.43% in Q3 of last year.",
+          "speaker": "Anindya",
+          "role": "management",
+          "page": 7,
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2025/2025-01-q3-2025-transcript-for-earnings-call-held-on-january-25-2025.pdf",
+          "source_sha256": "20af1073da46bfe0ef97dc193b1ac1707243d39444519de6443c330f272bf511",
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "basis": "As stated in call",
+          "metric_label": "Net interest margin",
+          "reported_change_bps": null,
+          "id": "402cf883d8bb7c3e"
+        },
+        {
+          "value": 4.3,
+          "raw": "4.30%",
+          "quote": "The net interest margin was 4.30% in this quarter compared to 4.30% in the previous quarter and 4.25% in Q3 of last year.",
+          "speaker": "Anindya",
+          "role": "management",
+          "page": 7,
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-earnings-call-jan2026.pdf",
+          "source_sha256": "35254653ec3034782f0b7c1338da088bb2788b6b5f580d3dafd5f2a0b604e024",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "basis": "As stated in call",
+          "metric_label": "Net interest margin",
+          "reported_change_bps": null,
+          "id": "4233f00cc487f2e6"
+        },
+        {
+          "value": 4.32,
+          "raw": "4.32%",
+          "quote": "The net interest margin was 4.32% in this quarter compared to 4.30% in the previous quarter.",
+          "speaker": "Anindya",
+          "role": "management",
+          "page": 8,
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-for-earnings-call-held-on-april-18-2026.pdf",
+          "source_sha256": "d81107decd1358c6cf89aa383cfe07566036dc0ad50436aa90c3d6b8a8562b68",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "As stated in call",
+          "metric_label": "Net interest margin",
+          "reported_change_bps": null,
+          "id": "c59c0fc395fee858"
+        },
+        {
+          "value": 4.36,
+          "raw": "4.36%",
+          "quote": "The net interest margin was 4.36% in this quarter compared to 4.32% in the previous quarter and 4.34% in Q1 of last year.",
+          "speaker": "Anindya",
+          "role": "management",
+          "page": 7,
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2027/transcript-for-earnings-call-held-on-july-18-2026.pdf",
+          "source_sha256": "60c104428aff18c78b697c82a173b7c8ac04b6c1b5e117feb828875041f74513",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "As stated in call",
+          "metric_label": "Net interest margin",
+          "reported_change_bps": null,
+          "id": "4f658a8c2d187a47"
+        }
+      ],
+      "commentary": [],
+      "signals": [
+        {
+          "id": "4f658a8c2d187a47-movement",
+          "kind": "observed_change",
+          "direction": "up",
+          "title": "Margin up",
+          "change_bps": 4.0,
+          "period": "Q1 FY27",
+          "current": {
+            "value": 4.36,
+            "raw": "4.36%",
+            "quote": "The net interest margin was 4.36% in this quarter compared to 4.32% in the previous quarter and 4.34% in Q1 of last year.",
+            "speaker": "Anindya",
+            "role": "management",
+            "page": 7,
+            "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2027/transcript-for-earnings-call-held-on-july-18-2026.pdf",
+            "source_sha256": "60c104428aff18c78b697c82a173b7c8ac04b6c1b5e117feb828875041f74513",
+            "period": "Q1 FY27",
+            "period_end": "2026-06-30",
+            "basis": "As stated in call",
+            "metric_label": "Net interest margin",
+            "reported_change_bps": null,
+            "id": "4f658a8c2d187a47"
+          },
+          "previous": {
+            "value": 4.32,
+            "raw": "4.32%",
+            "quote": "The net interest margin was 4.32% in this quarter compared to 4.30% in the previous quarter.",
+            "speaker": "Anindya",
+            "role": "management",
+            "page": 8,
+            "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-for-earnings-call-held-on-april-18-2026.pdf",
+            "source_sha256": "d81107decd1358c6cf89aa383cfe07566036dc0ad50436aa90c3d6b8a8562b68",
+            "period": "Q4 FY26",
+            "period_end": "2026-03-31",
+            "basis": "As stated in call",
+            "metric_label": "Net interest margin",
+            "reported_change_bps": null,
+            "id": "c59c0fc395fee858"
+          },
+          "attribution": "Calculated from as-reported figures; review comparability",
+          "arithmetic_matches": true
+        }
+      ],
+      "gap_before": [
+        "Q3 FY26"
+      ],
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "call_date": "2024-10-26",
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2024/transcript-for-analyst-call-held-on-october-26-2024.pdf",
+          "source_sha256": "389e4820fb8c2534642aa87aaf26f73bd786f4508ce81bd33b8b2da8ca599f2c",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "call_date": "2025-01-25",
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2025/2025-01-q3-2025-transcript-for-earnings-call-held-on-january-25-2025.pdf",
+          "source_sha256": "20af1073da46bfe0ef97dc193b1ac1707243d39444519de6443c330f272bf511",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-01-17",
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-earnings-call-jan2026.pdf",
+          "source_sha256": "35254653ec3034782f0b7c1338da088bb2788b6b5f580d3dafd5f2a0b604e024",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-18",
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2026/transcript-for-earnings-call-held-on-april-18-2026.pdf",
+          "source_sha256": "d81107decd1358c6cf89aa383cfe07566036dc0ad50436aa90c3d6b8a8562b68",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-18",
+          "source_url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/docs/about-us/2027/transcript-for-earnings-call-held-on-july-18-2026.pdf",
+          "source_sha256": "60c104428aff18c78b697c82a173b7c8ac04b6c1b5e117feb828875041f74513",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "Net interest margin"
     },
     {
       "symbol": "HINDUNILVR",
       "name": "Hindustan Unilever",
       "sector": "consumer",
       "market": "India",
-      "call_count": 1,
+      "call_count": 8,
       "latest_period": "Q1 FY27",
-      "facts": [],
+      "facts": [
+        {
+          "value": 23.8,
+          "raw": "23.8%",
+          "quote": "Our EBITDA margin continued to remain healthy at 23.8%.",
+          "speaker": "Rohit Jawa",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hul.co.in/files/sq24-earnings-call-transcript.pdf",
+          "source_sha256": "062f95b007b2d6e969e198294879f9dac4c4b687ed37a87293637c077c759907",
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "basis": "As stated in call",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "5a37475913ccee76"
+        },
+        {
+          "value": 23.1,
+          "raw": "23.1%",
+          "quote": "EBITDA margin remained healthy at 23.1%, albeit lower by 30 bps year-on year.",
+          "speaker": "Ritesh Tiwari",
+          "role": "management",
+          "page": 9,
+          "source_url": "https://www.hul.co.in/files/mq25-earnings-call-transcript.pdf",
+          "source_sha256": "26805403986d801260e9535b00d85531c04f5860e25f2f33af92edd8c127a8a3",
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "basis": "As stated in call",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "ddfa0dcb65b6ce79"
+        },
+        {
+          "value": 22.8,
+          "raw": "22.8%",
+          "quote": "We stepped up investments across lines of the P&L, resulting in an EBITDA margin of 22.8%.",
+          "speaker": "Rohit Jawa",
+          "role": "management",
+          "page": 4,
+          "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+          "source_sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2",
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "basis": "Consolidated",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "fc95185d6f6e2f47"
+        },
+        {
+          "value": 23.2,
+          "raw": "23.2%",
+          "quote": "As a result, EBITDA margin at 23.2% saw a year-on-year dilution of 90 bps.",
+          "speaker": "Ritesh Tiwari",
+          "role": "management",
+          "page": 7,
+          "source_url": "https://www.hul.co.in/files/sq25-earnings-call-transcript.pdf",
+          "source_sha256": "c56c54c8a197ec8ec5196c5f9fc8bde151c9d6f9411c9222f593c2586e43c8ea",
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "basis": "As stated in call",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "28af0b018ef1a243"
+        },
+        {
+          "value": 23.3,
+          "raw": "23.3%",
+          "quote": "EBITDA at Rs. 3,788 crores was up 3% year-onyear, while EBITDA margin at 23.3% was within the range that we have previously guided to.",
+          "speaker": "Priya Nair",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+          "source_sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d",
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "basis": "As stated in call",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "c2513a81f66cda56"
+        },
+        {
+          "value": 23.7,
+          "raw": "23.7%",
+          "quote": "From a profitability perspective, EBITDA grew 6% year-on-year with EBITDA margin at 23.7%, coming in at the higher end of our guidance.",
+          "speaker": "Priya Nair",
+          "role": "management",
+          "page": 3,
+          "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+          "source_sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818",
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "basis": "Consolidated",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "31c7d87d1a487017"
+        },
+        {
+          "value": 23.0,
+          "raw": "23%",
+          "quote": "We navigated external volatility through financial discipline across all the lines of P&L, delivering EBITDA Margin of 23%, which was within the guided range.",
+          "speaker": "Niranjan Gupta",
+          "role": "management",
+          "page": 5,
+          "source_url": "https://www.hul.co.in/files/jq26-earnings-call-transcript.pdf",
+          "source_sha256": "a4bf4c1a02598e332f742c62370f3b1de6206accab0570a8c59fdffd249e113b",
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "basis": "As stated in call",
+          "metric_label": "EBITDA margin",
+          "reported_change_bps": null,
+          "id": "c8c42e31c983306f"
+        }
+      ],
       "commentary": [],
       "signals": [],
       "gap_before": [],
-      "follow_through": []
+      "follow_through": [],
+      "result_periods": [
+        {
+          "period": "Q2 FY25",
+          "period_end": "2024-09-30",
+          "call_date": "2024-10-23",
+          "source_url": "https://www.hul.co.in/files/sq24-earnings-call-transcript.pdf",
+          "source_sha256": "062f95b007b2d6e969e198294879f9dac4c4b687ed37a87293637c077c759907",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY25",
+          "period_end": "2024-12-31",
+          "call_date": "2025-01-22",
+          "source_url": "https://www.hul.co.in/files/dq24-earnings-call-transcript.pdf",
+          "source_sha256": "e5aa8143d2ac7a227339d6f8289591e76dd8e4a53a194dfedcce6e92c5b54f0a",
+          "reported_range": {
+            "raw": "23% to 24%",
+            "lower": 23.0,
+            "upper": 24.0,
+            "raw_lower": "23%",
+            "raw_upper": "24%",
+            "quote": "EBITDA margin was maintained within the healthy range of 23% to 24%, while we continued to invest behind our brands and remain competitive in our A&P spends.",
+            "speaker": "Ritesh Tiwari",
+            "page": 8,
+            "period": "Q3 FY25",
+            "source_url": "https://www.hul.co.in/files/dq24-earnings-call-transcript.pdf",
+            "source_sha256": "e5aa8143d2ac7a227339d6f8289591e76dd8e4a53a194dfedcce6e92c5b54f0a"
+          }
+        },
+        {
+          "period": "Q4 FY25",
+          "period_end": "2025-03-31",
+          "call_date": "2025-04-24",
+          "source_url": "https://www.hul.co.in/files/mq25-earnings-call-transcript.pdf",
+          "source_sha256": "26805403986d801260e9535b00d85531c04f5860e25f2f33af92edd8c127a8a3",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY26",
+          "period_end": "2025-06-30",
+          "call_date": "2025-07-31",
+          "source_url": "https://www.hul.co.in/files/hul-earnings-call-jq25-transcript.pdf",
+          "source_sha256": "bf1d10108919f44c3147ace553f36ae43bb597182717deae70c9243633e712f2",
+          "reported_range": null
+        },
+        {
+          "period": "Q2 FY26",
+          "period_end": "2025-09-30",
+          "call_date": "2025-10-23",
+          "source_url": "https://www.hul.co.in/files/sq25-earnings-call-transcript.pdf",
+          "source_sha256": "c56c54c8a197ec8ec5196c5f9fc8bde151c9d6f9411c9222f593c2586e43c8ea",
+          "reported_range": null
+        },
+        {
+          "period": "Q3 FY26",
+          "period_end": "2025-12-31",
+          "call_date": "2026-02-12",
+          "source_url": "https://www.hul.co.in/files/hul-dq25-earnings-call-transcript.pdf",
+          "source_sha256": "2f51d5535e67652aed6214058b96e4f50a7160ed4cf01b2acdd8702a139c5e6d",
+          "reported_range": null
+        },
+        {
+          "period": "Q4 FY26",
+          "period_end": "2026-03-31",
+          "call_date": "2026-04-30",
+          "source_url": "https://www.hul.co.in/files/mq-26-earnings-call-transcript.pdf",
+          "source_sha256": "7ecb4a89728521a5f77a1261f5a92a18bc8634fe669491fc1f7e72646f315818",
+          "reported_range": null
+        },
+        {
+          "period": "Q1 FY27",
+          "period_end": "2026-06-30",
+          "call_date": "2026-07-28",
+          "source_url": "https://www.hul.co.in/files/jq26-earnings-call-transcript.pdf",
+          "source_sha256": "a4bf4c1a02598e332f742c62370f3b1de6206accab0570a8c59fdffd249e113b",
+          "reported_range": null
+        }
+      ],
+      "metric_label": "EBITDA margin"
     }
-  ]
+  ],
+  "supplemental_hash": "9365d5b9ee6aa55c3b08d3c3a26a975d6d301afa5bd5c9a57d92f897fafdecec",
+  "financial_release_count": 2
 }

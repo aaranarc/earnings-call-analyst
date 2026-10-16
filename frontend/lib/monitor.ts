@@ -1,10 +1,12 @@
 import { readWorkspace, saveWorkspace } from './workspace';
 import type { Thesis } from './types';
-export type SourceQuote = {period:string; quote:string; speaker:string; page:number; source_url:string; source_sha256:string};
+export type SourceQuote = {source_type?:string; period:string; quote:string; speaker:string; page:number; source_url:string; source_sha256:string};
 export type MetricFact = SourceQuote & {id:string; value:number; raw:string; basis:string; period_end:string; reported_change_bps:number|null};
 export type MonitorSignal = {id:string; kind:string; direction:string; title:string; change_bps:number; period:string; current:MetricFact; previous:MetricFact|null; attribution:string; arithmetic_matches:boolean};
 export type FollowThrough = {id:string; topic:string; before:SourceQuote; after:SourceQuote; metric:MetricFact|null; impact_source:MetricFact|null; wage_impact_bps:number|null; link_basis:string; outcome_label:string; verdict:string};
-export type MonitoredCompany = {symbol:string; name:string; sector:string; market:string; call_count:number; latest_period:string; facts:MetricFact[]; commentary:SourceQuote[]; signals:MonitorSignal[]; gap_before:string[]; follow_through?:FollowThrough[]};
+export type ReportedRange = SourceQuote & {raw:string; lower:number; upper:number};
+export type ResultPeriod = {period:string; period_end:string; call_date:string|null; source_url:string; source_sha256:string; reported_range?:ReportedRange|null};
+export type MonitoredCompany = {symbol:string; name:string; sector:string; market:string; call_count:number; latest_period:string; facts:MetricFact[]; commentary:SourceQuote[]; signals:MonitorSignal[]; gap_before:string[]; follow_through?:FollowThrough[]; metric_label?:string; result_periods?:ResultPeriod[]};
 export type MonitorReport = {version:number; as_of:string; corpus_hash:string; update_policy:string; companies:MonitoredCompany[]};
 const SLOT='quantrag.favourites.v1';
 function validFavourites(value:unknown):string[] {
@@ -30,6 +32,6 @@ export function keepTrail(company:MonitoredCompany,trail:FollowThrough) {
 function keepObservation(company:MonitoredCompany,id:string,title:string,quotes:SourceQuote[]) {
   const rows=readWorkspace();
   if(rows.some(r=>r.id===id))return id;
-  const row:Thesis={id,company:company.name,symbol:company.symbol,title:`${company.symbol}: ${title}`,description:'A company-reported observation, saved for source review. Not a causal conclusion.',status:'Unresolved',reviewed:false,sample:false,before:'',after:'',beforeQuarter:'',afterQuarter:'',note:'',evidence:quotes.map((q,i)=>({id:`${id}-${i}`,quarter:q.period,kind:'note',addedAt:new Date().toISOString(),text:`${q.speaker}, ${q.period}, PDF page ${q.page}:\n“${q.quote}”\nSource: ${q.source_url}#page=${q.page}\nPDF SHA-256: ${q.source_sha256}`}))};
+  const row:Thesis={id,company:company.name,symbol:company.symbol,title:`${company.symbol}: ${title}`,description:'A source-linked observation, saved for source review. Not a causal conclusion.',status:'Unresolved',reviewed:false,sample:false,before:'',after:'',beforeQuarter:'',afterQuarter:'',note:'',evidence:quotes.map((q,i)=>({id:`${id}-${i}`,quarter:q.period,kind:'note',addedAt:new Date().toISOString(),text:`${q.speaker}, ${q.period}, PDF page ${q.page}:\n“${q.quote}”\nSource: ${q.source_url}#page=${q.page}\nPDF SHA-256: ${q.source_sha256}`}))};
   saveWorkspace([row,...rows]);return id;
 }

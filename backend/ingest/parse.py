@@ -16,6 +16,7 @@ import pypdf
 TITLE = r"(?:(?:Mr|Ms|Mrs|Dr)\.?\s+)?"
 NAME = r"[A-Z][A-Za-z.'’-]*(?:\s+[A-Z][A-Za-z.'’-]*){0,4}"
 COLON_LINE = re.compile(rf"^{TITLE}({NAME})\s*:\s*(.*)$")
+OPENING_LINE = re.compile(rf"^{TITLE}({NAME})['’]s opening remarks$", re.IGNORECASE)
 # The moderator introduces each analyst: "...question is from the line of Gaurav Rateria from Morgan Stanley."
 INTRO = re.compile(rf"(?:line of|question (?:is |comes )?from)\s+{TITLE}({NAME}?)\s+(?:from|with|of)\b")
 QA_START = re.compile(r"question[- ]and[- ]answer|first question", re.IGNORECASE)
@@ -81,6 +82,8 @@ def _colon_speaker(line, extra_names):
     if not m:
         return None
     name = m[1].strip()
+    if name.casefold().startswith('on '):
+        return None  # A financial subheading such as "On Costs:", not a named speaker.
     if name.casefold() in NOT_SPEAKERS:
         return name, m[2]  # a labelled non-speaker block (e.g. "Disclaimer:"), dropped later
     if name.isupper() or not (name == "Moderator" or len(name.split()) >= 2 or _key(name) in extra_names):
@@ -95,7 +98,7 @@ def segment(lines):
     colon_names = {_key(m[1]) for _, ln in lines if (m := COLON_LINE.match(ln))}
     def is_speaker(ln):
         hit = _colon_speaker(ln, analysts)
-        return (hit and hit[0].casefold() not in NOT_SPEAKERS) or ln.strip() == "Moderator"
+        return (hit and hit[0].casefold() not in NOT_SPEAKERS) or bool(OPENING_LINE.fullmatch(ln)) or ln.strip() == "Moderator"
     cover_end = next((i for i, (_, ln) in enumerate(lines) if is_speaker(ln)), len(lines))
     cover = [re.split(r"\s[–-]\s", re.sub(rf"^{TITLE}", "", ln, flags=re.IGNORECASE))[0] for _, ln in lines[:cover_end]]
     cover_names = {_key(c) for c in cover}
@@ -104,6 +107,9 @@ def segment(lines):
     turns = []
     for page, ln in lines[cover_end:]:
         hit = _colon_speaker(ln, analysts)
+        opening = OPENING_LINE.fullmatch(ln)
+        if opening:
+            hit = (opening[1], '')
         if not hit and _key(ln) in standalone and len(ln.split()) <= 5:
             hit = (ln.strip(), "")
         if hit:

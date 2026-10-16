@@ -7,7 +7,7 @@
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
 > **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
-> small corpus (8 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
+> growing corpus (40 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
 > [`eval/results/`](eval/results/) and can be re-run.
 >
 > *Research and educational project. Not investment advice.*
@@ -34,10 +34,13 @@ in adjacent calls: TCS has two sourced sequences. It separates wage-only cost im
 labels topic-based links for review, and saves the whole trail as unresolved evidence. This is a focused research
 workflow, not a claim that quarterly comparison is new or that management promises have been independently verified.
 
-The monitor currently extracts a narrow operating-margin vocabulary from prepared management remarks.
-Its change cards quote management's stated sequential movement; gaps and excluded one-off items remain visible.
+The result view includes every covered call in a quarter selector, with operating margins for IT services,
+EBITDA margins for consumer companies and net interest margins for banks. Original quotes, accounting basis
+and reported ranges stay visible. HDFC margins also use two separately registered earnings releases, on a
+consistent total-assets basis. Change cards distinguish company-reported movement from calculations on
+adjacent as-reported figures; missing quarters and adjusted figures are not silently treated as comparable.
 It does not infer a missed commitment, establish causality, rate a company or forecast five-year performance.
-Bank/HUL calls without an unambiguous matching figure show no margin series. Snapshots refresh on ingestion,
+This is a sourced margin overview, not a complete quarterly income-statement database. Snapshots refresh on ingestion,
 not on a background schedule. To refresh after adding verified PDFs, run
 `python scripts/build_company_monitor.py` then `python scripts/export_public_data.py` before deploying.
 
@@ -81,14 +84,14 @@ flowchart LR
 
 ## Measured so far
 
-Coverage reflects the current 8-transcript ingest snapshot. The other development measurements below used the
+Coverage reflects the current 40-transcript ingest snapshot. The other development measurements below used the
 original 4-transcript corpus and are historical engineering checks, not benchmarks of the expanded corpus.
 Each figure links to the file it comes from.
 
 | What | Result | Notes | Source |
 |---|---|---|---|
-| Corpus in the database | **8** transcripts · **581** chunks · avg **132.6** tokens/chunk · **847** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
-| Database size | `quantrag` schema **3.67 MB**; whole database **14.38 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Corpus in the database | **40** transcripts · **2,700** chunks · avg **155.1** tokens/chunk · **5,676** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Database size | `quantrag` schema **15.46 MB**; whole database **26.23 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
 | Retrieval recall@5, **dev set** | hybrid **19/20** · hybrid + rerank **18/20** (router off) → **19/20** (router on) | 20 hand-written questions written while building, not a benchmark; one label widened after seeing results (D21) | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
@@ -100,9 +103,9 @@ Each figure links to the file it comes from.
 
 ## Known limitations
 
-- **Small corpus.** 8 of 96 planned transcripts: TCS Q2 FY26–Q1 FY27, Infosys Q2 FY25 and Q2 FY26,
-  and HDFC Bank/HUL Q1 FY27. TCS now supports four consecutive quarters and a same-quarter Q2 FY26
-  comparison with Infosys. Most company/quarter combinations are still missing.
+- **Partial coverage.** 40 of 96 planned transcripts across seven Indian companies: HCLTech, Wipro and HUL
+  have eight quarters each; Infosys and ICICI Bank have five each, TCS four and HDFC Bank two.
+  The latest-four gate is 25/48. US companies and the remaining Indian calls are not covered yet.
 - **The dev set is not a benchmark.** It has 20 questions written during development, and one label was widened after
   seeing results. The human-verified 60-question gold set is Phase 6.
 - **The number checker matches values, not meaning.** "Infosys's margin was 24%" passes if 24% is in the cited
@@ -123,7 +126,7 @@ Each figure links to the file it comes from.
 | Step | What | Status |
 |---|---|---|
 | Phase 5 eval | blind-label 120 numbers; publish checker precision/recall per corruption type | labelling page ready |
-| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 8/96; latest-four gate 7/48 |
+| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 40/96; latest-four gate 25/48 |
 | Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | [Retrieval, generation and calibration tooling ready](docs/EVALUATION.md); human-reviewed runs pending |
 | Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
 | Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |

@@ -102,3 +102,40 @@ def test_follow_through_requires_adjacent_calls_and_never_borrows_another_cost_i
     assert trail['link_basis'] == 'Explicit previous-quarter reference'
     assert 'Partnerships' not in trail['after']['quote']
     assert company_report(COMPANY, [(early, announcement), (ROW, outcome)])['follow_through'] == []
+
+
+def test_adjacent_reported_levels_get_a_labeled_calculation_not_a_management_claim():
+    early = dict(ROW, fiscal_label='Q4 FY26')
+    report = company_report(COMPANY, [(early, turns('Our Q4 operating margin was 17.3%.')),
+                                    (ROW, turns('Our Q1 operating margin was 16%.'))])
+    signal = report['signals'][0]
+    assert signal['kind'] == 'observed_change' and signal['change_bps'] == -130
+    assert 'review comparability' in signal['attribution']
+
+
+def test_adjusted_levels_do_not_generate_a_derived_change():
+    early = dict(ROW, fiscal_label='Q4 FY26')
+    report = company_report(COMPANY, [(early, turns('Our Q4 operating margin was 25%. This excludes one-off items.')),
+                                    (ROW, turns('Our Q1 operating margin was 24%. This excludes one-off items.'))])
+    assert report['signals'] == []
+
+
+def test_margin_percentage_change_does_not_conflict_with_actual_level():
+    source = turns('Our Q1 operating margin stood at 20.9%. Operating margins for Q1 declined by 0.3% to 20.9%, sequentially.')
+    assert margin_fact(source, ROW)['raw'] == '20.9%'
+
+
+def test_reported_and_adjusted_margins_keep_their_basis():
+    source = turns('Our adjusted operating margin for the quarter was 17.2%. Our operating margins for Q1 at 16.7% contracted quarter-on-quarter.')
+    fact = margin_fact(source, ROW)
+    assert fact['raw'] == '16.7%' and fact['basis'] == 'As stated in call'
+
+
+def test_quarter_context_can_come_from_the_preceding_performance_sentence():
+    source = turns('Getting into our business performance for the quarter. Our revenue grew sequentially. Our operating margin stood at 19.5%.')
+    assert margin_fact(source, ROW)['raw'] == '19.5%'
+
+
+def test_margin_expansion_percentage_is_not_an_operating_margin_level():
+    source = turns('For Q1, operating margins stood at 17.5%. This brings our FY27 operating margin expansion to 0.9%.')
+    assert margin_fact(source, ROW)['raw'] == '17.5%'
