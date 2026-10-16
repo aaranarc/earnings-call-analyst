@@ -98,7 +98,7 @@ export default function Landing() {
             · Number checks
           </div>
         </section>
-        <div className="landing-library"><CoverageMap /><div className="library-caption"><span className="eyebrow">START WITH WHAT IS KNOWN</span><h2>A clear view of<br/>the evidence.</h2><p>Choose an available quarter to start researching.</p><Link className="text-link" href="/watchlist">Build your research brief <ArrowRight size={16}/></Link></div></div>
+        <div className="landing-library"><CoverageMap /><div className="library-caption"><span className="eyebrow">START WITH WHAT IS KNOWN</span><h2>A clear view of<br/>the evidence.</h2><p>Choose an available quarter to start researching.</p><Link className="text-link" href="/watchlist">Explore company changes <ArrowRight size={16}/></Link></div></div>
         <section className="landing-features" aria-label="Research tools">
           {[
             [
@@ -110,9 +110,9 @@ export default function Landing() {
             ],
             [
               Target,
-              "A thesis that evolves.",
-              "Earlier evidence. Later evidence. Your assessment.",
-              "Explore the workspace",
+              "A quarter in context.",
+              "Track margin changes. Open the source. Keep the evidence.",
+              "Open the watchlist",
               "/watchlist",
             ],
             [
