@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Shell from "./shell";
+import { chartScale } from "@/lib/chart-scale";
 import Dialog from "./dialog";
 import type { SourceQuote } from "@/lib/monitor";
 import { keepGrowth } from "@/lib/monitor";
@@ -58,9 +59,9 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
   const active = points?.[Math.min(point, years)],
     chartPoint = points?.[Math.min(hovered ?? point, years)],
     last = points?.[years];
-  const max = points ? Math.max((amount || 0) * 0.5, 1) : 1,
-    x = (y: number) => 58 + (y / years) * 650,
-    y = (v: number) => 218 - ((v + max * 0.4) / (max * 1.4)) * 170;
+  const scale = chartScale(points?.map(p => p.profit) ?? [0, 1], true),
+    x = (year: number) => 58 + (year / years) * 650,
+    y = (value: number) => 218 - ((value - scale.min) / (scale.max - scale.min)) * 170;
   function choose(p: GrowthProject) {
     setId(p.id);
     setEnabled(false);
@@ -385,18 +386,18 @@ export default function GrowthPayoff({ report }: { report: GrowthReport }) {
                     : "Scenario chart. Choose assumptions to calculate potential investment payoff."
                 }
               >
-                {[-0.2, 0, 0.5].map((f) => (
-                  <g key={f}>
+                {scale.ticks.map((tick) => (
+                  <g key={tick}>
                     <line
                       x1="58"
                       x2="708"
-                      y1={y((max * f) / 0.5)}
-                      y2={y((max * f) / 0.5)}
+                      y1={y(tick)}
+                      y2={y(tick)}
                       stroke="var(--border)"
                       strokeDasharray="4 6"
                     />
-                    <text x="48" y={y((max * f) / 0.5) + 4} textAnchor="end">
-                      {enabled ? money((max * f) / 0.5) : "—"}
+                    <text x="48" y={y(tick) + 4} textAnchor="end">
+                      {enabled ? money(tick) : "—"}
                     </text>
                   </g>
                 ))}
