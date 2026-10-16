@@ -59,7 +59,6 @@ def test_explicit_fallback_is_second_and_final_attempt():
 
 def test_provider_busy_stream_releases_lock(monkeypatch):
     from fastapi.testclient import TestClient
-
     from quantrag import api
     for key in ('SUPABASE_DB_URL', 'GEMINI_API_KEY', 'GEMINI_MODEL'):
         monkeypatch.setenv(key, 'test-only')
