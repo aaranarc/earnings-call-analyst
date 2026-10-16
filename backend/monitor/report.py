@@ -96,6 +96,53 @@ def commentary(turns, row):
     return None
 
 
+def wage_statement(turns, row, kind):
+    """A deliberately narrow topic match, never a promise-fulfilment verdict."""
+    for turn in turns:
+        if turn.role != 'management' or turn.section != 'prepared':
+            continue
+        boundaries = [0, *[m.end() for m in re.finditer(r'(?<=[.!?])\s+(?=[A-Z])', turn.text)], len(turn.text)]
+        for left, right in pairwise(boundaries):
+            quote = re.sub(r'\s+\d+\.$', '', turn.text[left:right].strip())
+            if not re.search(r'wage (?:hike|increase)|salary increments', quote, re.IGNORECASE):
+                continue
+            if re.search(r'\b(?:not|never|cancel\w*|defer\w*|might|could)\b', quote, re.IGNORECASE):
+                continue
+            quarters = re.findall(r'\bQ([1-4])\b', quote, re.IGNORECASE)
+            if quarters and quarters[-1] != row['fiscal_label'][1]:
+                continue
+            announcement = re.search(r'announc\w*', quote, re.IGNORECASE) and re.search(r'effective|effect from', quote, re.IGNORECASE)
+            outcome = re.search(r'completed.{0,50}salary increments|wage increases announced last quarter', quote, re.IGNORECASE)
+            if kind == 'outcome' and re.search(r'\b(?:will|expect\w*|would|plan\w*)\b', quote, re.IGNORECASE):
+                continue
+            if (kind == 'announcement' and announcement) or (kind == 'outcome' and outcome):
+                return {'period': row['fiscal_label'], 'quote': quote, 'speaker': turn.speaker,
+                        'page': turn.page_at(left), 'source_url': row['source_url'], 'source_sha256': row['sha256']}
+    return None
+
+
+def follow_through(records, facts):
+    trails = []
+    for (before, early_turns), (after, later_turns) in pairwise(records):
+        if period_key(after['fiscal_label']) - period_key(before['fiscal_label']) != 1:
+            continue
+        announced = wage_statement(early_turns, before, 'announcement')
+        reported = wage_statement(later_turns, after, 'outcome')
+        if not announced or not reported:
+            continue
+        explicit = bool(re.search(r'announced last quarter', reported['quote'], re.IGNORECASE))
+        metric = next((f for f in facts if f['period'] == after['fiscal_label']), None)
+        impact = metric if metric and re.search(r'wage|salary', metric['quote'], re.IGNORECASE) else None
+        wage_bps = re.search(r'negative impact of (\d+) basis points', reported['quote'], re.IGNORECASE)
+        trails.append({'id': hashlib.sha256((before['sha256'] + after['sha256'] + announced['quote'] + reported['quote']).encode()).hexdigest()[:16],
+                       'topic': 'Salary increases', 'before': announced, 'after': reported, 'metric': metric,
+                       'impact_source': impact, 'wage_impact_bps': -int(wage_bps[1]) if wage_bps else None,
+                       'link_basis': 'Explicit previous-quarter reference' if explicit else 'Same topic in adjacent calls; review required',
+                       'outcome_label': 'Impact reported' if explicit else 'Completion reported',
+                       'verdict': 'Needs review'})
+    return trails
+
+
 def company_report(company, rows_and_turns):
     records = sorted(rows_and_turns, key=lambda x: period_key(x[0]['fiscal_label']))
     facts = [f for row, turns in records if (f := margin_fact(turns, row))]
@@ -116,7 +163,8 @@ def company_report(company, rows_and_turns):
     gaps = [b['period'] for a, b in pairwise(facts) if period_key(b['period'])-period_key(a['period']) != 1]
     return {'symbol': company['symbol'], 'name': company['name'], 'sector': company['sector'],
             'market': 'India', 'call_count': len(records), 'latest_period': latest_label,
-            'facts': facts, 'commentary': comments, 'signals': signals, 'gap_before': gaps}
+            'facts': facts, 'commentary': comments, 'signals': signals, 'gap_before': gaps,
+            'follow_through': follow_through(records, facts)}
 
 
 def build_report(companies, manifest, load_turns, as_of=None):

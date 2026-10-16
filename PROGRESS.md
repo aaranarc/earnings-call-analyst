@@ -300,3 +300,9 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 - Signals save idempotently to the existing local research store as unresolved evidence. Existing notes/import/export remain available at `/research`; `/watchlist` is the new company dashboard. Corrupt local storage is preserved rather than overwritten.
 - Monitor snapshots build after verified PDF ingestion and ship with the frontend so viewing them does not wake the API. CI checks manifest provenance and bundled snapshot parity.
 - This slice does not classify missed commitments or prove that commentary caused results. Broader metrics, India/US coverage, longitudinal commitment matching and validated business-performance scenarios remain future work. Human-reviewed evaluation and the owner's deferred labels/Nestlé count remain outstanding.
+
+## Follow-through pilot
+- Made the product focus visible on the landing page and first QuarterLens feature panel: earlier announcement → later management report → sourced result → saved evidence.
+- Rule-based salary-increase matching links consecutive calls only, with two actual TCS sequences. Explicit previous-quarter references are distinguished from topic matches needing review. Negation, future completion claims, analyst statements and wrong-quarter references are rejected.
+- The pilot keeps wage-only impact separate from net margin movement. Every trail includes original quotes/pages/PDF hashes; saving preserves all sources and leaves assessment unresolved. Other companies show a no-linked-evidence state.
+- This is a narrow pilot, not broad commitment tracking or an independently verified causal/missed-promise classifier. Competitive products already support cross-quarter research; differentiation still requires user validation and stronger data coverage.

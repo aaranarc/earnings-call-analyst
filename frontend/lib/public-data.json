@@ -356,7 +356,103 @@
             "arithmetic_matches": true
           }
         ],
-        "gap_before": []
+        "gap_before": [],
+        "follow_through": [
+          {
+            "id": "2105fe9502a5a470",
+            "topic": "Salary increases",
+            "before": {
+              "period": "Q2 FY26",
+              "quote": "In Quarter 2, we announced a wage hike for over 80% of our workforce with effect from September 1st.",
+              "speaker": "Sudeep Kunnumal",
+              "page": 12,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q2/Management%20Commentary/Transcript%20of%20the%20Q2%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20October%209%2C%202025.pdf",
+              "source_sha256": "41eba74cdcb01d04e8ef8f0689cfcb433fde289e05dbea89c357fb96c4fa0a34"
+            },
+            "after": {
+              "period": "Q3 FY26",
+              "quote": "Full quarter impact of the wage increases announced last quarter had a negative impact of 50 basis points.",
+              "speaker": "Samir Seksaria",
+              "page": 4,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+              "source_sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441"
+            },
+            "metric": {
+              "value": 25.2,
+              "raw": "25.2%",
+              "quote": "Our Q3 operating margins stood at 25.2%, remaining stable sequentially. This excludes one-offs.",
+              "speaker": "K Krithivasan",
+              "role": "management",
+              "page": 3,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q3/Management%20Commentary/Transcript%20of%20the%20Q3%202025-26%20Earnings%20Conference%20Call%20held%20on%20Jan%2012%2C%202026.pdf",
+              "source_sha256": "a554fa8db9e853bca01f7b091934c74e6686e582f61fd749adb560c05fe6f441",
+              "period": "Q3 FY26",
+              "period_end": "2025-12-31",
+              "basis": "Excludes one-off items",
+              "id": "02efb02bee3a628f",
+              "reported_change_bps": null
+            },
+            "impact_source": null,
+            "wage_impact_bps": -50,
+            "link_basis": "Explicit previous-quarter reference",
+            "outcome_label": "Impact reported",
+            "verdict": "Needs review"
+          },
+          {
+            "id": "28be6756cb835b4d",
+            "topic": "Salary increases",
+            "before": {
+              "period": "Q4 FY26",
+              "quote": "We have announced annual salary increments for our eligible associates across all grades, effective April 1.",
+              "speaker": "K Krithivasan",
+              "page": 4,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q4/Management%20Commentary/Transcript%20of%20the%20Q4%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20April%209%2C%202026.pdf",
+              "source_sha256": "58a07da27f1991ee640dc168801c0774d3756c1569490fe170885829ddad962b"
+            },
+            "after": {
+              "period": "Q1 FY27",
+              "quote": "This quarter, we completed the annual salary increments for all associates globally and also aligned salary structures of our India associates with the new India Labor Code requirements.",
+              "speaker": "Sudeep Kunnumal",
+              "page": 7,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+              "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b"
+            },
+            "metric": {
+              "value": 24.0,
+              "raw": "24%",
+              "quote": "Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes.",
+              "speaker": "K Krithivasan",
+              "role": "management",
+              "page": 3,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+              "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+              "period": "Q1 FY27",
+              "period_end": "2026-06-30",
+              "basis": "As stated in call",
+              "id": "94ffe77ec5febabb",
+              "reported_change_bps": -130.0
+            },
+            "impact_source": {
+              "value": 24.0,
+              "raw": "24%",
+              "quote": "Fifth, our operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes.",
+              "speaker": "K Krithivasan",
+              "role": "management",
+              "page": 3,
+              "source_url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2026-27/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202026-27%20Earnings%20Conference%20Call%20held%20on%20Jul%209,%202026.pdf",
+              "source_sha256": "89eeeb8cbb13ae2071ee5295e566116355ba5fb9e0eaa8539793166e6d137f5b",
+              "period": "Q1 FY27",
+              "period_end": "2026-06-30",
+              "basis": "As stated in call",
+              "id": "94ffe77ec5febabb",
+              "reported_change_bps": -130.0
+            },
+            "wage_impact_bps": null,
+            "link_basis": "Same topic in adjacent calls; review required",
+            "outcome_label": "Completion reported",
+            "verdict": "Needs review"
+          }
+        ]
       },
       {
         "symbol": "INFY",
@@ -437,7 +533,8 @@
         ],
         "gap_before": [
           "Q2 FY26"
-        ]
+        ],
+        "follow_through": []
       },
       {
         "symbol": "HDFCBANK",
@@ -449,7 +546,8 @@
         "facts": [],
         "commentary": [],
         "signals": [],
-        "gap_before": []
+        "gap_before": [],
+        "follow_through": []
       },
       {
         "symbol": "HINDUNILVR",
@@ -461,7 +559,8 @@
         "facts": [],
         "commentary": [],
         "signals": [],
-        "gap_before": []
+        "gap_before": [],
+        "follow_through": []
       }
     ]
   }

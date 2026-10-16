@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'backend'), str(ROOT/'scripts')]
-from monitor.report import build_report, corpus_hash
+from monitor.report import build_report, corpus_hash, period_key
 
 import check_manifest as cm
 from ingest.parse import parse_transcript
@@ -23,7 +23,11 @@ def validate(report, manifest):
     rows = {(r['symbol'], r['fiscal_label']): r for r in manifest if r['filename']}
     assert sum(c['call_count'] for c in report['companies']) == len(rows)
     for company in report['companies']:
-        for fact in company['facts'] + company['commentary']:
+        trail_quotes = [q for t in company.get('follow_through', []) for q in [t['before'], t['after'], t['metric'], t['impact_source']] if q]
+        for trail in company.get('follow_through', []):
+            assert period_key(trail['after']['period']) - period_key(trail['before']['period']) == 1
+            assert trail['verdict'] == 'Needs review'
+        for fact in company['facts'] + company['commentary'] + trail_quotes:
             row = rows[company['symbol'], fact['period']]
             assert fact['source_sha256'] == row['sha256'] and fact['source_url'] == row['source_url']
             assert fact['quote'] and fact['speaker'] and fact['page'] >= 1

@@ -48,13 +48,14 @@ export default function Landing() {
             <Sparkles size={13} /> EARNINGS CALLS / CONNECTED RESEARCH
           </div>
           <h1>
-            Follow the story.
+            What did they say?
             <br />
-            <span className="gradient-text">Question every number.</span>
+            <span className="gradient-text">What happened next?</span>
           </h1>
           <p>
-            Ask the call. Check the source. Keep track of what changes.
+            Follow company announcements into later earnings calls. Compare the statements, inspect the numbers, keep the evidence.
           </p>
+          <Link className="button primary follow-hero" href="/watchlist">Try Follow-through <ArrowRight size={16}/></Link>
           <form
             className="prompt-box"
             onSubmit={(e) => {
@@ -110,8 +111,8 @@ export default function Landing() {
             ],
             [
               Target,
-              "A quarter in context.",
-              "Track margin changes. Open the source. Keep the evidence.",
+              "Follow-through.",
+              "Earlier announcements beside later reported outcomes. Both sources included.",
               "Explore QuarterLens",
               "/watchlist",
             ],

@@ -65,3 +65,40 @@ def test_a_historical_metric_does_not_become_the_latest_signal():
     c = company_report(COMPANY,[(early,turns('Our Q4 operating margin stood at 25.3%, up 10 bps sequentially.')),
                               (ROW,turns('No margin figure was given.'))])
     assert c['latest_period'] == 'Q1 FY27' and c['signals'] == []
+
+
+def test_follow_through_keeps_announcement_completion_and_attributed_movement_separate():
+    early = dict(ROW, fiscal_label='Q4 FY26', period_end='2026-03-31')
+    c = company_report(COMPANY, [(early, turns('We have announced annual salary increments, effective April 1.')),
+                              (ROW, turns('This quarter, we completed annual salary increments globally. Our Q1 operating margins stood at 24%, down 130 bps sequentially, primarily due to wage hikes.'))])
+    trail = c['follow_through'][0]
+    assert trail['before']['period'] == 'Q4 FY26' and trail['after']['period'] == 'Q1 FY27'
+    assert trail['verdict'] == 'Needs review'
+    assert trail['link_basis'] == 'Same topic in adjacent calls; review required'
+    assert trail['wage_impact_bps'] is None  # Net movement is not a quantified wage-only impact.
+    assert trail['impact_source']['reported_change_bps'] == -130
+
+
+@pytest.mark.parametrize('outcome,role', [
+    ('We have not completed annual salary increments.', 'management'),
+    ('We expect to have completed annual salary increments next quarter.', 'management'),
+    ('We completed annual salary increments.', 'analyst'),
+    ('We completed annual salary increments in Q3.', 'management'),
+])
+def test_follow_through_rejects_negation_future_analyst_and_wrong_period(outcome, role):
+    early = dict(ROW, fiscal_label='Q4 FY26')
+    c = company_report(COMPANY, [(early, turns('We announced salary increments, effective April 1.')),
+                               (ROW, turns(outcome, role=role))])
+    assert c['follow_through'] == []
+
+
+def test_follow_through_requires_adjacent_calls_and_never_borrows_another_cost_impact():
+    early = dict(ROW, fiscal_label='Q2 FY26')
+    later = dict(ROW, fiscal_label='Q3 FY26')
+    announcement = turns('We announced a wage hike with effect from September 1st.')
+    outcome = turns('Full quarter impact of the wage increases announced last quarter had a negative impact of 50 basis points. Partnerships had an impact of 70 basis points.')
+    trail = company_report(COMPANY, [(early, announcement), (later, outcome)])['follow_through'][0]
+    assert trail['wage_impact_bps'] == -50 and trail['metric'] is None
+    assert trail['link_basis'] == 'Explicit previous-quarter reference'
+    assert 'Partnerships' not in trail['after']['quote']
+    assert company_report(COMPANY, [(early, announcement), (ROW, outcome)])['follow_through'] == []

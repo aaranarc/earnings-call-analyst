@@ -36,3 +36,29 @@ test('corrupt favourites never overwrite existing saved data',async({page})=>{
  await expect(page.getByRole('button',{name:'Follow Tata Consultancy Services',exact:true})).toBeDisabled();
  expect(await page.evaluate(()=>localStorage.getItem('quantrag.favourites.v1'))).toBe('corrupt-recoverable-data');
 });
+
+test('follow-through links sourced statements without declaring a fulfilled promise',async({page})=>{
+ await page.goto('/watchlist');
+ const feature=page.getByRole('region',{name:'Follow-through',exact:true});
+ await expect(feature).toContainText('Completion reported');
+ await expect(feature).toContainText('24%');
+ await expect(feature).toContainText('-130 bps net QoQ');
+ await feature.getByRole('button',{name:'Review & save evidence'}).click();
+ const drawer=page.getByRole('dialog');
+ await expect(drawer).toContainText('effective April 1');
+ await expect(drawer).toContainText('completed the annual salary increments');
+ await expect(drawer).toContainText('not a verified promise');
+ await expect(drawer.getByRole('link',{name:'Open source PDF'})).toHaveCount(3);
+ await drawer.getByRole('button',{name:'Save follow-through',exact:true}).click();
+ await expect(drawer.getByRole('button',{name:'Saved to research'})).toBeDisabled();
+ await page.keyboard.press('Escape');
+ await feature.getByRole('button',{name:/Q2 FY26.*Q3 FY26/}).click();
+ await expect(feature).toContainText('-50 bps');
+ await expect(feature).toContainText('not the net margin change');
+ await page.locator('.company-select').filter({hasText:'Infosys'}).click();
+ await expect(feature).toContainText('No linked announcement and outcome');
+ await page.getByRole('link',{name:'Saved research',exact:true}).first().click();
+ await expect(page.locator('.thesis-card').filter({hasText:'Follow-through: Salary increases'})).toBeVisible();
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('quantrag.theses.v2')!)[0]);
+ expect(saved.status).toBe('Unresolved');expect(saved.evidence).toHaveLength(3);
+});

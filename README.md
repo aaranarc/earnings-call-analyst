@@ -28,6 +28,12 @@ star companies, inspect operating-margin bars, open management quotes and save a
 Existing notes and thesis tools remain in [Saved research](https://quantrag.vercel.app/research).
 Favourites and saved research stay in the browser; export your research to back it up.
 
+**Follow-through** connects an earlier management announcement to a later report, with both original
+quotes and the reported result available for review. The current pilot matches salary-increase statements
+in adjacent calls: TCS has two sourced sequences. It separates wage-only cost impact from net margin movement,
+labels topic-based links for review, and saves the whole trail as unresolved evidence. This is a focused research
+workflow, not a claim that quarterly comparison is new or that management promises have been independently verified.
+
 The monitor currently extracts a narrow operating-margin vocabulary from prepared management remarks.
 Its change cards quote management's stated sequential movement; gaps and excluded one-off items remain visible.
 It does not infer a missed commitment, establish causality, rate a company or forecast five-year performance.
