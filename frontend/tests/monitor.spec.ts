@@ -52,6 +52,24 @@ test('corrupt favourites never overwrite existing saved data',async({page})=>{
  expect(await page.evaluate(()=>localStorage.getItem('quantrag.favourites.v1'))).toBe('corrupt-recoverable-data');
 });
 
+test('expanded bank coverage has eight quarters and sourced NIM results',async({page})=>{
+ await page.setViewportSize({width:375,height:812});
+ await page.goto('/watchlist');
+ for (const bank of [
+  {name:'Axis Bank',symbol:'AXISBANK',value:'3.46%',host:/axis\.bank\.in.*#page=/},
+  {name:'Kotak Mahindra Bank',symbol:'KOTAKBANK',value:'4.53%',host:/kotak\.bank\.in.*#page=/}
+ ]) {
+  await page.locator('.company-select').filter({hasText:bank.name}).click();
+  await expect(page.getByLabel('Result quarter').locator('option')).toHaveCount(8);
+  await page.getByLabel('Result quarter').selectOption('Q1 FY27');
+  await expect(page.locator('.monitor-metric')).toContainText(bank.value);
+  await page.getByRole('button',{name:`Open ${bank.symbol} Q1 FY27 net interest margin ${bank.value}`}).click();
+  await expect(page.getByRole('dialog').getByRole('link',{name:'Open source PDF'})).toHaveAttribute('href',bank.host);
+  expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).exclude('nextjs-portal').analyze()).violations).toEqual([]);
+  await page.keyboard.press('Escape');
+ }
+});
+
 test('follow-through links sourced statements without declaring a fulfilled promise',async({page})=>{
  await page.goto('/watchlist');
  const feature=page.getByRole('region',{name:'Follow-through',exact:true});

@@ -12,7 +12,8 @@ def test_health_and_coverage_do_not_need_credentials(monkeypatch):
     assert client.get("/health").json()["configured"] is False
     coverage = client.get("/companies").json()
     assert coverage["source"] == "committed ingest snapshot"
-    assert sum(len(c["documents"]) for c in coverage["companies"]) == 40
+    stats = json.loads((api.ROOT / "eval/results/ingest_stats.json").read_text())
+    assert sum(len(c["documents"]) for c in coverage["companies"]) == stats["totals"]["documents"] > 0
     assert all(d["source_url"].startswith("https://") for c in coverage["companies"] for d in c["documents"])
 
 

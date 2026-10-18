@@ -42,3 +42,26 @@ def test_reported_range_is_preserved_without_inventing_a_midpoint():
     value = reported_range(source, ROW)
     assert (value['lower'],value['upper']) == (23,24) and 'value' not in value
     assert reported_range(remarks('We expect EBITDA margin in the range of 23% to 24%.'), ROW) is None
+
+
+def test_bank_acronym_does_not_mix_domestic_or_annual_basis():
+    source = remarks('FY26 NIM at 4.60%. For the quarter Q2FY26, domestic NIMs were 4.80%. Overall NIM stood at 4.54%, compared to 4.65% in Q1FY26.')
+    fact = percent_series_fact(source, ROW, 'private_bank')
+    assert fact['raw'] == '4.54%'
+    assert 'compared to 4.65%' in fact['quote']
+
+
+def test_current_bank_margin_is_not_rejected_by_a_previous_quarter_comparison():
+    row = dict(ROW, fiscal_label='Q1 FY27')
+    source = remarks('Net interest margin for the quarter 4.53%, remained consistent with Q3FY26 and adjusted Q4 margin. As you would recall, we had reported 4.67% NIM margin for Q4.')
+    assert percent_series_fact(source, row, 'private_bank')['raw'] == '4.53%'
+
+
+@pytest.mark.parametrize('text', [
+    'FY26 NIM at 4.60%.', 'Full year NIM for FY26 was 4.60%.',
+    'Domestic NIMs at 4.80%.', 'NIM declined by 0.2% to 4.54%.',
+    'We expect NIM to improve to 4.8%.', 'Adjusted NIM for Q2 was 4.58%.',
+    'NIM for FY26 was 4.60%.', 'NIM for Q2FY25 was 4.60%.',
+])
+def test_bank_acronym_does_not_turn_other_bases_or_changes_into_reported_levels(text):
+    assert percent_series_fact(remarks(text), ROW, 'private_bank') is None

@@ -4,8 +4,8 @@ import re
 from itertools import pairwise
 
 PERCENT = re.compile(r'(?P<value>\d+(?:\.\d+)?)\s*%')
-ANNUAL = re.compile(r'full.year|financial year performance|for the year|year.to.date|nine.month|first half|second half|\bH[12]\b', re.IGNORECASE)
-QUARTER_SCOPE = re.compile(r'quarter(?:ly)? performance|for (?:the |this )?quarter|\bQ[1-4]\b', re.IGNORECASE)
+ANNUAL = re.compile(r'full.year|financial year performance|for the year|year.to.date|nine.month|first half|second half|\bH[12]\b|\bFY\s*\d{2,4}\s+(?:NIM|net interest margin)', re.IGNORECASE)
+QUARTER_SCOPE = re.compile(r'quarter(?:ly)? performance|for (?:the |this )?quarter|\bQ[1-4](?:\s*FY\s*\d{2,4})?\b', re.IGNORECASE)
 FUTURE = re.compile(r'\b(?:expect\w*|guidance|target\w*|would|will|could|aim)\b', re.IGNORECASE)
 
 
@@ -25,21 +25,26 @@ def statements(turns):
 
 
 def percent_series_fact(turns, row, sector):
-    label, pattern = ('EBITDA margin', r'\bEBITDA margins?\b') if sector == 'consumer' else ('Net interest margin', r'\bnet interest margins?\b')
+    label, pattern = ('EBITDA margin', r'\bEBITDA margins?\b') if sector == 'consumer' else ('Net interest margin', r'\b(?:net interest margins?|NIMs?)\b')
     candidates = []
     for turn, left, quote, annual in statements(turns):
         match = re.search(pattern, quote, re.IGNORECASE)
         if not match or annual:
             continue
         prefix = quote[:match.start()].lower()
-        if re.search(r'exclud|adjust|subsidiar', prefix):
+        if re.search(r'exclud|adjust|subsidiar|\bdomestic\b|\boverseas\b', prefix):
             continue
         after = quote[match.end():]
         value = PERCENT.search(after)
         if not value or value.start() > 65 or FUTURE.search(after[:value.start()]):
             continue
+        bridge = re.sub(r'\bQ[1-4]\s*FY\s*\d{2,4}\b', '', after[:value.start()], flags=re.IGNORECASE)
+        if re.search(r'\bFY\s*\d{2,4}\b', bridge, re.IGNORECASE):
+            continue  # "NIM for FY26" is annual; "NIM for Q2FY26" is quarterly.
         if re.search(r'\b(?:not|never|between|range)\b', after[:value.start()]) or after[:value.start()].rstrip().endswith('-'):
             continue
+        if re.search(r'\b(?:by|drop|decline|increase|expansion|contraction|impact)\b', after[:value.start()], re.IGNORECASE):
+            continue  # Changes expressed as percentages are not a margin level.
         if re.match(r'\s*(?:to|and|[-–])\s*\d', after[value.end():]):
             continue
         if re.search(r'\b(?:expect|guidance|target|would|will|could)\b', prefix):
@@ -50,10 +55,12 @@ def percent_series_fact(turns, row, sector):
         raw = value.group()
         bases = re.findall(r'\b(consolidated|standalone)\b', turn.text[:left + match.start()], re.IGNORECASE)
         basis = bases[-1].capitalize() if sector == 'consumer' and bases else 'As stated in call'
-        if re.search(r'\bQ([1-4])\b', quote, re.IGNORECASE):
-            named = re.search(r'\bQ([1-4])\b', quote, re.IGNORECASE)[1]
-            if named != row['fiscal_label'][1]:
-                continue
+        # A previous quarter mentioned AFTER the current value is a comparison, not its period.
+        attribution = quote[:match.end() + value.start()]
+        period = re.search(r'\bQ([1-4])(?:\s*FY\s*(\d{2,4}))?\b', attribution, re.IGNORECASE)
+        if period and (period[1] != row['fiscal_label'][1]
+                       or (period[2] and period[2][-2:] != row['fiscal_label'][-2:])):
+            continue
         # Restrict the quote before comparisons so its first number remains the current result.
         candidates.append({'value': amount, 'raw': raw, 'quote': quote, 'speaker': turn.speaker,
                            'role': turn.role, 'page': turn.page_at(left), 'source_url': row['source_url'],
