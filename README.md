@@ -105,7 +105,7 @@ Each figure links to the file it comes from.
 | What | Result | Notes | Source |
 |---|---|---|---|
 | Corpus in the database | **56** transcripts · **3,968** chunks · avg **155.7** tokens/chunk · **9,868** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
-| Database size | `quantrag` schema **23.07 MB**; whole database **33.8 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Database size | `quantrag` schema **44.98 MB**; whole database **55.8 MB** of Supabase free's 500 MB | Includes private source-PDF recovery archive | [`ingest_stats.json`](eval/results/ingest_stats.json) |
 | Retrieval recall@5, **dev set** | hybrid **19/20** · hybrid + rerank **18/20** (router off) → **19/20** (router on) | 20 hand-written questions written while building, not a benchmark; one label widened after seeing results (D21) | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |

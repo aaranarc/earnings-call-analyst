@@ -8,12 +8,14 @@ The artifact records response timings and failures; it does not claim a measured
 Failed runs appear in GitHub Actions; GitHub notification delivery depends on the owner's account settings.
 
 Every Sunday at 03:30 UTC (09:00 India time), a separate refresh job restores **registered** official PDFs and
-checks each against its committed SHA-256. It then runs idempotent ingestion and rebuilds coverage and
+checks each against its committed SHA-256. Verified recovery copies live in `quantrag.source_pdfs` in the
+existing Supabase database, with row-level security and no public access policies or API endpoint. The job
+restores those exact bytes first, so issuer bot blocks do not break already reviewed sources. It then runs idempotent ingestion and rebuilds coverage and
 QuarterLens snapshots. It needs the repository secret `SUPABASE_DB_URL`; this credential must remain private.
 Jobs serialize so two refreshes cannot ingest the same new source concurrently.
 
 The source checker permits only explicitly listed official HTTPS hosts, checks every redirect, bounds PDF size,
-rejects HTML/errors/changed hashes and refuses to overwrite a different local PDF. An issuer blocking a download
+rejects HTML/errors/changed hashes and refuses to overwrite a different local PDF. If no verified recovery copy exists, an issuer blocking a download
 or changing a PDF stops the refresh before database writes; the artifact lists the blocked files. Do not bypass
 these checks or count an unavailable document as ingested. A local verified file can be used to complete the
 same commands. Raw PDFs and secrets are never uploaded as workflow artifacts.
@@ -32,6 +34,8 @@ Manual checks:
 ```bash
 .venv/bin/python scripts/operations.py health --out /tmp/quantrag-health.json
 .venv/bin/python scripts/operations.py sources --out /tmp/quantrag-sources.json
+# Preserve locally reviewed PDFs once, with the private database environment supplied:
+.venv/bin/python scripts/operations.py archive --out /tmp/quantrag-archive.json
 # With the private database environment supplied:
 (cd backend && ../.venv/bin/python -m ingest.run)
 .venv/bin/python eval/ingest_stats.py

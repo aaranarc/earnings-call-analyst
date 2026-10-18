@@ -51,7 +51,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/pyproject.toml
       - name: Install source checker
-        run: pip install httpx==0.28.1 PyYAML==6.0.3
+        run: pip install httpx==0.28.1 PyYAML==6.0.3 'psycopg[binary]==3.3.6'
       - name: Restore only registered, hash-verified official sources
         run: python scripts/operations.py sources --out /tmp/sources.json
       - name: Require configured database
@@ -59,6 +59,8 @@ jobs:
       - name: Install ingestion dependencies
         run: pip install -c backend/requirements-api.lock -e 'backend[dev,api]'
       - run: python scripts/check_manifest.py --gate phase2
+      - name: Preserve verified sources in the private recovery archive
+        run: python scripts/operations.py archive --out /tmp/source-archive.json
       - name: Idempotent ingestion
         working-directory: backend
         run: python -m ingest.run
@@ -75,6 +77,7 @@ jobs:
           name: reviewed-refresh
           path: |
             /tmp/sources.json
+            /tmp/source-archive.json
             eval/results/ingest_stats.json
             eval/results/company_monitor.json
             frontend/lib/public-data.json

@@ -61,6 +61,18 @@ def test_size_limit_leaves_no_partial_file(tmp_path, monkeypatch):
     assert not list(tmp_path.iterdir())
 
 
+def test_verified_private_archive_restores_without_contacting_blocked_issuer(tmp_path):
+    archive = lambda _: (row()["source_url"], PDF)
+    assert op.restore(row(), tmp_path, None, archive) == "restored_verified_archive"
+    assert (tmp_path / row()["filename"]).read_bytes() == PDF
+
+
+def test_corrupt_private_archive_cannot_replace_reviewed_source(tmp_path):
+    with pytest.raises(ValueError, match="Archived PDF"):
+        op.restore(row(), tmp_path, None, lambda _: (row()["source_url"], b"%PDF-tampered"))
+    assert not list(tmp_path.iterdir())
+
+
 def test_pending_evaluation_and_cold_models_are_healthy():
     def respond(request):
         if request.url.path == "/":

@@ -8,6 +8,7 @@ This does not discover, approve or silently replace new versions of documents.
 import argparse
 import hashlib
 import json
+import os
 import re
 import time
 from datetime import UTC, datetime
@@ -36,7 +37,7 @@ def checked_url(url):
     return url
 
 
-def restore(row, raw_dir, client):
+def restore(row, raw_dir, client, archive_lookup=None):
     """Validate cache or fetch to a temporary file; never overwrite a different registered source."""
     filename = row["filename"]
     if not re.fullmatch(r"(?:results/)?[A-Za-z0-9_-]+\.pdf", filename):
@@ -49,6 +50,17 @@ def restore(row, raw_dir, client):
         if cm.sha256(path) != row["sha256"]:
             raise ValueError("Local source hash mismatch; refusing replacement")
         return "verified_local"
+    if archive_lookup:
+        archived = archive_lookup(row["sha256"])
+        if archived and archived[0] == url:
+            body = bytes(archived[1])
+            if (not body.startswith(b"%PDF-") or len(body) > MAX_PDF_BYTES
+                    or hashlib.sha256(body).hexdigest() != row["sha256"]):
+                raise ValueError("Archived PDF does not match the reviewed source")
+            write_pdf(path, body)
+            return "restored_verified_archive"
+    if client is None:
+        raise ValueError("Archiving requires the reviewed PDF locally")
     # Redirects are checked individually before the next request, including scheme/host/credentials.
     for _ in range(6):
         with client.stream("GET", url, follow_redirects=False) as response:
@@ -63,31 +75,67 @@ def restore(row, raw_dir, client):
                     raise ValueError("Source exceeds PDF size limit")
         if not body.startswith(b"%PDF-") or hashlib.sha256(body).hexdigest() != row["sha256"]:
             raise ValueError("Downloaded PDF does not match the reviewed source")
-        path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = path.with_suffix(".pdf.part")
-        try:
-            temporary.write_bytes(body)
-            temporary.replace(path)
-        finally:
-            temporary.unlink(missing_ok=True)
+        write_pdf(path, body)
         return "downloaded_verified"
     raise ValueError("Too many source redirects")
 
 
-def sources(client, root=ROOT):
+def write_pdf(path, body):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".pdf.part")
+    try:
+        temporary.write_bytes(body)
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def registered_rows(root):
     rows = cm.read_manifest(root / "data/manifest.csv")
     extra = root / "data/results_manifest.csv"
     if extra.exists():
         import csv
         with extra.open() as stream:
             rows += list(csv.DictReader(stream))
+    return [r for r in rows if r["filename"]]
+
+
+def archive_sources(conn, root=ROOT):
+    rows = registered_rows(root)
+    payloads = []
+    for row in rows:
+        # The restore path validates basename, host and hash without making a request for a local PDF.
+        restore(row, root / "data/raw", None)
+        body = (root / "data/raw" / row["filename"]).read_bytes()
+        if not body.startswith(b"%PDF-") or len(body) > MAX_PDF_BYTES:
+            raise ValueError("Invalid source PDF")
+        payloads.append((row["sha256"], row["source_url"], body))
+    conn.execute((root / "db/schema.sql").read_text())
+    with conn.cursor() as cur:
+        cur.executemany("""insert into source_pdfs (sha256,source_url,content) values (%s,%s,%s)
+            on conflict (sha256) do nothing""", payloads)
+    # Verify read-back including RLS rather than treating successful writes as recovery proof.
+    for sha, url, body in payloads:
+        archived = conn.execute("select source_url,content from source_pdfs where sha256=%s", (sha,)).fetchone()
+        if not archived or archived[0] != url or bytes(archived[1]) != body:
+            raise ValueError("Source archive read-back mismatch")
+    rls = conn.execute("select relrowsecurity from pg_class where oid='quantrag.source_pdfs'::regclass").fetchone()[0]
+    policies = conn.execute("select count(*) from pg_policies where schemaname='quantrag' and tablename='source_pdfs'").fetchone()[0]
+    if not rls or policies:
+        raise ValueError("Private source archive requires row-level security with no public policies")
+    return {"ok": True, "archived_documents": len(payloads), "bytes": sum(len(p[2]) for p in payloads),
+            "rls_enabled": rls, "access_policies": policies}
+
+
+def sources(client, root=ROOT, archive_lookup=None):
+    rows = registered_rows(root)
     results = []
     for row in rows:
         if not row["filename"]:
             continue
         result = {"symbol": row["symbol"], "period": row["fiscal_label"], "filename": row["filename"]}
         try:
-            result["status"] = restore(row, root / "data/raw", client)
+            result["status"] = restore(row, root / "data/raw", client, archive_lookup)
         except (ValueError, httpx.HTTPError) as exc:
             # No raw exceptions: URLs from a redirect could contain sensitive query parameters.
             result.update(status="blocked", category=type(exc).__name__)
@@ -135,12 +183,25 @@ def health(client):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["health", "sources"])
+    parser.add_argument("mode", choices=["health", "sources", "archive"])
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     timeout = 120 if args.mode == "health" else 30
     with httpx.Client(timeout=httpx.Timeout(timeout, connect=15), follow_redirects=False) as client:
-        report = health(client) if args.mode == "health" else sources(client)
+        if args.mode == "archive" or (args.mode == "sources" and os.getenv("SUPABASE_DB_URL")):
+            import psycopg
+            with psycopg.connect(os.environ["SUPABASE_DB_URL"], connect_timeout=15,
+                                 options="-c search_path=quantrag,public,extensions") as conn:
+                if args.mode == "archive":
+                    report = archive_sources(conn)
+                else:
+                    conn.execute("set transaction read only")
+                    exists = conn.execute("select to_regclass('quantrag.source_pdfs')").fetchone()[0]
+                    def lookup(sha):
+                        return conn.execute("select source_url,content from source_pdfs where sha256=%s", (sha,)).fetchone()
+                    report = sources(client, archive_lookup=lookup if exists else None)
+        else:
+            report = health(client) if args.mode == "health" else sources(client)
     report["checked_at"] = datetime.now(UTC).isoformat()
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2) + "\n")

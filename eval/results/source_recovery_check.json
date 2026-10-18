@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "restored": 58,
+  "issuer_requests": 0,
+  "rls_enabled": true,
+  "access_policies": 0,
+  "checked_at": "2026-10-18T06:44:35.680334+00:00",
+  "manifest_sha256": "30adcd7c2a3c3b5a02f4261a95364bbff4555e280045d12f53d443ba0749dd58",
+  "method": "Restored all registered transcript and supplemental PDFs into an empty temporary directory from the private database archive; each URL/hash/size checked; any issuer HTTP request would fail the check."
+}

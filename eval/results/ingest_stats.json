@@ -346,8 +346,8 @@
     "avg_tokens_per_chunk": 155.7,
     "median_tokens_per_chunk": 108.0,
     "max_tokens_per_chunk": 450,
-    "quantrag_schema_mb": 23.07,
-    "database_mb": 33.8,
+    "quantrag_schema_mb": 44.98,
+    "database_mb": 55.8,
     "supabase_free_tier_mb": 500
   },
   "manifest_target": {
