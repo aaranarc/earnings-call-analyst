@@ -1,8 +1,22 @@
 # Phase 6 retrieval evaluation
 
-The runner is ready for a human-reviewed gold set. No gold questions or benchmark scores have been generated.
+The runner is ready for a human-reviewed gold set. No human-approved gold set or final benchmark scores are published.
 The number-checker labels remain a separate Phase 5 task. Generation and publication tools are implemented below. Reviewed generation/judge runs,
 human calibration, model comparison, refusal threshold selection and the observed failure-case report remain pending.
+
+## Prepare a review packet
+
+`scripts/prepare_gold_review.py --out-dir <new-directory>` creates 60 **unreviewed draft candidates** from a
+read-only, repeatable-read database snapshot. It includes 30 single-period questions, 15 peer comparisons,
+10 across-period questions and 5 proposed refusals, with exact chunk text, original PDF pages and corpus hashes.
+The templates do not establish answerability, accounting comparability or complete evidence. A person must
+edit and approve every question and supporting quote before it becomes gold data. All review flags start false
+and reviewer names are blank; the benchmark runner rejects this draft. No generated answers or retrieval
+results are consulted, and the deferred numeric answer key is never read. The tool refuses to overwrite a packet.
+
+After review, save the approved questions as `eval/gold.jsonl` and use the validation and run commands below.
+Judge credentials are a separate dependency. Until review and actual runs finish, keep public benchmark scores
+pending and development results labelled as development data.
 
 ## Prepare gold data before running the system
 

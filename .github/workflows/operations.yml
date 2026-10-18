@@ -1,0 +1,86 @@
+name: Production checks and reviewed corpus refresh
+
+on:
+  schedule:
+    - cron: '30 2 * * *'
+    - cron: '30 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      refresh:
+        description: 'Restore hash-verified registered PDFs, ingest and export updated snapshots'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quantrag-operations
+  cancel-in-progress: false
+
+jobs:
+  health:
+    if: github.event.schedule != '30 3 * * 0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install httpx==0.28.1 PyYAML==6.0.3
+      - run: python scripts/operations.py health --out /tmp/health.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-readiness
+          path: /tmp/health.json
+          retention-days: 30
+
+  refresh:
+    if: github.event.schedule == '30 3 * * 0' || inputs.refresh == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install source checker
+        run: pip install httpx==0.28.1 PyYAML==6.0.3 'psycopg[binary]==3.3.6'
+      - name: Restore only registered, hash-verified official sources
+        run: python scripts/operations.py sources --out /tmp/sources.json
+      - name: Require configured database
+        run: test -n "$SUPABASE_DB_URL"
+      - name: Install ingestion dependencies
+        run: pip install -c backend/requirements-api.lock -e 'backend[dev,api]'
+      - run: python scripts/check_manifest.py --gate phase2
+      - name: Preserve verified sources in the private recovery archive
+        run: python scripts/operations.py archive --out /tmp/source-archive.json
+      - name: Idempotent ingestion
+        working-directory: backend
+        run: python -m ingest.run
+      - name: Refresh and validate snapshots
+        run: |
+          python eval/ingest_stats.py
+          python scripts/build_company_monitor.py
+          python scripts/export_public_data.py
+          python scripts/build_company_monitor.py --check
+          python scripts/export_public_data.py --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-refresh
+          path: |
+            /tmp/sources.json
+            /tmp/source-archive.json
+            eval/results/ingest_stats.json
+            eval/results/company_monitor.json
+            frontend/lib/public-data.json
+          retention-days: 30
+      # Snapshots are reviewable artifacts. Publishing them still requires a reviewed commit and deploy.
+      # Never upload raw copyrighted PDFs, database URLs, or blind evaluation material.

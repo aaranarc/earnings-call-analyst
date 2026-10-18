@@ -1,7 +1,55 @@
 {
-  "date": "2026-10-16",
+  "date": "2026-10-18",
   "database": "supabase",
   "documents": [
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 90,
+      "numbers": 306
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 67,
+      "numbers": 261
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q4 FY25",
+      "chunks": 75,
+      "numbers": 312
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q1 FY26",
+      "chunks": 74,
+      "numbers": 320
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 80,
+      "numbers": 345
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 79,
+      "numbers": 319
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 59,
+      "numbers": 321
+    },
+    {
+      "symbol": "AXISBANK",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 81,
+      "numbers": 325
+    },
     {
       "symbol": "HCLTECH",
       "fiscal_label": "Q2 FY25",
@@ -52,15 +100,21 @@
     },
     {
       "symbol": "HDFCBANK",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 62,
+      "numbers": 123
+    },
+    {
+      "symbol": "HDFCBANK",
       "fiscal_label": "Q4 FY26",
       "chunks": 61,
       "numbers": 183
     },
     {
-      "symbol": "HDFCBANK",
+      "symbol": "HINDUNILVR",
       "fiscal_label": "Q1 FY27",
-      "chunks": 62,
-      "numbers": 123
+      "chunks": 72,
+      "numbers": 72
     },
     {
       "symbol": "HINDUNILVR",
@@ -103,12 +157,6 @@
       "fiscal_label": "Q4 FY26",
       "chunks": 92,
       "numbers": 108
-    },
-    {
-      "symbol": "HINDUNILVR",
-      "fiscal_label": "Q1 FY27",
-      "chunks": 72,
-      "numbers": 72
     },
     {
       "symbol": "ICICIBANK",
@@ -171,6 +219,60 @@
       "numbers": 155
     },
     {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q2 FY25",
+      "chunks": 69,
+      "numbers": 242
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q3 FY25",
+      "chunks": 90,
+      "numbers": 127
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q4 FY25",
+      "chunks": 61,
+      "numbers": 237
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q1 FY26",
+      "chunks": 83,
+      "numbers": 211
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q2 FY26",
+      "chunks": 106,
+      "numbers": 178
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q3 FY26",
+      "chunks": 88,
+      "numbers": 232
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q4 FY26",
+      "chunks": 83,
+      "numbers": 260
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 83,
+      "numbers": 196
+    },
+    {
+      "symbol": "TCS",
+      "fiscal_label": "Q1 FY27",
+      "chunks": 69,
+      "numbers": 74
+    },
+    {
       "symbol": "TCS",
       "fiscal_label": "Q2 FY26",
       "chunks": 95,
@@ -187,12 +289,6 @@
       "fiscal_label": "Q4 FY26",
       "chunks": 76,
       "numbers": 120
-    },
-    {
-      "symbol": "TCS",
-      "fiscal_label": "Q1 FY27",
-      "chunks": 69,
-      "numbers": 74
     },
     {
       "symbol": "WIPRO",
@@ -244,14 +340,14 @@
     }
   ],
   "totals": {
-    "documents": 40,
-    "chunks": 2700,
-    "numbers": 5676,
-    "avg_tokens_per_chunk": 155.1,
-    "median_tokens_per_chunk": 106.0,
+    "documents": 56,
+    "chunks": 3968,
+    "numbers": 9868,
+    "avg_tokens_per_chunk": 155.7,
+    "median_tokens_per_chunk": 108.0,
     "max_tokens_per_chunk": 450,
-    "quantrag_schema_mb": 15.46,
-    "database_mb": 26.23,
+    "quantrag_schema_mb": 44.98,
+    "database_mb": 55.8,
     "supabase_free_tier_mb": 500
   },
   "manifest_target": {

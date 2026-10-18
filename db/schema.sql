@@ -54,3 +54,12 @@ create table if not exists eval_runs (
   created_at timestamptz default now(),
   metrics jsonb
 );
+
+-- Private recovery copies of reviewed official sources; no public access policy or API route.
+create table if not exists source_pdfs (
+  sha256 text primary key check (sha256 ~ '^[0-9a-f]{64}$'),
+  source_url text not null,
+  content bytea not null check (octet_length(content) between 5 and 31457280),
+  archived_at timestamptz not null default now()
+);
+alter table source_pdfs enable row level security;
