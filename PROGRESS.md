@@ -1,15 +1,17 @@
 # QuantRAG v2: Progress
 
-## Current release status · 2026-10-16
-- Core ingestion, retrieval, cited answers, number checking, API, dashboard and research storage are implemented.
-- Verified corpus: **40 official transcripts across 7 Indian companies**, plus 2 separately registered HDFC results releases. Latest-four coverage is 25/48; full planned window is 40/96. Remaining coverage is not complete.
-- Growth Payoff is deployed: 4 reviewed investment projects, 9 sourced milestones, operational progress chart and a 3/5-year assumption explorer. It does not claim a validated company forecast or automatic coverage of all projects.
-- QuarterLens and Follow-through retain source quotes, reporting bases, missing-period handling and unresolved evidence saving.
-- Phase 6 evaluation tooling is implemented. Human-reviewed gold questions, blind number labels, judge calibration and published benchmark scores remain pending. The owner deferred the 120 labels and Nestlé count.
-- Published on existing free [Vercel frontend](https://quantrag.vercel.app/growth-payoff) and [Render API](https://quantrag-api.onrender.com/health), from release commit `1dac325`. [Main CI](https://github.com/aaranarc/earnings-call-analyst/actions/runs/38924279612) passed. Verified the live source drawer, scenario controls, 375px layout, expanded corpus snapshot, API health and out-of-scope refusal.
-- Release smoke-test limitation: cited-answer generation reached Gemini but the provider returned HTTP 503 UNAVAILABLE (high demand). A successful live generated answer was not verified in this release check; retry when provider availability recovers. Dashboard evidence and scenarios remain available independently.
-- Bankruptcy/EWS integration and Telegram are outside the current release scope. No new paid hosting is authorized.
-- The chronological phase notes below are historical development records, not the current completion checklist.
+## Current release status · 2026-10-18
++- Core ingestion, retrieval, cited answers, number checking, API, dashboard and browser-local research storage are implemented.
++- Verified corpus: **56 official transcripts across 9 Indian companies**, plus 2 separately registered HDFC results releases. Axis and Kotak each now cover the complete eight-quarter window. Latest-four coverage is 33/48; full planned coverage is 56/96. See `eval/results/coverage_expansion_56.json` for the database/manifest match and zero-additions replay.
++- Growth Payoff remains a reviewed four-project pilot with sourced milestones and explicit three-/five-year scenarios. Whole-company forecasts are withheld; no validated forecasting model or causal payoff result is claimed.
++- QuarterLens preserves source quotes, accounting basis, missing quarters, and reported vs adjusted series. Bank extraction now recognizes NIM while rejecting domestic/adjusted/annual figures and wrong-period attribution.
++- Provider retry/fallback and dated saved outage examples are implemented. A successful live cited TCS answer was verified after the earlier provider outage; this supersedes the October 16 failed release probe.
++- The latest UI refinements were merged in PR #14: Ask is the primary home action, source-derived development results are visible, chart scales fit the data, answer lists render correctly, research starts empty, and contrast/grammar/internal arrows were corrected.
++- Daily public readiness checks and a weekly hash-verified registered-source refresh are configured in `.github/workflows/operations.yml`. Refreshed public JSON remains a review artifact until committed and deployed. Download blocks fail closed; automatic new-source discovery is not implemented.
++- Phase 6 runners and publication gates are ready. A separate 60-question source-linked **unreviewed draft** can be generated with `scripts/prepare_gold_review.py`. Human gold approval, cross-family judge credentials, actual runs/calibration and publication remain pending. The owner's 120 blind number labels and Nestlé count remain untouched.
++- Existing free [Vercel frontend](https://quantrag.vercel.app) and [Render API](https://quantrag-api.onrender.com/health) are the deployment targets. Current checks are in [main CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain); scheduled checks are in [Operations](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/operations.yml). No paid resources were added.
++- Bankruptcy/EWS integration and Telegram remain outside the current release scope.
++- The chronological phase notes below are historical development records, not the current completion checklist.
 
 ## The v1 baseline is for a tiny corpus (read before comparing v1 and v2)
 v1's data folder held 9 PDFs, but **only 6 were real transcripts** (JPMorgan, HDFC and Infosys, two quarters each). The other 3 (Apple, Microsoft, Reliance) were one-line placeholders. The shipped index held just **one** real transcript (JPMorgan Q2 2024, 88 chunks). So v1's memory and latency figures describe a system answering over roughly one transcript, and v2's quality numbers have **no v1 equivalent** to compare against. Any "v1 → v2" claim must say this. Only the reranker memory story (peak RAM with and without the PyTorch reranker) is a like-for-like comparison.

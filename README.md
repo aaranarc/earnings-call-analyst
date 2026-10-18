@@ -7,7 +7,7 @@
 ![python](https://img.shields.io/badge/python-3.11-blue)
 
 > **v2.0-alpha: a working core engine with a public roadmap.** The engine runs end to end from the command line on a
-> growing corpus (40 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
+> growing corpus (56 transcripts). **[Open the live dashboard](https://quantrag.vercel.app)** — free Vercel frontend and Render API. The API wakes on demand after idle periods. Every number below comes from a file in
 > [`eval/results/`](eval/results/) and can be re-run.
 >
 > *Research and educational project. Not investment advice.*
@@ -38,7 +38,7 @@ until sufficient comparable financial history and historical validation exist. R
 with `python scripts/build_growth_payoff.py`; `--check` verifies its provenance and reviewed definitions.
 
 [QuarterLens](https://quantrag.vercel.app/watchlist) puts sourced quarterly changes first:
-star companies, inspect operating-margin bars, open management quotes and save a change to your evidence pile.
+star companies, inspect margin lines and dots, open management quotes and save a change to your evidence pile.
 Existing notes and thesis tools remain in [Saved research](https://quantrag.vercel.app/research).
 Favourites and saved research stay in the browser; export your research to back it up.
 
@@ -54,8 +54,8 @@ and reported ranges stay visible. HDFC margins also use two separately registere
 consistent total-assets basis. Change cards distinguish company-reported movement from calculations on
 adjacent as-reported figures; missing quarters and adjusted figures are not silently treated as comparable.
 It does not infer a missed commitment, establish causality, rate a company or forecast five-year performance.
-This is a sourced margin overview, not a complete quarterly income-statement database. Snapshots refresh on ingestion,
-not on a background schedule. To refresh after adding verified PDFs, run
+This is a sourced margin overview, not a complete quarterly income-statement database. A weekly job refreshes registered, hash-verified sources and produces reviewable snapshots; source blocks stop
+the refresh. See [scheduled operations](docs/OPERATIONS.md). New source discovery and public deployment still require review. To refresh after adding verified PDFs, run
 `python scripts/build_company_monitor.py` then `python scripts/export_public_data.py` before deploying.
 
 ```bash
@@ -98,14 +98,14 @@ flowchart LR
 
 ## Measured so far
 
-Coverage reflects the current 40-transcript ingest snapshot. The other development measurements below used the
+Coverage reflects the current 56-transcript ingest snapshot. The other development measurements below used the
 original 4-transcript corpus and are historical engineering checks, not benchmarks of the expanded corpus.
 Each figure links to the file it comes from.
 
 | What | Result | Notes | Source |
 |---|---|---|---|
-| Corpus in the database | **40** transcripts · **2,700** chunks · avg **155.1** tokens/chunk · **5,676** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
-| Database size | `quantrag` schema **15.46 MB**; whole database **26.23 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Corpus in the database | **56** transcripts · **3,968** chunks · avg **155.7** tokens/chunk · **9,868** stored numbers | target is 96 transcripts | [`ingest_stats.json`](eval/results/ingest_stats.json) |
+| Database size | `quantrag` schema **23.07 MB**; whole database **33.8 MB** of Supabase free's 500 MB | | [`ingest_stats.json`](eval/results/ingest_stats.json) |
 | Retrieval recall@5, **dev set** | hybrid **19/20** · hybrid + rerank **18/20** (router off) → **19/20** (router on) | 20 hand-written questions written while building, not a benchmark; one label widened after seeing results (D21) | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Retrieval latency, dev set | hybrid p50 **7.4–7.7 ms**; hybrid + rerank p50 **0.43–0.46 s** | local Postgres, 3 runs | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
 | Reranker peak memory, **macOS** | **386–419 MB** with reranking (6 runs), down from **1,116–1,191 MB** untuned; 274–285 MB with no reranker | macOS RSS is noisy; Linux not measured yet | [`smoke_retrieval.json`](eval/results/smoke_retrieval.json) |
@@ -117,9 +117,9 @@ Each figure links to the file it comes from.
 
 ## Known limitations
 
-- **Partial coverage.** 40 of 96 planned transcripts across seven Indian companies: HCLTech, Wipro and HUL
+- **Partial coverage.** 56 of 96 planned transcripts across nine Indian companies: HCLTech, Wipro, HUL, Axis and Kotak
   have eight quarters each; Infosys and ICICI Bank have five each, TCS four and HDFC Bank two.
-  The latest-four gate is 25/48. US companies and the remaining Indian calls are not covered yet.
+  The latest-four gate is 33/48. US companies and the remaining Indian calls are not covered yet.
 - **The dev set is not a benchmark.** It has 20 questions written during development, and one label was widened after
   seeing results. The human-verified 60-question gold set is Phase 6.
 - **The number checker matches values, not meaning.** "Infosys's margin was 24%" passes if 24% is in the cited
@@ -132,7 +132,7 @@ Each figure links to the file it comes from.
   an incomplete sector refuses before retrieval. "This/latest quarter" means the latest ingested quarter,
   not the current calendar quarter. Explicit fiscal periods take precedence over relative wording.
 - **Memory figures are from macOS** and vary by up to ~140 MB between identical runs. Cloud Run (Linux) needs its own measurement.
-- **[Public dashboard available](https://quantrag.vercel.app)** on free hosting; the API sleeps when idle. There is no weekly ingest job. The v1 code (`app/`, `models/`, `chroma_db/`) is
+- **[Public dashboard available](https://quantrag.vercel.app)** on free hosting; the API sleeps when idle. A [weekly registered-source refresh](docs/OPERATIONS.md) is configured and fails closed on unavailable or changed PDFs. The v1 code (`app/`, `models/`, `chroma_db/`) is
   still in the repo pending removal.
 
 ## Roadmap
@@ -140,13 +140,13 @@ Each figure links to the file it comes from.
 | Step | What | Status |
 |---|---|---|
 | Phase 5 eval | blind-label 120 numbers; publish checker precision/recall per corruption type | labelling page ready |
-| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 40/96; latest-four gate 25/48 |
+| Corpus | download the remaining transcripts (gates: one per sector ✓ → latest 4 quarters → all 96) | 56/96; latest-four gate 33/48 |
 | Phase 6 | 60-question human-verified gold set; cross-family judge (Groq/Llama); ablations (dense / keyword / hybrid / rerank / router); refusal threshold; failure cases | [Retrieval, generation and calibration tooling ready](docs/EVALUATION.md); human-reviewed runs pending |
 | Phase 7 | FastAPI with checked-result SSE, server-only access token, daily request budget, health | implemented |
 | Phase 8 | Next.js dashboard, citation drawers, number badges, retrieval trace, evaluation page | implemented |
-| Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | [deployed on Vercel + free Render](https://quantrag.vercel.app); automated ingest pending |
+| Phase 9 | Production images, access controls, deployment runbook; hosting and automated ingest | [deployed on Vercel + free Render](https://quantrag.vercel.app); scheduled registered-source refresh and daily readiness checks; source availability and snapshot publication remain gated |
 | Bankruptcy/EWS integration | Separate distress-prediction project | outside current scope by owner decision |
-| Release documentation | README, architecture, deployment and evaluation runbooks | implemented; current release verification pending |
+| Release documentation | README, architecture, deployment and evaluation runbooks | implemented; release checks linked in CI |
 | Growth Payoff | Sourced investment milestones, operational progress and explicit scenario explorer | implemented as a reviewed pilot; validated company forecasts pending |
 | Thesis tracker | source-quoted AI suggestions, multi-period evidence timeline, manual assessment, import/export, printable brief | implemented on demand |
 | Telegram bot | Optional delivery channel | deferred by owner |
