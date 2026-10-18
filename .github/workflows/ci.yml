@@ -54,6 +54,7 @@ jobs:
       - name: Test with coverage
         working-directory: backend
         run: |
+          set -o pipefail
           pytest tests ../scripts -q \
             --cov=ingest --cov=numcheck --cov=retrieve --cov=generate --cov=quantrag --cov=monitor --cov=check_manifest \
             --cov-report=term | tee pytest.txt

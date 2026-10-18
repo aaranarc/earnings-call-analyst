@@ -121,3 +121,7 @@ When both provider attempts fail, Ask displays three explicitly dated example an
 To replace the curated examples, supply the database environment and run `python scripts/save_example_answers.py --answers <three-or-four-real-result-files> --model <generator-id> --reviewed-by <reviewer>`. The script checks each cited passage against the database before saving. `--check` validates the bundled dates, citations and manifest provenance offline; CI runs it. Do not invent answers or saved dates.
 
 The initial Ask loading state explains free-hosting wake-up and shows elapsed seconds. API readiness, embedding/reranker startup and answer-generation latency are different measurements; do not present warm-request timings as an idle Render wake-up.
+
+## Scheduled operations
+
+Daily public readiness checks and a weekly registered-source refresh are defined in `.github/workflows/operations.yml`. See [OPERATIONS.md](OPERATIONS.md) for timing, secret setup, source-block handling and reviewed snapshot publication. These jobs do not generate model answers or evaluation labels.
