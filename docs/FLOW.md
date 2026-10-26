@@ -65,6 +65,8 @@ Smoke test: `eval/smoke_retrieval.py --rerank|--no-rerank [--batch-size --max-to
 4. Print errors, notes and counts → `gates(complete, companies)`: `phase2` (1 per sector), `A` (`TIER_A` × all companies), `B` (`WINDOW` × all companies minus `EXCUSED`, ≤ `MAX_EXCUSED`) → exit 1 if any row error or the `--gate` (default `B`) fails
 
 ## v1 (tag `v1-final`)
+> The v1 files in this section were removed from the working tree in the interview cleanup; they now live only in tag `v1-final` (`git show v1-final:<path>`).
+
 
 ### User asks a question (Streamlit → API)
 1. `app/ui/streamlit_app.py` chat input → `requests.post(f"{API_URL}/ask", json={"question": ...}, timeout=120)`

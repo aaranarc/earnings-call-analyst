@@ -48,7 +48,7 @@ One dated entry per meaningful decision. Never rewrite old entries; add a new en
 ## D7 · 2026-10-15 · `backend/` and `frontend/` at the repo root
 - **Decided (Aarana):** no `quantrag/` wrapper folder. This repo *is* QuantRAG.
 - **Why:** one less level of nesting, and nothing else lives in this repo.
-- **Trade-off:** the v1 folders (`app/`, `models/`, `chroma_db/`) sit beside the v2 ones until they are removed with approval.
+- **Trade-off:** the v1 folders (`app/`, `models/`, `chroma_db/`) sat beside the v2 ones until they were removed; they now live only in tag `v1-final`.
 - **Revisit if:** never, unless the repo starts hosting a second project.
 
 ## D8 · 2026-10-15 · Corpus window: Q2 FY25 → Q1 FY27, the same 8 quarters for all 12 companies

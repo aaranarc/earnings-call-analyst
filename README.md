@@ -79,7 +79,7 @@ flowchart LR
 | Layer | Implementation |
 | --- | --- |
 | Dashboard | Next.js, React, TypeScript, Geist / Geist Mono |
-| API and generation | Python, FastAPI, Gemini; checked-result SSE and bounded provider fallback |
+| API and generation | Python, FastAPI, Gemini; checked-result SSE; transient provider errors retry once (2 attempts total), the second optionally on a fallback Gemini model (`GEMINI_FALLBACK_MODEL`) |
 | Retrieval | ONNX embeddings and cross-encoder reranking, PostgreSQL full-text search, reciprocal-rank fusion |
 | Data | Supabase PostgreSQL / pgvector; idempotent ingestion with speaker, page and fiscal-period metadata |
 | Delivery | Docker, Vercel, Render, GitHub Actions, pytest, Playwright and automated accessibility checks |

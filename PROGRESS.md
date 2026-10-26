@@ -19,6 +19,8 @@ v1's data folder held 9 PDFs, but **only 6 were real transcripts** (JPMorgan, HD
 ## Phase 0: v1 audit
 
 ### What each v1 module does
+> The v1 files below were removed from the working tree in the interview cleanup; they now live only in tag `v1-final` (`git show v1-final:<path>`).
+
 | Module | What it does | v2 fate |
 |---|---|---|
 | `app/main.py` | FastAPI: `POST /ask`, `GET /companies`, `POST /risk-score`, `GET /health/memory`. Errors return the full Python traceback to the client. | Replaced in Phase 7. Keep the idea of the memory endpoint (psutil RSS). Stop leaking tracebacks. |
@@ -26,7 +28,7 @@ v1's data folder held 9 PDFs, but **only 6 were real transcripts** (JPMorgan, HD
 | `RAGService.predict_risk` | Taiwan-bankruptcy XGBoost + RobustScaler + winsorising. Features without data are filled with a constant `0.45–0.54`, chosen by **a hash of the company name**. 4 features are mapped from yfinance. SHAP top-3, then a RAG call for "context". | Removed. Replaced by the EWS API (Phase 10). |
 | `app/ui/streamlit_app.py` | Streamlit UI (Bloomberg style): chat, company list, risk gauge. Before the `v1-final` WIP commit, the SHAP panel showed **hard-coded** percentages (34% / 28% / 15%). | Replaced by Next.js (Phase 8). |
 | `re_ingest.py` (now committed) | The ingest that built the shipped index: deletes `chroma_db/`, PyMuPDF per page, 1000-char/200-overlap splitter, Gemini embeddings (3072-d). Filename parsing puts the market into `quarter` (`parts[1]`) and ignores the real quarter, so Q1 and Q2 of one company get **identical chunk IDs** (`{company}_{quarter}_{year}_{i}`). Errors are caught and only printed. | Replaced by `backend/ingest/` (Phase 2). |
-| `app/scripts/ingest.py` | Older ingest: MiniLM embeddings (384-d) into a Chroma server. **Doesn't match** the Gemini query embeddings, so it is dead code. | Delete (needs approval). |
+| `app/scripts/ingest.py` | Older ingest: MiniLM embeddings (384-d) into a Chroma server. **Doesn't match** the Gemini query embeddings, so it is dead code. | Deleted; lives only in tag `v1-final`. |
 | `app/scripts/evaluate_rag.py` | 5 hand-written questions; Gemini judges Gemini (faithfulness, context precision). **Crashes**: calls `rag.reranker.predict` while `reranker` is `None`. The ground truths paraphrase the synthetic stub PDFs (below). | Replaced by `eval/` (Phase 6). Accurate wording: "v1 had a 5-question self-judged eval that no longer runs". |
 | `models/` | XGBoost model + scaler + bounds + feature names. | Removed with the risk score. |
 | `chroma_db/` (committed) | 91 chunks: **88 from JPMorgan Q2 only, 1 each from the Apple/Microsoft/Reliance stubs, 0 HDFC, 0 Infosys, 0 JPMorgan Q1.** | Replaced by pgvector (Phase 2). |
@@ -62,7 +64,7 @@ Caveats: measured on a macOS arm64 laptop (Python 3.11.15), not Render's Linux b
 
 ## Cleanup candidates (ask before deleting)
 Done in Phase 1 (D11): untracked scratch files and `* 2` duplicates moved to `../quantrag_v1_scratch/`, `venv/` deleted.
-Tracked v1 files to remove later in v2: `app/scripts/ingest.py`, `app/resave_model.py 22-34-15-124.py`, `app/services/resave_model copy.py`, `app/services/resave_model.py`, `resave_model.py`, `scratch.py`, `app/test_service.py`, `chroma_db/`, `models/`, the `.DS_Store` files.
+Tracked v1 files, now removed from the tree (they live only in tag `v1-final`): `app/scripts/ingest.py`, `app/resave_model.py 22-34-15-124.py`, `app/services/resave_model copy.py`, `app/services/resave_model.py`, `resave_model.py`, `scratch.py`, `app/test_service.py`, `chroma_db/`, `models/`, the `.DS_Store` files, plus the rest of `app/`, `re_ingest.py`, the root `requirements.txt`, `build.sh`, `.streamlit/` and `notebooks/`. `.DS_Store` is now in `.gitignore`.
 
 ## Phase 1: corpus
 ### Done (Claude Code)
@@ -211,7 +213,7 @@ Typical answer time ≈ 2.4 s (retrieve ≈ 0.45 s with reranker + Gemini ≈ 2 
 ### Done
 - `backend/numcheck/match.py`: `verified` / `found_elsewhere` / `derived` (formula) / `unverified` per number, using the citations in the number's own sentence (D31). Wired into `generate/answer.py`: every answer now has `numbers[]` (where, raw, value, unit, status, offsets, formula, source chunk). Table cells are checked against their own citations.
 - Extractor: stated precision (`decimals`) and a `pp` unit. Stored numbers unchanged (0 rows differ), so no re-ingest.
-- Tests: **67 number tests** (45 extraction + 22 matching: every format in the brief, precision, units, signs, ranges, sentence-level citations, derivations, made-up numbers) against the brief's ≥ 25. Full suite locally: **153 passed** (incl. DB tests on `quantrag_test`).
+- Tests: **67 number tests** (45 extraction + 22 matching: every format in the brief, precision, units, signs, ranges, sentence-level citations, derivations, made-up numbers) against the brief's ≥ 25. Full suite locally at that point: **153 passed** (incl. DB tests on `quantrag_test`); see live CI for current counts.
 - Labelling sheet: `eval/numbers_label.py` → 37 real answers (saved in `eval/private/`) → **120 rows: 77 real + 33 value corruptions + 10 context swaps**, shuffled under ids `n001…` (D32, D34). The answer key is only in git-ignored `eval/private/numcheck_key.json` (D33).
 - Labelling page: `python eval/label_server.py`, then open http://127.0.0.1:8765. Local only. One row at a time, number highlighted in the sentence, same-value numbers highlighted in the excerpts; keys 1/2/3 = supported / not supported / unsure; saves after every click to `eval/labels/numbers_labels.csv`. Checked: listens on 127.0.0.1 only, rejects bad labels, never sends key fields, renders correctly (headless-Chrome screenshot).
 - Scoring: `python eval/numbers_eval.py`: red and any-flag precision/recall for real / corrupted / all, plus recall per corruption type. Partial results stay in `eval/private/` until every row is labelled.
