@@ -28,12 +28,9 @@ eval/private/
 .coverage
 *.egg-info/
 
-# Dashboard dependencies and build outputs
-frontend/node_modules/
-frontend/.next/
-frontend/*.tsbuildinfo
-frontend/playwright-report/
-frontend/test-results/
+.streamlit/secrets.toml
+.pytest_cache/
+.ruff_cache/
 # Raw evaluation runs may contain future human review material; publish only deliberate reports.
 eval/runs/
 *.sqlite3

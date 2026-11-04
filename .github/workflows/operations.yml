@@ -80,7 +80,7 @@ jobs:
             /tmp/source-archive.json
             eval/results/ingest_stats.json
             eval/results/company_monitor.json
-            frontend/lib/public-data.json
+            ui/data/public-data.json
           retention-days: 30
       # Snapshots are reviewable artifacts. Publishing them still requires a reviewed commit and deploy.
       # Never upload raw copyrighted PDFs, database URLs, or blind evaluation material.

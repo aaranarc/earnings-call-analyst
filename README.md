@@ -1,130 +1,80 @@
-# QuantRAG
+# QuantRAG — Python financial research dashboard
 
-### Follow the claim. Check the number. Keep the evidence.
+Ask questions about official earnings calls, inspect the source passages and numerical checks, explore quarterly margins, and track investment milestones. The interface is **Streamlit (Python)**; FastAPI owns the existing research pipeline.
 
-A financial research dashboard for understanding what companies said, what changed between quarters, and what evidence supports your view. Built for individual investors, finance students and analysts who want to check the original source.
+[Open QuantRAG](https://quantrag.vercel.app) · [CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml)
 
-[![CI](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain)
-[![Operations](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/operations.yml/badge.svg?branch=main)](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/operations.yml)
-![Status: portfolio alpha](https://img.shields.io/badge/status-portfolio_alpha-DDEB91)
+The former Next.js/React/TypeScript frontend is replaced by a Python interface with the earlier charcoal-and-lime design: sidebar navigation, rounded metric cards, a source coverage grid, sector chart and compact research panels. Historical code remains in Git history. See `docs/verification` for release checks.
 
-**[Open the dashboard →](https://quantrag.vercel.app)** · [Ask the analyst](https://quantrag.vercel.app/ask) · [Explore Growth Payoff](https://quantrag.vercel.app/growth-payoff) · [Evaluation](https://quantrag.vercel.app/eval)
+## Run the dashboard
 
-![QuantRAG answering a Kotak Mahindra Bank question with a source citation, a numeric value check and an inspectable retrieval trace](docs/img/analyst-answer.jpg)
+Use Python 3.11. From the project root:
 
-*Actual live answer captured on 18 October 2026. The API runs on free Render hosting and may need time to wake after being idle.*
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r ui/requirements.txt
+python -m streamlit run streamlit_app.py
+```
 
-## Why it exists
+Open http://localhost:8501. Coverage, quarterly snapshots, project timelines and recorded development results work without credentials. Saved research starts empty and belongs to the current Streamlit session; export JSON before closing. There are no user accounts, shared note files, browser-storage migration or cross-device sync. JSON imports accept this Streamlit app's export format only.
 
-A company announces an investment. A later call reports progress. Another quarter brings a margin change. Those details are scattered across long PDFs, and a fluent AI summary can hide the wrong number, period or attribution.
+## Enable live answers
 
-QuantRAG brings those statements into one research workflow: **find a change → read the source → save the evidence → revisit your view.** Its focus is making company research traceable, with visual comparisons and inspectable answers.
+In a second terminal with the same environment:
 
-## Highlights
+```bash
+pip install -c backend/requirements-api.lock -e 'backend[api]'
+cp .env.example .env
+# Fill SUPABASE_DB_URL, GEMINI_API_KEY and GEMINI_MODEL in .env.
+python -m uvicorn quantrag.api:app --app-dir backend --env-file .env --host 127.0.0.1 --port 8000
+```
 
-- **Ask, then verify.** Ask questions about covered earnings calls, compare companies, and open citations with the original passage, speaker, quarter and PDF page. Number badges distinguish matched values, derived or elsewhere-found values, and unmatched values.
-- **QuarterLens.** Favourite companies and explore sourced margin charts and quarterly changes. Reported and adjusted figures retain their accounting basis; missing quarters stay visible as gaps.
-- **Growth Payoff.** Follow investment announcements through later execution milestones. Open the source behind each step, see where financial payoff remains unproven, and explore explicit three- or five-year operating-profit assumptions.
-- **An evidence pile you control.** Save cited findings to research notes, build a timeline and assess whether evidence supports or challenges your idea. Export/import JSON or print a research brief. Assessments remain yours.
-- **Inspect how an answer was built.** Expand the detected companies and periods, retrieval scores and latency breakdown. Unsupported questions can be refused; provider failures offer clearly dated saved examples and a retry button.
+The database must contain the ingested source corpus. PDFs, database credentials and model keys are not included. Set `API_ORIGIN` if the API is remote. If `API_ACCESS_TOKEN` is configured, both Python servers must use the same value; it is never entered in the browser. Streamlit loads the root `.env` automatically. Never commit it.
 
-<details>
-<summary><strong>See Growth Payoff: investment → execution → payoff</strong></summary>
+## What remains
 
-![Growth Payoff showing an investment timeline, source-linked operating milestones and a clearly labelled assumption explorer](docs/img/growth-payoff.jpg)
+- **Ask:** cited answers, comparison tables, source excerpts/PDF links, numerical status table and retrieval/timing details.
+- **QuarterLens:** favourite companies for the session; margin dots on a single selected accounting basis, reported changes and source excerpts. Missing values are not invented.
+- **Growth Payoff:** reviewed investment milestones, original sources and an explicit operating-profit sensitivity chart. It is not a trained forecast or stock-price predictor.
+- **Saved research:** save answers/evidence, write notes, choose an assessment, delete, export and import.
+- **Evaluation:** versioned development retrieval and memory results, pending final benchmark status and the CI link. No hand-entered test count or accuracy claim.
+- **Reliability:** server-side secrets, existing request budget, bounded provider retry and clearly dated saved examples after live-answer failures.
 
-*Dashboard captured on 16 October 2026. The dashed scenario line represents assumptions, not a validated forecast. Operational progress alone does not establish investment returns.*
-
-</details>
-
-## Try it
-
-1. **[Ask the analyst](https://quantrag.vercel.app/ask):** “What net interest margin did Kotak Mahindra Bank report in Q1 FY27?” Open the citation to inspect the source.
-2. **[Open QuarterLens](https://quantrag.vercel.app/watchlist):** favourite a covered company, select a quarter and inspect its margin history.
-3. **[Explore Growth Payoff](https://quantrag.vercel.app/growth-payoff):** follow an acquisition or capacity project from announcement to later reported milestones.
-4. **[Save your research](https://quantrag.vercel.app/research):** collect evidence and update your assessment as new information arrives. The workspace starts empty; examples are opt-in.
-
-Favourites and research are stored in your browser, without accounts or cross-device sync. Export JSON to keep a backup.
-
-## Coverage and evidence
-
-The [18 October 2026 ingest snapshot](eval/results/ingest_stats.json) contains **56 official earnings-call transcripts across nine Indian companies**, indexed into **3,968 source chunks**.
-
-| Sector | Companies |
-| --- | --- |
-| IT services | TCS, Infosys, HCLTech, Wipro |
-| Banking | HDFC Bank, ICICI Bank, Axis Bank, Kotak Mahindra Bank |
-| Consumer | Hindustan Unilever |
-
-The registered window spans **Q2 FY25–Q1 FY27**, with uneven coverage by company. The [live coverage view](https://quantrag.vercel.app/watchlist) exposes available quarters; the [manifest](data/manifest.csv) records source URLs and SHA-256 hashes. Two supplemental HDFC earnings releases support its margin view and are registered [separately](data/results_manifest.csv).
-
-Growth Payoff is a **reviewed pilot of four projects and nine milestones across three companies**. Follow-through currently links two TCS salary-announcement/report sequences for review. Neither feature automatically discovers or verifies every management commitment.
-
-## How it works
+No JWT login, Redis, Kafka or artificial microservice split has been added. The Streamlit UI calls the existing API using Python HTTPX; there is no JavaScript proxy to learn.
 
 ```mermaid
 flowchart LR
-    PDF["Official PDFs + source hashes"] --> Parse["Parse speakers, pages and sections"]
-    Parse --> Store[("PostgreSQL + pgvector")]
-    Q["Your question"] --> Route["Company, period and intent router"]
-    Route --> Retrieve["Vector + keyword search → RRF → ONNX reranker"]
-    Store --> Retrieve
-    Retrieve --> Answer["Gemini structured answer"]
-    Answer --> Check["Citation validation + numeric value matching"]
-    Check --> UI["Answer, sources and retrieval trace"]
-    Store --> Snapshots["Reviewed margin and project snapshots"]
-    Snapshots --> UI
+    User --> UI[Streamlit Python UI]
+    UI --> API[FastAPI]
+    API --> DB[(Supabase PostgreSQL + pgvector)]
+    API --> R[Hybrid retrieval + ONNX reranker]
+    R --> G[Gemini]
+    G --> C[Citation and numerical checks]
+    C --> UI
+    Snapshots[Reviewed committed JSON snapshots] --> UI
 ```
 
-| Layer | Implementation |
-| --- | --- |
-| Dashboard | Next.js, React, TypeScript, Geist / Geist Mono |
-| API and generation | Python, FastAPI, Gemini; checked-result SSE; transient provider errors retry once (2 attempts total), the second optionally on a fallback Gemini model (`GEMINI_FALLBACK_MODEL`) |
-| Retrieval | ONNX embeddings and cross-encoder reranking, PostgreSQL full-text search, reciprocal-rank fusion |
-| Data | Supabase PostgreSQL / pgvector; idempotent ingestion with speaker, page and fiscal-period metadata |
-| Delivery | Docker, Vercel, Render, GitHub Actions, pytest, Playwright and automated accessibility checks |
-
-Public coverage and evaluation snapshots ship with the frontend, so browsing them does not depend on a warm API. Daily readiness checks and weekly hash-verified refreshes maintain registered sources; changed or unavailable PDFs block refresh. New sources and public snapshot deployments still require review. [Operations runbook →](docs/OPERATIONS.md)
-
-## What is measured—and what is pending
-
-**[Development set, not a final benchmark](https://quantrag.vercel.app/eval).** The evaluation page presents recorded retrieval and reranker-memory results from [versioned reports](eval/results/). Those historical development checks used the original, smaller corpus; they do not establish accuracy on the expanded library.
-
-| Evidence | Where to inspect it |
-| --- | --- |
-| Current test status, test counts and coverage | [Latest CI runs on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) |
-| Retrieval development checks and memory measurements | [Recorded development results](eval/results/smoke_retrieval.json) |
-| Corpus inventory and ingest totals | [Ingest snapshot](eval/results/ingest_stats.json) |
-| Held-out retrieval, generation and judge evaluation | [Runner, review requirements and publication gates](docs/EVALUATION.md) |
-
-The evaluation tooling is implemented, but the **human-reviewed gold benchmark and blind numeric labels remain pending**. Automated tests passing is not proof of answer faithfulness or investment-prediction accuracy.
-
-## Run locally
-
-The quickest way to try the product is the **[live dashboard](https://quantrag.vercel.app)**. To work on the interface locally, use Node.js 22 and npm:
+## Tests and containers
 
 ```bash
-git clone https://github.com/aaranarc/earnings-call-analyst.git
-cd earnings-call-analyst/frontend
-npm ci
-npm run dev
+pip install -c backend/requirements-api.lock -e 'backend[dev,api]'
+pytest -c backend/pyproject.toml backend/tests scripts -q
+pytest ui/tests -q
+ruff check backend scripts eval --config backend/pyproject.toml
+ruff check streamlit_app.py ui
+# Full stack: fill .env, including a random API_ACCESS_TOKEN of at least 32 characters.
+docker compose up --build
 ```
 
-Open **http://127.0.0.1:3000**. Bundled coverage and evaluation views are available without database credentials. **Live questions and research checks require the Python API, your own database and Gemini credentials.**
+Compose exposes the Streamlit UI on port 8501; its API stays internal. PostgreSQL is external. Database integration tests require a separate throwaway local `TEST_DATABASE_URL` and may drop its test schema. See [local setup](docs/LOCAL_DEVELOPMENT.md).
 
-For the full stack, ingestion and tests, follow the **[local development guide](docs/LOCAL_DEVELOPMENT.md)**. Production configuration is in the **[deployment guide](docs/DEPLOYMENT.md)**. PDFs and credentials are not distributed with the repository.
+CI now runs Python backend tests and Streamlit tests, and builds the Streamlit image. Earlier Playwright tests belonged to the removed React UI and are not presented as tests of this version. Current CI results: [Actions on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) (check the commit on a run before associating it with a release).
 
-## Boundaries worth knowing
+## Evidence and limits
 
-- **Numeric matching is not semantic verification.** A value can match a passage while referring to the wrong metric, company or period. Read the citation.
-- **Scenarios are not predictions.** Growth Payoff models annual incremental operating profit under visible assumptions. It does not forecast share prices, whole-company performance or success/failure probabilities, and it does not prove ROI or causality.
-- **Coverage is partial.** The roadmap targets 96 transcripts across 12 Indian companies. US companies and a complete financial-statement database are not included. “Latest quarter” means the latest ingested quarter.
-- **Research is local; live answers depend on services.** Browser storage can be lost, and free hosting or model providers can be unavailable. Saved example answers are dated and explicitly labelled as examples.
+Corpus inventory comes from [the ingest snapshot](eval/results/ingest_stats.json), source registration from [the manifest](data/manifest.csv), and displayed figures from committed reports under `ui/data` and `eval/results`. Snapshots are dated, partial and not real-time market data. Human-reviewed final evaluation and blind numerical labels remain pending.
 
-## Explore the project
+A numerical value match does not establish the right company, metric or fiscal period. Management statements are not independently audited investment conclusions. Scenario assumptions do not prove actual ROI or predict a company's future success. Review the original sources.
 
-[Local development](docs/LOCAL_DEVELOPMENT.md) · [Architecture walkthrough](docs/FLOW.md) · [Design decisions](docs/DECISIONS.md) · [Evaluation](docs/EVALUATION.md) · [Deployment](docs/DEPLOYMENT.md) · [Operations](docs/OPERATIONS.md) · [Progress and next steps](PROGRESS.md)
-
-Built by **[Aarana Chaurasia](https://github.com/aaranarc)**. Found a misleading result, missing source or usability issue? [Open an issue](https://github.com/aaranarc/earnings-call-analyst/issues) with the question, company, quarter and supporting source. Keep credentials and personal research out of public reports.
-
-*Research and educational software, not investment advice. Generated answers can be wrong even when cited. Verify claims against the original documents. Source transcripts belong to their respective publishers. This repository does not currently declare a software license; public availability alone does not grant unrestricted reuse.*
+[Learning guide](docs/LEARNING.md) · [Request flow](docs/FLOW.md) · [Deployment](docs/DEPLOYMENT.md) · [Evaluation methodology](docs/EVALUATION.md) · [Historical implementation notes](docs/history/)

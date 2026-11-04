@@ -18,12 +18,13 @@ services:
     restart: unless-stopped
   web:
     image: quantrag-web:release
-    build: frontend
+    build:
+      context: .
+      dockerfile: ui/Dockerfile
     environment:
       API_ORIGIN: http://api:8000
       API_ACCESS_TOKEN: ${API_ACCESS_TOKEN:?Set API_ACCESS_TOKEN}
-      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
-    ports: ["3000:3000"]
+    ports: ["8501:8501"]
     init: true
     restart: unless-stopped
     depends_on:

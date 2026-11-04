@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "functions": {
+    "server.py": {
+      "maxDuration": 300,
+      "includeFiles": "{streamlit_app.py,ui/**,.streamlit/**}",
+      "excludeFiles": "{backend/**,docs/**,eval/**,assets/**,scripts/**,data/**,db/**,ui/tests/**,.venv/**}"
+    }
+  }
+}

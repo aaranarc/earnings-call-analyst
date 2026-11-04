@@ -1,4 +1,4 @@
-"""Local dashboard API. Start from the repository root; see frontend/README.md."""
+"""Local dashboard API. Start from the repository root; see docs/LOCAL_DEVELOPMENT.md."""
 import asyncio
 import csv
 import json

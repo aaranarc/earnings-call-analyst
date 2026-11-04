@@ -1,0 +1,32 @@
+{
+  "backend": {
+    "passed": 282,
+    "skipped": 8,
+    "coverage_percent": 74
+  },
+  "streamlit": {
+    "passed": 23,
+    "skipped": 0,
+    "coverage_percent": 89
+  },
+  "browser_smoke": {
+    "pages_checked": 7,
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "width": 375,
+        "height": 812
+      }
+    ],
+    "mobile_growth_horizontal_overflow": false
+  },
+  "limits": [
+    "No database credentials or live Gemini request were available.",
+    "Four DB integration tests and four raw-PDF tests skipped.",
+    "Docker CLI unavailable; container build not executed locally.",
+    "No git push or deployment performed."
+  ]
+}

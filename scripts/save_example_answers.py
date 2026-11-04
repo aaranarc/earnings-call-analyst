@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / 'frontend/lib/saved-answers.json'
+OUTPUT = ROOT / 'ui/data/saved-answers.json'
 
 
 def validate(rows):

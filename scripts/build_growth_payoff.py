@@ -12,7 +12,7 @@ from monitor.growth import PROJECTS, build_growth
 
 from ingest.parse import parse_transcript
 
-OUTPUT = ROOT/'frontend/lib/growth-data.json'
+OUTPUT = ROOT/'ui/data/growth-data.json'
 
 
 def validate(report, rows):

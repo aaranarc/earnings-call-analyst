@@ -8,12 +8,8 @@
 **/*.pyc
 **/.coverage
 **/*.egg-info
-frontend
 app
 notebooks
 data/raw
 eval/private
 eval/labels
-**/node_modules
-**/.next
-**/test-results
