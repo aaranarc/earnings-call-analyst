@@ -19,3 +19,15 @@ References: https://vercel.com/docs/functions/websockets and https://docs.stream
 For a persistent Python server, `ui/Dockerfile` starts Streamlit on the host's `PORT` (default 8501). Set `API_ORIGIN` and the shared server-only `API_ACCESS_TOKEN`; only the API needs database and Gemini credentials.
 
 For local containers, `docker compose up --build` starts both Python services. The UI is exposed on 8501; the API is internal. Budget state uses the existing named volume. No paid service is required or created by this configuration.
+
+## Vercel API migration
+
+`vercel.json` now defines `web` (Python ASGI Streamlit) and `analyst` (the container in root `Dockerfile.api`). Vercel Services and Container Runtime are beta. The container bakes the original FastEmbed/ONNX models into its image instead of downloading them on a user's request. Use project `PORT=8000`. The Dockerfile must remain at repository root because the container builder uses its directory as the build context.
+
+Set `SUPABASE_DB_URL`, `GEMINI_API_KEY`, `GEMINI_MODEL`, optional `GEMINI_FALLBACK_MODEL` and the existing `API_ACCESS_TOKEN` for Production and Preview. Set `API_PROVIDER=vercel` only in the target environment when testing/cutting over. Vercel injects `ANALYST_INTERNAL_URL` from the service binding; never invent its value. Leaving the provider unset retains `API_ORIGIN` for rollback. `/backend/health` and `/backend/docs` expose the API's read-only status/documentation; POST routes retain bearer authentication.
+
+`Dockerfile.api` selects `USAGE_BACKEND=postgres` and `API_ROOT_PATH=/backend`. The first budget reservation safely creates the counter table with row-level security (versioned SQL in `db/migrations`). The database role must own that table and have permission to create it. Budget failures are closed with 503, exhausted quotas with 429. SQLite remains available for the original single-instance local/Render setup.
+
+Keep Render available until the Vercel preview and production each return a real cited answer. Vercel also scales containers down after inactivity: measure an actual first request rather than promising zero cold starts. No paid plan is required by this configuration.
+
+References: https://vercel.com/docs/services and https://vercel.com/docs/functions/runtimes/container.

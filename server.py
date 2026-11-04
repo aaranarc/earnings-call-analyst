@@ -24,6 +24,8 @@ async def health(request):
     return JSONResponse({'status': 'ok', 'interface': 'streamlit',
                          'theme': config.get_option('theme.base'),
                          'primary_color': config.get_option('theme.primaryColor'),
+                         'api_provider': os.getenv('API_PROVIDER', 'local'),
+                         'api_binding_configured': bool(os.getenv('ANALYST_INTERNAL_URL')),
                          'commit': os.getenv('VERCEL_GIT_COMMIT_SHA', 'local')})
 
 
