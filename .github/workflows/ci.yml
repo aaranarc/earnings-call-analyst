@@ -77,7 +77,7 @@ jobs:
           cache: pip
           cache-dependency-path: ui/requirements.txt
       - run: pip install -r ui/requirements.txt pytest ruff
-      - run: ruff check streamlit_app.py ui
+      - run: ruff check streamlit_app.py server.py api ui
       - run: pytest ui/tests -q
       - name: Build Python dashboard container
         run: docker build -f ui/Dockerfile -t quantrag-streamlit .

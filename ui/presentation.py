@@ -51,7 +51,7 @@ def apply_design():
 
 
 def chart_style(chart):
-    return chart.configure_view(stroke=None).configure_axis(
+    return chart.properties(background='#202024').configure_view(stroke=None).configure_axis(
         labelColor=MUTED, titleColor=MUTED, gridColor='#303036', domain=False,
         labelFontSize=11, titleFontSize=11).configure_legend(labelColor=MUTED, titleColor=MUTED)
 

@@ -1,0 +1,26 @@
+{
+  "url": "https://quantrag-ezrmlfqqb-byte-me21.vercel.app",
+  "health": {
+    "status": "ok",
+    "interface": "streamlit",
+    "theme": "dark",
+    "primary_color": "#DDEB91",
+    "commit": "5bfb792264ec1cddeec679cd1715119c2741fe37"
+  },
+  "passed": [
+    "Ask the analyst",
+    "QuarterLens",
+    "Growth Payoff",
+    "Saved research",
+    "Evaluation",
+    "How it works",
+    "Repeated JSON downloads",
+    "JSON backup import",
+    "Old deep link",
+    "375px mobile"
+  ],
+  "theme": {
+    "background": "rgb(221, 235, 145)",
+    "text": "rgb(17, 17, 19)"
+  }
+}
