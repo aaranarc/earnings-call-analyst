@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'eval/results/smoke_retrieval.json'
-OUTPUT = ROOT / 'frontend/lib/development-results.json'
+OUTPUT = ROOT / 'ui/data/development-results.json'
 
 
 def snapshot():

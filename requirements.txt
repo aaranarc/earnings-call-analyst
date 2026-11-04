@@ -1,0 +1,2 @@
+# Vercel installs only the Python interface. FastAPI stays on the existing Render API.
+-r ui/requirements.txt

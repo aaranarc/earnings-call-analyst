@@ -1,3 +1,5 @@
+> Historical v1/v2 development log. The current Python interface is documented in README.md and docs/LEARNING.md. Earlier frontend and deployment claims below describe the previous version.
+
 # QuantRAG v2: Progress
 
 ## Current release status · 2026-10-18

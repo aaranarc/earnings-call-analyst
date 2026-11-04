@@ -27,7 +27,7 @@ def test_reviewed_source_requires_unique_management_match():
 
 def test_growth_snapshot_retains_source_and_planned_vs_actual():
     root = Path(__file__).resolve().parents[2]
-    report = json.loads((root/'frontend/lib/growth-data.json').read_text())
+    report = json.loads((root/'ui/data/growth-data.json').read_text())
     rows = list(csv.DictReader((root/'data/manifest.csv').open()))
     validate(report, rows)
     projects = {p['id']: p for p in report['projects']}
