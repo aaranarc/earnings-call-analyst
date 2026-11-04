@@ -1,9 +1,9 @@
 {
-  "source": "https://github.com/aaranarc/earnings-call-analyst/actions/runs/41787662518",
-  "source_commit": "830c9c6ec07dcddfc8a6ac2effb705f21d6a8090",
+  "source": "https://github.com/aaranarc/earnings-call-analyst/actions/runs/41788178696",
+  "source_commit": "7b799f42473eee73a611119c00e3e0953fc73b9e",
   "results": [
-    "dashboard\tRun pytest ui/tests -q\t2026-11-04T06:46:03.3205578Z 27 passed in 5.20s",
-    "test\tTest with coverage\t2026-11-04T06:46:24.9013828Z TOTAL                                                                                      1495    326    78%",
-    "test\tTest with coverage\t2026-11-04T06:46:24.9014268Z 286 passed, 4 skipped in 3.75s"
+    "test\tTest with coverage\t2026-11-04T06:51:15.3525336Z TOTAL                                                                                      1495    326    78%",
+    "test\tTest with coverage\t2026-11-04T06:51:15.3525900Z 286 passed, 4 skipped in 4.48s",
+    "dashboard\tRun pytest ui/tests -q\t2026-11-04T06:50:44.8014667Z 27 passed in 3.88s"
   ]
 }

@@ -58,3 +58,5 @@ If asked about an older React/Next.js resume: “The earlier interface used Reac
 Existing `/ask`, `/watchlist`, `/growth-payoff`, `/research`, `/eval` and `/how-it-works` links redirect to a `page` query parameter. Python reads that parameter once to choose the initial sidebar page. Clicking navigation still uses ordinary Streamlit session state; there is no client router to maintain.
 
 On Vercel, `server.py` supplies the same theme through environment defaults because hidden config-file discovery differs from a local launch. Research exports are encoded as a direct download link in `ui/presentation.py`, so they do not depend on a temporary server media file. Restore research by opening the downloaded JSON and pasting its contents into Import a backup; this avoids server-local upload state. No JavaScript is used. Charts may take an extra moment to load their built-in rendering code on a fresh browser visit.
+
+Research exports use Base64 to put JSON safely inside a download link. Base64 is encoding, not encryption; the downloaded backup is ordinary JSON.

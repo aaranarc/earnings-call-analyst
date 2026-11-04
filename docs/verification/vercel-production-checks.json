@@ -1,0 +1,15 @@
+{
+  "url": "https://quantrag.vercel.app",
+  "health": {
+    "status": "ok",
+    "interface": "streamlit",
+    "theme": "dark",
+    "primary_color": "#DDEB91",
+    "commit": "7b799f42473eee73a611119c00e3e0953fc73b9e"
+  },
+  "question": "What net interest margin did Kotak Mahindra Bank report in Q1 FY27?",
+  "observed_answer": "Ask the analyst\n\nOfficial transcripts \u2192 retrieved evidence \u2192 cited answer \u2192 number checks\n\nYour question\n\nAsk the analyst\n\nRetry last question\n\ncheck\n\nAnswer received\n\nManagement reported that the net interest margin for Q1 FY27 was 4.53% [c1].\n\nkeyboard_arrow_right\n\nNumber checks \u2014 value matches, not a guarantee of correct attribution\n\nCitation [c1]\n\nkeyboard_arrow_right\n\nKOTAKBANK Q1 FY27 \u00b7 Devang Gheewalla \u00b7 page 4\n\nkeyboard_arrow_right\n\nHow this was answered\n\nSave answer\n\nResearch software. Sources and generated answers require review; scenarios are assumptions.",
+  "desktop_width": 1440,
+  "mobile_width": 375,
+  "horizontal_overflow": false
+}
