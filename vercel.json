@@ -12,12 +12,6 @@
           "excludeFiles": "{backend/**,docs/**,eval/**,assets/**,scripts/**,data/**,db/**,ui/tests/**,.venv/**}"
         }
       },
-      "rewrites": [
-        {
-          "source": "/(.*)",
-          "destination": "/api/index"
-        }
-      ],
       "bindings": [
         {
           "type": "service",
