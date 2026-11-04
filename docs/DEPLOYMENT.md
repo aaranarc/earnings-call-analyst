@@ -2,11 +2,11 @@
 
 ## Vercel interface
 
-`server.py` exports `streamlit.App` as an ASGI application; `api/index.py` exposes it to Vercel. `pyproject.toml` selects `api.index:app` as Vercel's entrypoint; root `requirements.txt` includes only UI dependencies. The existing FastAPI service stays on Render. There is no React/Next.js build.
+`server.py` exports `streamlit.App` as an ASGI application; `api/index.py` exposes it to Vercel. `pyproject.toml` selects `api.index:app` as Vercel's entrypoint; root `requirements.txt` includes only UI dependencies. The FastAPI service can run alongside it as a Vercel container; Render remains the rollback host. There is no React/Next.js build.
 
-Vercel project settings must use the repository root (not the removed `frontend` directory) with the old Next.js framework/build/install/output overrides cleared. `vercel.json` includes the Python dashboard and public snapshots in the function, excludes backend/private inputs, and sets the function duration to 300 seconds.
+Vercel project settings must use the repository root (not the removed `frontend` directory) with the old Next.js framework/build/install/output overrides cleared. The `web` service in `vercel.json` includes the Python dashboard and public snapshots in its function, excludes backend/private inputs, and sets the function duration to 300 seconds. The separate `analyst` container includes the API and model files.
 
-Keep the existing production `API_ORIGIN` and server-only `API_ACCESS_TOKEN` on the Vercel project. Preview environments also need these values for live answers. Never print or commit their values. Snapshot browsing needs no API credentials.
+Keep the existing `API_ORIGIN` for rollback and the server-only `API_ACCESS_TOKEN` on the Vercel project. The API token, database URL and Gemini settings must also be enabled for Preview to test live answers. Never print or commit their values. Snapshot browsing needs no API credentials.
 
 Current Vercel supports Python ASGI WebSockets, but a serverless instance and its session state are temporary. A connection can close when the function duration ends; reconnects/refreshes may reset notes. Export research JSON before closing. This is a demo with no durable accounts or cross-device notes.
 
