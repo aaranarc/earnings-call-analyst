@@ -11,7 +11,8 @@ MUTED = '#B9B9C2'
 def apply_design():
     # Appearance only: deleting this block leaves a functional native Streamlit app.
     st.html('''<style>
-    .stApp {background:#111113;color:#F3F3F5}
+    .stApp {background:#111113;color:#F3F3F5;color-scheme:dark}
+    .stApp h1,.stApp h2,.stApp h3,[data-testid="stSidebar"] label p {color:#F3F3F5!important}
     [data-testid="stSidebar"] {background:#19191C;border-right:1px solid #303036}
     [data-testid="stSidebar"] h1 {font-size:2rem;letter-spacing:-.07em}
     [data-testid="stSidebar"] [data-testid="stRadio"] label {
@@ -24,13 +25,16 @@ def apply_design():
     h3 {font-size:1.08rem!important;letter-spacing:-.02em}
     [data-testid="stMetric"] {background:#202024;border:1px solid #303036;
         border-radius:20px;padding:1.2rem 1.35rem;min-height:124px}
-    [data-testid="stMetricValue"] {font-family:ui-monospace,monospace;font-size:2.2rem;
+    [data-testid="stMetricValue"] {color:#F3F3F5!important;font-family:ui-monospace,monospace;font-size:2.2rem;
         font-variant-numeric:tabular-nums;letter-spacing:-.07em}
     [data-testid="stMetricLabel"] {color:#B9B9C2}
     [data-testid="stVerticalBlockBorderWrapper"] {border-radius:20px!important}
     [data-testid="stExpander"] {border-radius:14px;background:#1C1C20}
     [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p {color:#B9B9C2}
+    button[kind="primary"] {background:#DDEB91!important;border-color:#DDEB91!important}
     button[kind="primary"],button[kind="primary"] p {color:#111113!important}
+    .stButton>button:not([kind="primary"]),.stDownloadButton>button {background:#202024;color:#F3F3F5;border-color:#41414A}
+    .stButton>button:not([kind="primary"]) p,.stDownloadButton>button p {color:#F3F3F5}
     [data-testid="stForm"] {border-color:#35353D;border-radius:20px;background:#1C1C20}
     .stButton>button,.stDownloadButton>button {border-radius:12px;min-height:44px}
     a {color:#DDEB91}
