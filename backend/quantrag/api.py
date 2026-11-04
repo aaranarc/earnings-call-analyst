@@ -25,7 +25,8 @@ async def lifespan(app):
     yield
 
 
-app = FastAPI(title="QuantRAG", version="2.0.0-alpha", lifespan=lifespan)
+app = FastAPI(title="QuantRAG", version="2.0.0-alpha", lifespan=lifespan,
+              root_path=os.getenv("API_ROOT_PATH", ""))
 
 
 @app.middleware("http")
@@ -162,12 +163,15 @@ async def ask(body: Question):
 
 
 def reserve_budget(units=1):
-    from quantrag.usage import BudgetExceeded, reserve
+    from quantrag.usage import BudgetExceeded, BudgetUnavailable, reserve
     try:
         reserve(units)
     except BudgetExceeded as exc:
         raise HTTPException(429, "Today's analyst budget is used up. Please return tomorrow.",
                             headers={"Retry-After": "3600"}) from exc
+
+    except BudgetUnavailable as exc:
+        raise HTTPException(503, "Request budget unavailable. Please retry shortly.") from exc
 
 
 class ThesisQuestion(BaseModel):

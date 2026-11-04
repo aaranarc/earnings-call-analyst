@@ -1,17 +1,50 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 300,
-      "includeFiles": "{server.py,streamlit_app.py,ui/**,.streamlit/**}",
-      "excludeFiles": "{backend/**,docs/**,eval/**,assets/**,scripts/**,data/**,db/**,ui/tests/**,.venv/**}"
+  "services": {
+    "web": {
+      "root": ".",
+      "runtime": "python",
+      "entrypoint": "api.index:app",
+      "functions": {
+        "api/index.py": {
+          "maxDuration": 300,
+          "includeFiles": "{server.py,streamlit_app.py,ui/**,.streamlit/**}",
+          "excludeFiles": "{backend/**,docs/**,eval/**,assets/**,scripts/**,data/**,db/**,ui/tests/**,.venv/**}"
+        }
+      },
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/api/index"
+        }
+      ],
+      "bindings": [
+        {
+          "type": "service",
+          "service": "analyst",
+          "format": "url",
+          "env": "ANALYST_INTERNAL_URL"
+        }
+      ]
+    },
+    "analyst": {
+      "root": ".",
+      "runtime": "container",
+      "entrypoint": "deploy/Dockerfile.api"
     }
   },
   "rewrites": [
     {
+      "source": "/backend/(.*)",
+      "destination": {
+        "service": "analyst"
+      }
+    },
+    {
       "source": "/(.*)",
-      "destination": "/api/index"
+      "destination": {
+        "service": "web"
+      }
     }
   ],
   "redirects": [

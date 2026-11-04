@@ -81,3 +81,11 @@ jobs:
       - run: pytest ui/tests -q
       - name: Build Python dashboard container
         run: docker build -f ui/Dockerfile -t quantrag-streamlit .
+
+  api-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API with embedding and reranker models
+        run: docker build -f deploy/Dockerfile.api -t quantrag-api .

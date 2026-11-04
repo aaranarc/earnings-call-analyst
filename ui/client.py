@@ -9,17 +9,27 @@ class AnalystError(Exception):
     """A safe message that can be displayed without leaking credentials."""
 
 
+def api_origin():
+    """Select the deployment binding explicitly; never silently call an old host."""
+    if os.getenv("API_PROVIDER") == "vercel":
+        origin = os.getenv("ANALYST_INTERNAL_URL", "")
+        if not origin:
+            raise AnalystError("The Vercel analyst binding is not configured.")
+        return origin.rstrip("/")
+    return os.getenv("API_ORIGIN", "http://127.0.0.1:8000").rstrip("/")
+
+
 def health():
     try:
-        response = httpx.get(os.getenv('API_ORIGIN', 'http://127.0.0.1:8000').rstrip('/') + '/health', timeout=5)
+        response = httpx.get(api_origin() + '/health', timeout=5)
         response.raise_for_status()
         return response.json()
-    except (httpx.HTTPError, ValueError):
+    except (httpx.HTTPError, ValueError, AnalystError):
         return {'status': 'unreachable', 'configured': False}
 
 
 def ask(question, on_status=lambda message: None, transport=None):
-    origin = os.getenv('API_ORIGIN', 'http://127.0.0.1:8000').rstrip('/')
+    origin = api_origin()
     token = os.getenv('API_ACCESS_TOKEN', '')
     headers = {'Authorization': 'Bearer ' + token} if token else {}
     timeout = httpx.Timeout(290, connect=10)
@@ -54,7 +64,7 @@ def ask(question, on_status=lambda message: None, transport=None):
 
 def check_research(symbol, thesis, periods, transport=None):
     """Ask for reviewed quote suggestions; never change a saved assessment automatically."""
-    origin = os.getenv('API_ORIGIN', 'http://127.0.0.1:8000').rstrip('/')
+    origin = api_origin()
     token = os.getenv('API_ACCESS_TOKEN', '')
     headers = {'Authorization': 'Bearer ' + token} if token else {}
     try:
