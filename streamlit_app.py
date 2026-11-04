@@ -18,6 +18,7 @@ from ui.presentation import (
     chart_style,
     corpus_ring,
     coverage_grid,
+    research_download,
     timeline,
 )
 from ui.research import note, project_payoff, read_notes
@@ -245,13 +246,19 @@ def research_page(public):
                 st.rerun()
             else:
                 st.warning('Enter a title and a note.')
-    uploaded = st.file_uploader('Import a Streamlit research export (replaces session notes)', type=['json'])
-    if st.button('Import notes', disabled=uploaded is None):
-        try:
-            st.session_state.notes = read_notes(uploaded.getvalue())
-            st.rerun()
-        except (ValueError, TypeError, UnicodeError):
-            st.error('Invalid export. Import a JSON file exported by this Streamlit app, under 2 MB.')
+    for saved in st.session_state.notes:
+        saved['assessment'] = st.session_state.get('assessment-' + saved['id'], saved['assessment'])
+    research_download(st.session_state.notes)
+    with st.expander('Import a backup'):
+        uploaded = st.file_uploader('Import a Streamlit research export (replaces session notes)', type=['json'])
+        pasted = st.text_area('Or paste a research JSON export', max_chars=2000000,
+                              help='Works even when a serverless file upload cannot reconnect to its session.')
+        if st.button('Import notes', disabled=uploaded is None and not pasted.strip()):
+            try:
+                st.session_state.notes = read_notes(uploaded.getvalue() if uploaded else pasted.encode('utf-8'))
+                st.rerun()
+            except (ValueError, TypeError, UnicodeError):
+                st.error('Invalid export. Import a JSON file exported by this Streamlit app, under 2 MB.')
     for item in list(st.session_state.notes):
         with st.expander(item['title']):
             st.caption('Saved ' + item['saved_at'])
@@ -263,8 +270,6 @@ def research_page(public):
             if st.button('Delete note', key='delete-' + item['id']):
                 st.session_state.notes.remove(item)
                 st.rerun()
-    st.download_button('Export notes as JSON', json.dumps(st.session_state.notes, indent=2),
-                       file_name='quantrag-research.json', mime='application/json', on_click='ignore')
 
 
 def evaluation_page(public):

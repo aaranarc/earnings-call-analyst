@@ -1,4 +1,7 @@
 """Optional visual styling and charts. All interactions remain native Streamlit/Python."""
+import base64
+import json
+
 import altair as alt
 import pandas as pd
 import streamlit as st
@@ -81,3 +84,13 @@ def timeline(milestones):
         y=alt.Y('index:Q', title=None, axis=None, scale=alt.Scale(domain=[0, len(rows) + 1])),
         tooltip=['period:N', 'stage:N', 'label:N']).properties(height=160)
     st.altair_chart(chart_style(chart), width='stretch', theme=None)
+
+
+def research_download(notes):
+    """Download directly from this page; no server-local media file or JavaScript."""
+    encoded = base64.b64encode(json.dumps(notes, indent=2).encode('utf-8')).decode('ascii')
+    st.markdown(
+        '<a download="quantrag-research.json" href="data:application/json;base64,' + encoded + '" '
+        'style="display:inline-block;padding:.7rem 1rem;border:1px solid #41414A;'
+        'border-radius:12px;color:#F3F3F5;background:#202024;text-decoration:none">'
+        'Export notes as JSON</a>', unsafe_allow_html=True)
