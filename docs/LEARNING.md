@@ -54,3 +54,7 @@ If asked about an older React/Next.js resume: “The earlier interface used Reac
 `ui/presentation.py` holds the chart colours, coverage grid, sector ring and optional static styles. It has no JavaScript, React components or browser-side application logic. All forms, navigation, state and requests remain Python Streamlit. The static style block only changes appearance; removing it leaves the app functional.
 
 `server.py` creates `streamlit.App`, an ASGI application, for a hosting platform to run. ASGI is the Python server interface also used by FastAPI; you do not need a Node build. The application still depends on a WebSocket connection, and serverless deployments can reconnect and lose session-only notes: export your notes regularly.
+
+Existing `/ask`, `/watchlist`, `/growth-payoff`, `/research`, `/eval` and `/how-it-works` links redirect to a `page` query parameter. Python reads that parameter once to choose the initial sidebar page. Clicking navigation still uses ordinary Streamlit session state; there is no client router to maintain.
+
+On Vercel, `server.py` supplies the same theme through environment defaults because hidden config-file discovery differs from a local launch. Downloads use `on_click="ignore"` so exporting does not rerun the interface mid-download. Charts may take an extra moment to load their built-in rendering code on a fresh browser visit.

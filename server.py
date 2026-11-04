@@ -13,6 +13,6 @@ for key, value in {
 }.items():
     os.environ.setdefault(key, value)
 
-from streamlit import App  # noqa: E402 -- set configuration before importing Streamlit
+from streamlit import App
 
 app = App(Path(__file__).with_name('streamlit_app.py'))
