@@ -22,6 +22,10 @@ def apply_design():
         padding:.7rem .8rem;border-radius:12px;margin-bottom:.25rem;min-height:44px}
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {
         background:#2A2A2E;color:#DDEB91}
+    [data-testid="stWidgetLabel"] p,[data-testid="stExpander"] summary p {color:#F3F3F5!important}
+    textarea,input,[data-baseweb="input"],[data-baseweb="base-input"],
+    [data-baseweb="select"]>div {background:#202024!important;color:#F3F3F5!important;border-color:#41414A!important}
+    [role="listbox"],[role="option"] {background:#202024!important;color:#F3F3F5!important}
     .block-container {padding-top:2.2rem;max-width:1560px;padding-bottom:3rem}
     h1 {font-size:2.35rem!important;letter-spacing:-.055em;line-height:1.12!important}
     h2 {font-size:1.45rem!important;letter-spacing:-.035em}
