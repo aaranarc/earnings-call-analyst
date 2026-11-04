@@ -22,3 +22,12 @@ def test_local_api_origin(monkeypatch):
     monkeypatch.delenv('API_PROVIDER', raising=False)
     monkeypatch.setenv('API_ORIGIN', 'http://127.0.0.1:8000/')
     assert client.api_origin() == 'http://127.0.0.1:8000'
+
+
+def test_deployment_binding_is_default_without_an_override(monkeypatch):
+    monkeypatch.delenv('API_PROVIDER', raising=False)
+    monkeypatch.setenv('ANALYST_INTERNAL_URL', 'https://deployment.example')
+    assert client.api_origin() == 'https://deployment.example'
+    monkeypatch.setenv('API_PROVIDER', 'local')
+    monkeypatch.setenv('API_ORIGIN', 'https://rollback.example')
+    assert client.api_origin() == 'https://rollback.example'

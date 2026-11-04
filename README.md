@@ -55,6 +55,10 @@ flowchart LR
     Snapshots[Reviewed committed JSON snapshots] --> UI
 ```
 
+## Hosting
+
+The Streamlit dashboard and FastAPI API deploy together on Vercel using its beta Services and Container Runtime. The Python UI calls a private deployment binding; the API retains server-only bearer authentication and stores its shared daily request budget in Supabase Postgres. Models are baked into the API image. Vercel can still scale down idle instances; this is not an always-on guarantee. Render remains available for rollback. See [deployment details](docs/DEPLOYMENT.md).
+
 ## Tests and containers
 
 ```bash
@@ -69,7 +73,7 @@ docker compose up --build
 
 Compose exposes the Streamlit UI on port 8501; its API stays internal. PostgreSQL is external. Database integration tests require a separate throwaway local `TEST_DATABASE_URL` and may drop its test schema. See [local setup](docs/LOCAL_DEVELOPMENT.md).
 
-CI now runs Python backend tests and Streamlit tests, and builds the Streamlit image. Earlier Playwright tests belonged to the removed React UI and are not presented as tests of this version. Current CI results: [Actions on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) (check the commit on a run before associating it with a release).
+CI runs Python backend tests (including a disposable Postgres counter test), Streamlit tests, and builds both API and Streamlit images. Earlier Playwright tests belonged to the removed React UI and are not presented as tests of this version. Current CI results: [Actions on main](https://github.com/aaranarc/earnings-call-analyst/actions/workflows/ci.yml?query=branch%3Amain) (check the commit on a run before associating it with a release).
 
 ## Evidence and limits
 

@@ -65,7 +65,7 @@ Research exports use Base64 to put JSON safely inside a download link. Base64 is
 
 A container packages Python, its libraries and the embedding/reranker model files. `Dockerfile.api` uses the same pipeline as the Render Dockerfile; Vercel starts that HTTP server when it needs an instance. Containers can still scale down, so this is not a promise of an always-on server.
 
-`vercel.json` defines the existing Streamlit UI and FastAPI API as two services in one deployment. The UI's `ui/client.py` reads a private, deployment-specific `ANALYST_INTERNAL_URL` binding when `API_PROVIDER=vercel`. It sends the server-only bearer token; bindings provide connectivity, not authentication. The browser never receives the database URL, Gemini key or API token.
+`vercel.json` defines the existing Streamlit UI and FastAPI API as two services in one deployment. The UI's `ui/client.py` reads a private, deployment-specific `ANALYST_INTERNAL_URL` binding when available (or explicitly required by `API_PROVIDER=vercel`). It sends the server-only bearer token; bindings provide connectivity, not authentication. The browser never receives the database URL, Gemini key or API token.
 
 An instance's local files do not provide a shared request counter across instances. `backend/quantrag/usage.py` therefore reserves request units atomically in Postgres on Vercel. The small additive migration in `db/migrations/20261104_api_daily_usage.sql` creates only the counter table and enables row-level security; the server initializes it idempotently on the first reservation. A database failure returns a safe 503 and prevents an unbudgeted model call.
 

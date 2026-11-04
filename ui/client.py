@@ -11,7 +11,7 @@ class AnalystError(Exception):
 
 def api_origin():
     """Select the deployment binding explicitly; never silently call an old host."""
-    if os.getenv("API_PROVIDER") == "vercel":
+    if os.getenv("API_PROVIDER", "vercel" if os.getenv("ANALYST_INTERNAL_URL") else "local") == "vercel":
         origin = os.getenv("ANALYST_INTERNAL_URL", "")
         if not origin:
             raise AnalystError("The Vercel analyst binding is not configured.")

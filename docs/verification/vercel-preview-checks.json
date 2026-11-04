@@ -1,11 +1,11 @@
 {
-  "url": "https://quantrag-ezrmlfqqb-byte-me21.vercel.app",
+  "url": "https://quantrag-cues3g0us-byte-me21.vercel.app",
   "health": {
     "status": "ok",
     "interface": "streamlit",
     "theme": "dark",
     "primary_color": "#DDEB91",
-    "commit": "5bfb792264ec1cddeec679cd1715119c2741fe37"
+    "commit": "ebd757b2ca47a3722710ae421c1b97edac8e9caa"
   },
   "passed": [
     "Ask the analyst",
