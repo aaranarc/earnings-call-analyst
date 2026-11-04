@@ -13,9 +13,18 @@ for key, value in {
 }.items():
     os.environ.setdefault(key, value)
 
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 from streamlit import App, config
 
 # An ASGI host can import Streamlit before this module; refresh its cached settings.
 config.get_config_options(force_reparse=True)
 
-app = App(Path(__file__).with_name('streamlit_app.py'))
+async def health(request):
+    return JSONResponse({'status': 'ok', 'interface': 'streamlit',
+                         'theme': config.get_option('theme.base'),
+                         'primary_color': config.get_option('theme.primaryColor'),
+                         'commit': os.getenv('VERCEL_GIT_COMMIT_SHA', 'local')})
+
+
+app = App(Path(__file__).with_name('streamlit_app.py'), routes=[Route('/health', health)])
