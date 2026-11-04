@@ -30,7 +30,7 @@
     "analyst": {
       "root": ".",
       "runtime": "container",
-      "entrypoint": "deploy/Dockerfile.api"
+      "entrypoint": "Dockerfile.api"
     }
   },
   "rewrites": [

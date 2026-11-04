@@ -88,4 +88,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build API with embedding and reranker models
-        run: docker build -f deploy/Dockerfile.api -t quantrag-api .
+        run: docker build -f Dockerfile.api -t quantrag-api .
