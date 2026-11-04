@@ -2,7 +2,7 @@
 
 ## Vercel interface
 
-`server.py` exports `streamlit.App` as an ASGI application. `pyproject.toml` selects `server:app` as Vercel's entrypoint; root `requirements.txt` includes only UI dependencies. The existing FastAPI service stays on Render. There is no React/Next.js build.
+`server.py` exports `streamlit.App` as an ASGI application; `api/index.py` exposes it to Vercel. `pyproject.toml` selects `api.index:app` as Vercel's entrypoint; root `requirements.txt` includes only UI dependencies. The existing FastAPI service stays on Render. There is no React/Next.js build.
 
 Vercel project settings must use the repository root (not the removed `frontend` directory) with the old Next.js framework/build/install/output overrides cleared. `vercel.json` includes the Python dashboard and public snapshots in the function, excludes backend/private inputs, and sets the function duration to 300 seconds.
 

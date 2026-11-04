@@ -147,8 +147,8 @@ def health(client):
     results = []
     for name, url in [
         ("dashboard", "https://quantrag.vercel.app/"),
-        ("coverage", "https://quantrag.vercel.app/api/companies"),
-        ("evaluation", "https://quantrag.vercel.app/api/eval/latest"),
+        ("coverage", "https://quantrag-api.onrender.com/companies"),
+        ("evaluation", "https://quantrag-api.onrender.com/eval/latest"),
         ("api", "https://quantrag-api.onrender.com/health"),
     ]:
         started = time.monotonic()
