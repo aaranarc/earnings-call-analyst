@@ -147,3 +147,11 @@ def test_research_client_request_and_redaction(monkeypatch):
     with pytest.raises(AnalystError):
         check_research('TCS', 'Margins are under pressure', ['Q1 FY27'],
                         httpx.MockTransport(lambda r: httpx.Response(503, text='secret')))
+
+
+def test_vercel_and_local_ui_dependencies_match():
+    import tomllib
+    project = tomllib.loads((ROOT / 'pyproject.toml').read_text())
+    local = [line for line in (ROOT / 'ui/requirements.txt').read_text().splitlines()
+             if line.strip() and not line.startswith('#')]
+    assert project['project']['dependencies'] == local
