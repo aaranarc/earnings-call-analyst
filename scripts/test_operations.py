@@ -75,8 +75,8 @@ def test_corrupt_private_archive_cannot_replace_reviewed_source(tmp_path):
 
 def test_pending_evaluation_and_cold_models_are_healthy():
     def respond(request):
-        if request.url.path == "/":
-            return httpx.Response(200, text="QuantRAG")
+        if request.url.path == "/_stcore/health":
+            return httpx.Response(200, text="ok")
         if request.url.path.endswith("companies"):
             return httpx.Response(200, json={"companies": [{"documents": [{"fiscal_label": "Q1 FY27"}]}]})
         if request.url.path.endswith("latest"):

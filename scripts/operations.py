@@ -146,7 +146,7 @@ def sources(client, root=ROOT, archive_lookup=None):
 def health(client):
     results = []
     for name, url in [
-        ("dashboard", "https://quantrag.vercel.app/"),
+        ("dashboard", "https://quantrag.vercel.app/_stcore/health"),
         ("coverage", "https://quantrag-api.onrender.com/companies"),
         ("evaluation", "https://quantrag-api.onrender.com/eval/latest"),
         ("api", "https://quantrag-api.onrender.com/health"),
@@ -170,7 +170,7 @@ def health(client):
                 if data.get("status") != "ok" or data.get("configured") is not True:
                     raise ValueError("API is not configured")
                 item["models_loaded"] = data.get("models_loaded")
-            elif "QuantRAG" not in response.text:
+            elif response.text.strip() != "ok":
                 raise ValueError("Unexpected dashboard")
             item["ok"] = True
         except (httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
