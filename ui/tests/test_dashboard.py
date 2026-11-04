@@ -182,7 +182,7 @@ def test_paste_import_and_direct_export_keep_user_content():
     test = app()
     test.sidebar.radio[0].set_value('Saved research').run()
     rows = [note('Imported research', 'A source quote with <angle brackets>.')]
-    next(a for a in test.text_area if a.label == 'Or paste a research JSON export').set_value(json.dumps(rows)).run()
+    next(a for a in test.text_area if a.label == 'Paste a research JSON export').set_value(json.dumps(rows)).run()
     next(b for b in test.button if b.label == 'Import notes').click().run()
     assert not test.exception
     assert test.session_state['notes'][0]['title'] == 'Imported research'

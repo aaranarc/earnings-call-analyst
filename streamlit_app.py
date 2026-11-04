@@ -250,15 +250,15 @@ def research_page(public):
         saved['assessment'] = st.session_state.get('assessment-' + saved['id'], saved['assessment'])
     research_download(st.session_state.notes)
     with st.expander('Import a backup'):
-        uploaded = st.file_uploader('Import a Streamlit research export (replaces session notes)', type=['json'])
-        pasted = st.text_area('Or paste a research JSON export', max_chars=2000000,
-                              help='Works even when a serverless file upload cannot reconnect to its session.')
-        if st.button('Import notes', disabled=uploaded is None and not pasted.strip()):
+        st.caption('Open your exported JSON file, then paste its contents below to replace this session’s notes.')
+        pasted = st.text_area('Paste a research JSON export', max_chars=2000000,
+                              help='Use the JSON downloaded from this app. No shared file storage is needed.')
+        if st.button('Import notes', disabled=not pasted.strip()):
             try:
-                st.session_state.notes = read_notes(uploaded.getvalue() if uploaded else pasted.encode('utf-8'))
+                st.session_state.notes = read_notes(pasted.encode('utf-8'))
                 st.rerun()
             except (ValueError, TypeError, UnicodeError):
-                st.error('Invalid export. Import a JSON file exported by this Streamlit app, under 2 MB.')
+                st.error('Invalid export. Paste JSON exported by this Streamlit app, under 2 MB.')
     for item in list(st.session_state.notes):
         with st.expander(item['title']):
             st.caption('Saved ' + item['saved_at'])

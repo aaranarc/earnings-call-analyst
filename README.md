@@ -37,7 +37,7 @@ The database must contain the ingested source corpus. PDFs, database credentials
 - **Ask:** cited answers, comparison tables, source excerpts/PDF links, numerical status table and retrieval/timing details.
 - **QuarterLens:** favourite companies for the session; margin dots on a single selected accounting basis, reported changes and source excerpts. Missing values are not invented.
 - **Growth Payoff:** reviewed investment milestones, original sources and an explicit operating-profit sensitivity chart. It is not a trained forecast or stock-price predictor.
-- **Saved research:** save answers/evidence, write notes, choose an assessment, delete, export and import.
+- **Saved research:** save answers/evidence, write notes, choose an assessment, delete, download JSON and restore by pasting an exported JSON backup.
 - **Evaluation:** versioned development retrieval and memory results, pending final benchmark status and the CI link. No hand-entered test count or accuracy claim.
 - **Reliability:** server-side secrets, existing request budget, bounded provider retry and clearly dated saved examples after live-answer failures.
 
