@@ -251,9 +251,11 @@ def research_page(public):
     research_download(st.session_state.notes)
     with st.expander('Import a backup'):
         st.caption('Open your exported JSON file, then paste its contents below to replace this session’s notes.')
-        pasted = st.text_area('Paste a research JSON export', max_chars=2000000,
-                              help='Use the JSON downloaded from this app. No shared file storage is needed.')
-        if st.button('Import notes', disabled=not pasted.strip()):
+        with st.form('import_backup'):
+            pasted = st.text_area('Paste a research JSON export', max_chars=2000000,
+                                  help='Use the JSON downloaded from this app. No shared file storage is needed.')
+            import_backup = st.form_submit_button('Import notes')
+        if import_backup:
             try:
                 st.session_state.notes = read_notes(pasted.encode('utf-8'))
                 st.rerun()
