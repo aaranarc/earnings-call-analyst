@@ -264,7 +264,7 @@ def research_page(public):
                 st.session_state.notes.remove(item)
                 st.rerun()
     st.download_button('Export notes as JSON', json.dumps(st.session_state.notes, indent=2),
-                       file_name='quantrag-research.json', mime='application/json')
+                       file_name='quantrag-research.json', mime='application/json', on_click='ignore')
 
 
 def evaluation_page(public):
@@ -348,7 +348,11 @@ def home_page(public):
 def main():
     apply_design()
     st.session_state.setdefault('notes', [])
-    st.session_state.setdefault('navigation', 'Home')
+    pages = {'ask': 'Ask the analyst', 'watchlist': 'QuarterLens', 'growth-payoff': 'Growth Payoff',
+             'research': 'Saved research', 'eval': 'Evaluation', 'how-it-works': 'How it works'}
+    st.session_state.setdefault('navigation', pages.get(st.query_params.get('page'), 'Home'))
+    if 'last_question' not in st.session_state and st.query_params.get('q'):
+        st.session_state.last_question = str(st.query_params['q'])[:2000]
     public = load('public-data.json')
     st.sidebar.title('QuantRAG')
     st.sidebar.caption('Follow the evidence.')

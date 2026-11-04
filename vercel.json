@@ -13,5 +13,37 @@
       "source": "/(.*)",
       "destination": "/api/index"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/ask",
+      "destination": "/?page=ask",
+      "permanent": false
+    },
+    {
+      "source": "/watchlist",
+      "destination": "/?page=watchlist",
+      "permanent": false
+    },
+    {
+      "source": "/growth-payoff",
+      "destination": "/?page=growth-payoff",
+      "permanent": false
+    },
+    {
+      "source": "/research",
+      "destination": "/?page=research",
+      "permanent": false
+    },
+    {
+      "source": "/eval",
+      "destination": "/?page=eval",
+      "permanent": false
+    },
+    {
+      "source": "/how-it-works",
+      "destination": "/?page=how-it-works",
+      "permanent": false
+    }
   ]
 }

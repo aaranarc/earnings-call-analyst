@@ -155,3 +155,22 @@ def test_vercel_and_local_ui_dependencies_match():
     local = [line for line in (ROOT / 'ui/requirements.txt').read_text().splitlines()
              if line.strip() and not line.startswith('#')]
     assert project['project']['dependencies'] == local
+
+
+def test_existing_ask_link_opens_question_without_auto_submitting():
+    test = AppTest.from_file(str(ROOT / 'streamlit_app.py'), default_timeout=15)
+    test.query_params['page'] = 'ask'
+    test.query_params['q'] = 'What margin?'
+    with patch('ui.client.ask') as request:
+        test.run()
+    assert not test.exception
+    assert test.sidebar.radio[0].value == 'Ask the analyst'
+    assert test.text_area[0].value == 'What margin?'
+    request.assert_not_called()
+
+
+def test_home_primary_action_opens_ask():
+    test = app()
+    next(b for b in test.button if b.label == 'Ask the analyst').click().run()
+    assert test.sidebar.radio[0].value == 'Ask the analyst'
+    assert not test.exception
